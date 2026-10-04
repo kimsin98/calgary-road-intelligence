@@ -2029,3 +2029,10 @@ body:has(.admin-dashboard) > #root > footer {
 .algorithm-note p { color: #bacbd7; line-height: 1.65; max-width: 1100px; }
 .algorithm-note strong { color: #e2edf4; }
 @media (max-width: 760px) { .algorithm-note { padding: 18px; } }
+
+.inspection-review { border-top:1px solid #344958; margin-top:24px; padding-top:20px; }
+.inspection-check { display:flex; align-items:flex-start; gap:12px; margin:14px 0; line-height:1.5; }
+.inspection-check input { width:18px; height:18px; flex:0 0 18px; margin-top:3px; accent-color:var(--amber); }
+.inspection-fields { display:grid; gap:18px; margin:24px 0; }
+.inspection-fields label { display:grid; gap:10px; }
+.inspection-fields textarea { min-height:110px; padding:14px; width:100%; box-sizing:border-box; background:#0b1923; color:#dce8f0; border:1px solid #455d70; border-radius:8px; font:inherit; resize:vertical; }

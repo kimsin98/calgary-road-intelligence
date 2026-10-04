@@ -85,3 +85,5 @@ Traffic control/crosswalk SPF features integrated, with asset arrays included in
 Recomputed asset-aware results: annual mean EB/ridge deviance 0.097/0.203, Top20 oracle coverage 83%/81%. Next30 mean Top20 rate/EB/Poisson/hybrid 33.0/36.83/32.83/35.33; next7 6.17/5.83/5.83/6.00. Monthly choice and seven-day retention remain unchanged. New snapshots/experiment reports share the asset-aware fingerprint.
 
 PR #2 closeout verification: 38 Node tests, 13 Python tests, production build and all 15 browser suites pass. Production asset-aware EB/CMF evidence also passed. Synthetic CMF checks confirm no report-reduction output and no ramp inference; all replay/future snapshots regenerated against the asset-aware fingerprint.
+
+Inspection workflow extension: monthly EB evidence shows mapped facilities and association caveats, context-aware checklist, review decision and notes. Explicit save uses local storage isolated by fingerprint/mode/cutoff/end/location; forecast export includes saved reviews. Browser verification covers save/reload/export and cutoff isolation. No shared backend or operational benefit claim. The browser runner now includes 16 suites.

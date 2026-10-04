@@ -380,3 +380,7 @@ Use precomputed pure EB for next30 on the validated full-inventory unit definiti
 ### PR #2: site assets and candidate treatments
 
 Enrich site characteristics with mapped signals, signs and crossings. Reproduce annual and short-horizon evaluations after feature changes. Show CMF studies as expert-review candidates on monthly future evidence, retaining study context and uncertainty. Do not convert all-report forecasts into predicted crash reductions, infer ramps from road class, or treat mapped proximity as verified infrastructure linkage.
+
+### Analyst feedback workflow
+
+Display mapped facilities with association limitations, then offer a context-aware inspection checklist and explicit saved review. Separate decisions, notes and checked review steps from verified field findings. Isolate local records by data snapshot, forecast period and location; include saved feedback in exported plans. Team synchronization and inspection outcomes remain later pilot work.

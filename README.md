@@ -83,7 +83,7 @@ npm run compress:data
 
 Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 15 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 16 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
 ## Interpretation and attribution
 
@@ -114,3 +114,5 @@ Seven-day forecasts retain browser Ridge Poisson, collision targets and experime
 The next7 Poisson and annual EB modes are additional planning horizons; their units and controls differ. Keep the main presentation focused on historical review and next30 outlook.
 
 Monthly future outlook also offers CMF-based treatment research in selected-location evidence. Candidates depend on nearby mapped controls and road class, and require expert verification. External crash modification factors are shown with study references; they are not used to calculate reductions in traffic-event reports. Signal/sign/crosswalk features now enter the EB SPF; current/undated asset and removal-history limitations remain.
+
+Monthly location evidence displays mapped facility counts and proximity limitations, a desk/site-review checklist, decision and reviewer notes. Save review persists on this device, isolated by snapshot fingerprint, mode, forecast period and EB location. Saved reviews are included in forecast JSON exports; drafts are not automatically saved or shared with teammates. These records support a pilot review workflow, not validation of safety benefits.
