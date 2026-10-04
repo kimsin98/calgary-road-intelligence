@@ -91,6 +91,13 @@ export function ForecastPanel({
             evidence available at the cutoff. This demo uses all event types and
             all hours, independently of the reactive analysis filters.
           </p>
+          <section className="algorithm-note" aria-label="Algorithm and rationale">
+            <span className="outlook-eyebrow">ALGORITHM / WHY THIS MODEL</span>
+            <h3>Ridge Poisson regression · next 7 days</h3>
+            <p>Estimates report counts from recent activity, using regularization to limit unstable coefficients. Expanding-year validation selects the penalty using 2024 and 2025; the final fit uses 2023–2025 windows. Optional learned weighting uses separate event-type history features.</p>
+            <p><strong>Why retain Poisson:</strong> the seven-day EB experiment did not improve average Top20 capture: EB and the temporal Poisson comparator both captured 5.83 reports versus 6.17 for recent frequency. We retain the existing model because there is no demonstrated Top20 benefit from replacement. This is a continuity decision, not evidence that Poisson is superior; the Python comparison does not exactly reproduce the browser fit.</p>
+            <p>Short windows are sparse. Interpret results alongside the recent-rate baseline; expected counts are not crash probabilities.</p>
+          </section>
           <div
             className="notice"
             role="note"

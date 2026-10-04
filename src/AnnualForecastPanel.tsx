@@ -91,6 +91,13 @@ export function AnnualForecastPanel() {
         overlap is not directly comparable. Weather, time-of-day and event-type
         controls do not apply.
       </p>
+      <section className="algorithm-note" aria-label="Algorithm and rationale">
+        <span className="outlook-eyebrow">ALGORITHM / WHY THIS MODEL</span>
+        <h3>Empirical Bayes · next 12 months</h3>
+        <p>A site-characteristic Poisson safety performance function provides the prior; empirical Bayes blends it with each location’s own history. A negative-binomial posterior provides predictive count intervals. The five-year history window was selected by historical annual backtests.</p>
+        <p><strong>Why EB:</strong> annual report counts are overdispersed and many inventory locations have no prior reports. Shrinkage reduces reliance on noisy individual histories and allows ranking never-reported sites using road characteristics and partial traffic-volume data. Reproduced annual backtests show lower average deviance than the ridge comparator; yearly rankings and simple baselines remain visible below.</p>
+        <p>The model assumes broadly stable rates. Traffic reports are not confirmed crashes; historical geometry and volume publication dates remain unverified.</p>
+      </section>
       <p>
         Evidence through {data.dataThrough} · forecast {data.horizon.start} ~{" "}
         {data.horizon.end} · history {data.history.start} ~ {data.history.end}.
