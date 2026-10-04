@@ -1,3 +1,4 @@
+import { AgentPage } from "./AgentPage";
 import { useSavedPlan } from "./hooks/useSavedPlan";
 import {
   useDashboardNavigation,
@@ -610,6 +611,7 @@ function App() {
                 </table>
               </div>
             )}
+            {tab === "Agent" && <AgentPage />}
             {tab === "Data & method" && <DataMethodPage />}
           </div>
         </section>

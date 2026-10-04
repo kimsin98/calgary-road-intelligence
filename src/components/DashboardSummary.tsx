@@ -37,7 +37,7 @@ export function DashboardSummary({
       )}
       <div
         className="dashboard-summary"
-        hidden={["Forward outlook", "Data & method"].includes(tab)}
+        hidden={["Forward outlook", "Data & method", "Agent"].includes(tab)}
       >
         <div
           hidden={["Automatic evaluation", "Historical evaluation"].includes(

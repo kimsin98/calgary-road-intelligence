@@ -8,6 +8,7 @@ export const dashboardPages = [
   "Weather context",
   "Historical evaluation",
   "Data & method",
+  "Agent",
 ];
 export const pageHash = (page: string) =>
   page.toLowerCase().replaceAll(" ", "-").replace("&", "and");

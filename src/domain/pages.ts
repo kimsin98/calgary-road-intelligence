@@ -6,8 +6,8 @@ export function pageControls(tab: string) {
       "Plan comparison",
       "Weather context",
     ].includes(tab),
-    period: !["Forward outlook", "Data & method"].includes(tab),
-    category: !["Forward outlook", "Data & method"].includes(tab),
+    period: !["Forward outlook", "Data & method", "Agent"].includes(tab),
+    category: !["Forward outlook", "Data & method", "Agent"].includes(tab),
     weather: [
       "Map preview",
       "Evidence",

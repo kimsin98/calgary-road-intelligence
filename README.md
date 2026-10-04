@@ -122,3 +122,9 @@ Monthly forecast map points open the same location evidence as table rows; selec
 The presentation should follow [DEMO_GUIDE.md](DEMO_GUIDE.md), aligned to the organizers' Pitch slides: short introduction, one-minute problem statement, 1–2 minute solution/demo, and 1–2 minute closing. The earlier five-minute click-through is background preparation; this pitch structure takes precedence.
 
 Annual outlook supports confirmed selection of precomputed month-end replay cutoffs from 2025 onward, alongside the latest future forecast. Run `OPENBLAS_NUM_THREADS=1 analysis/.venv/bin/python analysis/export_annual_replays.py` to regenerate per-cutoff gzip files and their index. Historical replay uses fixed five-year history, independent of later model-window selection. Incomplete observation periods are explicitly marked; current-geometry/undated-asset caveats still apply.
+
+## Evidence Agent
+
+The Agent page chats with selected monthly EB Top20 or one location, including source evidence, evaluation and saved local reviews. Configure server-only `AGENT_BASE_URL` (including `/v1` if required), `AGENT_MODEL` and `AGENT_API_KEY` in Vercel, then redeploy. The provider must support OpenAI-compatible Chat Completions. No key is included in the browser. Local API testing requires `vercel dev`; plain Vite serves only the UI.
+
+Questions and selected evidence are sent to the configured provider. Responses are model-generated and require review; the agent cannot execute changes or verify site conditions. The endpoint has request-size limits and timeout, but no user authentication/rate limiting: add access controls before broadly sharing a paid-provider deployment. Annual/seven-day context is not yet included.

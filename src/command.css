@@ -2038,3 +2038,9 @@ body:has(.admin-dashboard) > #root > footer {
 .inspection-fields textarea { min-height:110px; padding:14px; width:100%; box-sizing:border-box; background:#0b1923; color:#dce8f0; border:1px solid #455d70; border-radius:8px; font:inherit; resize:vertical; }
 
 .review-status { display:inline-block; padding:6px 10px; border:1px solid #3c5262; border-radius:16px; color:#c4d4df; font-size:14px; }
+
+.agent-messages { margin:24px 0; padding:20px; border:1px solid #344958; border-radius:12px; min-height:180px; }
+.agent-message { margin:16px 0; padding:18px; background:#142735; border-radius:10px; }
+.agent-message.user { background:#20313d; }
+.agent-message p { white-space:pre-wrap; line-height:1.65; overflow-wrap:anywhere; }
+.agent-page textarea { display:block; width:100%; box-sizing:border-box; min-height:100px; background:#0b1923; border:1px solid #455d70; color:#dce8f0; padding:16px; font:inherit; border-radius:10px; margin:12px 0; }
