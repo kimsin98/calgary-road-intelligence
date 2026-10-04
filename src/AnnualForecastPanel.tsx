@@ -1,3 +1,4 @@
+import { suggestImprovement, type SiteControl } from "./domain/countermeasures";
 import { useEffect, useState } from "react";
 import { loadSnapshot } from "./domain/loadSnapshot";
 import { downloadJson } from "./domain/download";
@@ -18,6 +19,7 @@ interface AnnualUnit {
   ridgeRank: number;
   rank: number;
   observedReports?:number|null;
+  roadClass?:string; minorRoadClass?:string|null; signalized?:boolean; stopSigns?:number; yieldSigns?:number; crosswalks?:number;
   relatedDashboardLocationIds?: string[];
   reportEvidence?: { id: string; date: string; description: string }[];
 }
@@ -69,6 +71,8 @@ export function AnnualForecastPanel() {
   const controls=<div className="forecast-controls"><label>Annual evidence cutoff<select aria-label="Annual cutoff" value={draft} onChange={e=>setDraft(e.target.value)}><option value="latest">Latest · future forecast</option>{entries.map(e=><option key={e.cutoff} value={e.url}>{e.cutoff} · historical replay</option>)}</select></label><button onClick={()=>setUrl(draft=== "latest"?"/data/forecast-annual.json.gz":draft)}>Apply annual cutoff</button></div>;
   if (error) return <>{controls}<p role="alert">{error}</p></>;
   if (!data) return <>{controls}<p role="status">Loading precomputed annual outlook…</p></>;
+  const future = !data.observation;
+  const siteControl = (r:AnnualUnit):SiteControl|undefined => r.signalized===undefined?undefined:{kind:r.kind as SiteControl["kind"],name:r.name,roadClass:r.roadClass??null,minorRoadClass:r.minorRoadClass??null,legs:0,signalized:r.signalized,stopSigns:r.stopSigns??0,yieldSigns:r.yieldSigns??0,crosswalks:r.crosswalks??0};
   const focus = data.units.find((r) => r.id === selected);
   const preview: ForecastMapInput = {
     historyLabel: "fitted history",
@@ -126,6 +130,7 @@ export function AnnualForecastPanel() {
             <th>Expected reports</th>
             <th>90% predictive interval</th>
             <th>Own-history / similar-sites prior</th>
+            {future&&<th>Suggested improvement · review candidate</th>}
             {revealed&&<th>Observed reports</th>}
           </tr>
         </thead>
@@ -149,6 +154,7 @@ export function AnnualForecastPanel() {
                 {Math.round(r.priorWeight * 100)}%
                 <small>Ridge rank {r.ridgeRank}</small>
               </td>
+              {future&&<td className="suggestion-cell">{suggestImprovement(siteControl(r))?<button onClick={()=>setSelected(r.id)}>{suggestImprovement(siteControl(r))!.action}</button>:"No supported treatment match"}<small>Verify mapped facilities and study applicability</small></td>}
               {revealed&&<td>{r.observedReports??"Unavailable"}</td>}
             </tr>
           ))}
@@ -157,6 +163,7 @@ export function AnnualForecastPanel() {
       {focus && (
         <section>
           <h3>{focus.name ?? focus.id} · annual-unit evidence</h3>
+          {future&&<section aria-label="Annual candidate improvement"><h4>Candidate improvement · expert review required</h4>{suggestImprovement(siteControl(focus))?<><p>{suggestImprovement(siteControl(focus))!.action}</p><p>{suggestImprovement(siteControl(focus))!.source}</p><p>External study CMF: {suggestImprovement(siteControl(focus))!.cmf}. It applies to crashes in the study population, not predicted reductions in traffic reports. Verify mapped assets, local geometry and engineering warrants.</p></>:<p>No supported treatment match. Facility absence and treatment suitability cannot be established from nearby mapped records alone.</p>}</section>}
           <p>
             {focus.historyReports} reports in fitted history;{" "}
             {focus.last365Reports} in last 365 days. Records below belong to
