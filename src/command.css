@@ -2044,3 +2044,13 @@ body:has(.admin-dashboard) > #root > footer {
 .agent-message.user { background:#20313d; }
 .agent-message p { white-space:pre-wrap; line-height:1.65; overflow-wrap:anywhere; }
 .agent-page textarea { display:block; width:100%; box-sizing:border-box; min-height:100px; background:#0b1923; border:1px solid #455d70; color:#dce8f0; padding:16px; font:inherit; border-radius:10px; margin:12px 0; }
+
+.agent-markdown { line-height:1.65; overflow-wrap:anywhere; }
+.agent-markdown p { white-space:normal; }
+.agent-markdown h1,.agent-markdown h2,.agent-markdown h3 { font-size:22px; margin:20px 0 12px; }
+.agent-markdown ul,.agent-markdown ol { padding-left:26px; }
+.agent-markdown li { margin:8px 0; }
+.agent-markdown pre { overflow-x:auto; padding:16px; background:#081620; border-radius:8px; }
+.agent-markdown code { color:#ffd98a; }
+.agent-markdown blockquote { margin-left:0; padding-left:18px; border-left:3px solid var(--amber); color:#b8cbd7; }
+.agent-markdown table { display:block; max-width:100%; overflow-x:auto; }

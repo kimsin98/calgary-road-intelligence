@@ -1,6 +1,6 @@
 import {chromium} from '@playwright/test';import assert from 'node:assert/strict';
 const b=await chromium.launch({args:['--no-sandbox']});const p=await b.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
-await p.goto('http://localhost:5173');await p.getByRole('button',{name:'Forward outlook',exact:true}).click();await p.getByLabel('Forecast horizon').selectOption('7');
+await p.goto('http://localhost:5173/#map-preview');await p.getByRole('button',{name:'Forward outlook',exact:true}).click();await p.getByLabel('Forecast horizon').selectOption('7');
 await p.getByRole('button',{name:'Future forecast',exact:true}).click();assert.equal(await p.getByLabel('Forecast cutoff').inputValue(),'2026-10-03');assert.ok(await p.getByLabel('Forecast cutoff').isDisabled());
 await p.getByRole('button',{name:'Generate forecast',exact:true}).click();await p.getByRole('button',{name:'Export forecast report'}).waitFor({timeout:60000});await p.getByText(/through 2026-10-10/).waitFor();assert.equal(await p.getByRole('button',{name:'Reveal what happened next'}).count(),0);
 const dl=p.waitForEvent('download');await p.getByRole('button',{name:'Export forecast report'}).click();const d=await dl;await d.saveAs('/tmp/forecast-future.json');const fs=await import('node:fs');const report=JSON.parse(fs.readFileSync('/tmp/forecast-future.json'));assert.equal(report.forecast.evaluation,null);assert.ok(report.forecast.top.every(r=>r.target===null));

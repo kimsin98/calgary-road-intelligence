@@ -83,7 +83,7 @@ npm run compress:data
 
 Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 19 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 20 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
 ## Interpretation and attribution
 
@@ -130,3 +130,5 @@ The Agent page chats with selected monthly EB Top20 or one location, including s
 Questions and selected evidence are sent to the configured provider. Responses are model-generated and require review; the agent cannot execute changes or verify site conditions. The endpoint has request-size limits and timeout, but no user authentication/rate limiting: add access controls before broadly sharing a paid-provider deployment. Annual/seven-day context is not yet included.
 
 Agent evidence sources now include the applied historical shortlist (with matching filtered source samples), generated latest-future seven-day Poisson, monthly EB replays/future, and annual latest/replay snapshots. Seven-day target/weighting settings require regenerating context before asking. Every request includes curated project purpose, methods, provenance, page workflows and interpretation limits. It does not automatically read arbitrary repository files or all reports, and model understanding is not guaranteed by supplying context. Real provider calls remain unverified until configured.
+
+Agent is the default landing page and first sidebar entry, with its own conversation icon. Assistant prose renders Markdown/GFM (headings, lists, tables and code); raw HTML is not enabled and links use safe URL handling. Existing page deep links remain valid.

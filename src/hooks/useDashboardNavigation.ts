@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 export const dashboardPages = [
+  "Agent",
   "Map preview",
   "Evidence",
   "Plan comparison",
@@ -8,13 +9,12 @@ export const dashboardPages = [
   "Weather context",
   "Historical evaluation",
   "Data & method",
-  "Agent",
 ];
 export const pageHash = (page: string) =>
   page.toLowerCase().replaceAll(" ", "-").replace("&", "and");
 const currentPage = () =>
   dashboardPages.find((page) => pageHash(page) === location.hash.slice(1)) ??
-  "Map preview";
+  "Agent";
 export function useDashboardNavigation() {
   const [page, setPage] = useState(currentPage);
   useEffect(() => {

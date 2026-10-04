@@ -20,7 +20,7 @@ export function DashboardSidebar({ pages, tab, setTab }: any) {
               aria-current={tab === page ? "page" : undefined}
               onClick={() => setTab(page)}
             >
-              <NavIcon index={i} />
+              <NavIcon index={page === "Agent" ? 8 : i - 1} />
               <span className="nav-label">{page}</span>
               <span className="nav-index">
                 {String(i + 1).padStart(2, "0")}

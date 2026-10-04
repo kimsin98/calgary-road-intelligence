@@ -30,6 +30,10 @@ export function NavIcon({ index }: { index: number }) {
       <ellipse cx="12" cy="5" rx="8" ry="3" />
       <path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0" />
     </>,
+    <>
+      <path d="M5 5h14v11H9l-4 4Z" />
+      <path d="m12 7 1 3 3 1-3 1-1 3-1-3-3-1 3-1Z" />
+    </>,
   ];
   return (
     <svg
