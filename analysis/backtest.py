@@ -87,6 +87,8 @@ def main():
             "historyYears": h or "all",
             "k": forecast["k"],
             "eb": score(actual[year], forecast["expected"], ids, never_reported),
+            "lastYear": score(actual[year], inputs.counts(date(year-1,1,1), cutoff) * days / ((cutoff-date(year-1,1,1)).days+1) * scale, ids, never_reported),
+            "historicalRate": score(actual[year], inputs.counts(model.FIRST_DATE, cutoff) * days / ((cutoff-model.FIRST_DATE).days+1) * scale, ids, never_reported),
         }
         # Uncertainty check on the 500 highest forecasts (most units are 0, so all-unit coverage is uninformative).
         top = model.rank(forecast["expected"], ids)[:500]
@@ -106,10 +108,11 @@ def main():
     summary = {
         name: {key: float(np.mean([r[name][key] for r in compared]))
                for key in ("deviance", "top20OfOracle", "top100OfOracle", "top500OfOracle", "neverReportedTop500")}
-        for name in ("eb", "ridge")
+        for name in ("eb", "ridge", "lastYear", "historicalRate")
     }
     report = {
-        "version": "eb-annual-v1",
+        "version": "eb-annual-v2",
+        "dataFingerprint": inputs.fingerprint(),
         "dataThrough": inputs.last_complete.isoformat(),
         "units": {kind: int((inputs.units.kind == kind).sum()) for kind in ("segment", "intersection")},
         "selectedHistoryYears": selected or "all",

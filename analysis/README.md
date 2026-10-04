@@ -74,7 +74,7 @@ Each year N is predicted from data through Dec 31 of N−1. 2026 is scored throu
 
 ## Export: `public/data/forecast-annual.json`
 
-A rolling 12-month forecast from the day after `dataThrough`, with the top 1,000 units (about 80 KB gzipped). Load the `.gz` the same way `useDataset.ts` loads `dataset.json.gz`. `export.py --top N` changes the count. Re-run the pipeline to refresh it; nothing in the app retrains.
+A rolling 12-month forecast from the day after `dataThrough`, with the top 1,000 units (about 220 KB gzipped, including source evidence). Load the `.gz` the same way `useDataset.ts` loads `dataset.json.gz`. `export.py --top N` changes the count. Re-run the pipeline to refresh it; nothing in the app retrains.
 
 ```ts
 interface AnnualForecast {
@@ -149,3 +149,19 @@ All were evaluated with the same yearly backtest unless noted.
 ## References
 
 Hauer, E., Harwood, D. W., Council, F. M., & Griffith, M. S. (2002). Estimating Safety by the Empirical Bayes Method: A Tutorial. *Transportation Research Record: Journal of the Transportation Research Board*, 1784(1), 126–131. https://doi.org/10.3141/1784-16
+
+## Integration and corrections (October 4, 2026)
+
+The app now loads the annual gzip export from a separate Annual planning mode. Exports contain unit-specific source samples and associated dashboard location IDs derived from shared source IDs. Annual and dashboard location units remain distinct.
+
+Version eb-annual-v2 uses complete calendar-year ridge training targets converted to reports per 365 days, including December 31 in leap years. Backtest/export fingerprints must match; rerun backtest after changing prepared data. The report includes last-year-count and historical-rate baselines. Current geometry and actual publication times of yearly volume data remain unverified, so year filtering alone is not a full point-in-time data guarantee.
+
+Run `python compare_short.py` for exploratory EB versus recent-count forecasts on the same annual units. This comparison does not reproduce or replace the dashboard's Poisson/type-weight models and uses already inspected 2026 windows. Run the Python tests with prepared data.
+
+## Same-unit short-model experiment
+
+`OPENBLAS_NUM_THREADS=1 .venv/bin/python compare_short.py` compares recent 90-day rate, 3-year EB, pooled temporal Poisson, and a Poisson hybrid with log EB expectation plus seasonal sin/cos. All use the same 166,574 road/intersection units and next-30-day targets. L2 is selected by expanding 2023→2024 / 2023–2024→2025 folds, then final fits use 2023–2025. Six already inspected 2026 windows are exploratory.
+
+Mean Top20 report coverage: rate33.0, EB36.7, Poisson32.8, hybrid35.7. Mean Top100: 70.7/85.3/67.8/73.2. EB has lowest deviance; the hybrid does not consistently improve on EB and has worse active-site count error than the rate baseline. The Python Poisson uses browser-like pooled temporal features, but its solver, scaling of regularization and candidate universe differ from the browser model. It is not an exact reproduction of current browser predictions.
+
+See `reports/short-model-comparison.json` for every window, metrics, folds and convergence diagnostics. Neither this comparison nor repeated 2026 exploration justifies replacing the default model. Python tests cover model, export fingerprint and short-feature boundaries. Next work: consistent browser/annual unit mapping, additional untouched periods, and a controlled negative-binomial comparison.

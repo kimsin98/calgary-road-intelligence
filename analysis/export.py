@@ -27,6 +27,8 @@ CAVEATS = [
     "Site characteristics use the current road inventory and mean weekday volume over 2016–2024 counts "
     "(2020–2021 unpublished; counts cover a minority of segments, mostly major roads).",
     "Incident geocoding changed in December 2025; intersection units (76 m) absorb most but not all of the shift.",
+    "Historical road geometry and actual publication dates of volume counts are unverified; cutoff-year filtering is not a complete point-in-time guarantee.",
+    "Weather, time of day, incident category and spatial spillover are not used.",
     "Expected reports describe where reports concentrate, not causes or the effect of an inspection.",
 ]
 
@@ -41,6 +43,11 @@ def rounded_geometry(text):
     return geometry
 
 
+def validate_backtest(backtest, inputs):
+    if backtest.get("dataFingerprint") != inputs.fingerprint():
+        raise ValueError("Data differs from backtest; rerun backtest.py before exporting")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--top", type=int, default=1000, help="number of highest-forecast units to export")
@@ -49,6 +56,7 @@ def main():
     history_years = None if backtest["selectedHistoryYears"] == "all" else backtest["selectedHistoryYears"]
 
     inputs = model.load()
+    validate_backtest(backtest, inputs)
     cutoff = inputs.last_complete
     units, ids = inputs.units, inputs.units.unit_id.to_numpy()
     eb = model.eb_forecast(inputs, cutoff, history_years, HORIZON_DAYS)
@@ -59,6 +67,14 @@ def main():
     ridge_rank[model.rank(ridge, ids)] = np.arange(1, len(ids) + 1)
     recent = inputs.counts(cutoff - timedelta(days=364), cutoff)
 
+    import pandas as pd
+    records = pd.read_parquet(model.DATA / "events.parquet")
+    records = records[(records.date >= model.history_start(cutoff, history_years).isoformat()) & (records.date <= cutoff.isoformat())]
+    dashboard_path = model.DATA.parent.parent / "public/data/dataset.json"
+    dashboard = json.loads(dashboard_path.read_text())
+    reactive_location = {e["id"]: e["location"] for e in dashboard["events"]}
+    associations = {uid: sorted({reactive_location[eid] for eid in g.id if eid in reactive_location}) for uid,g in records.groupby("unit_id")}
+    evidence = {uid:list(g.sort_values("date",ascending=False).head(5).itertuples()) for uid,g in records.groupby("unit_id")}
     rows = []
     for position, i in enumerate(model.rank(eb["expected"], ids)[: args.top], start=1):
         u = units.iloc[i]
@@ -84,12 +100,15 @@ def main():
                 "priorWeight": round(float(eb["priorWeight"][i]), 3),
                 "ridgeExpected": round(float(ridge[i]), 3),
                 "ridgeRank": int(ridge_rank[i]),
+                "relatedDashboardLocationIds": associations.get(u.unit_id, []),
+                "reportEvidence": [{"id": str(e.id), "date": str(e.date), "description": str(e.description)} for e in evidence.get(u.unit_id, [])],
             }
         )
 
     history_start = model.history_start(cutoff, history_years)
     export = {
         "version": backtest["version"],
+        "dataFingerprint": inputs.fingerprint(),
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "dataThrough": cutoff.isoformat(),
         "horizon": {"start": (cutoff + timedelta(days=1)).isoformat(),
@@ -111,7 +130,8 @@ def main():
         "backtest": {
             "summaryYears": backtest["summaryYears"],
             "summary": backtest["summary"],
-            "years": [{"year": r["year"], "total": r["total"],
+            "years": [{"year": r["year"], "total": r["total"], "scoredThrough": r["scoredThrough"],
+                       "lastYear": r["lastYear"], "historicalRate": r["historicalRate"],
                        "eb": {k: r["eb"][k] for k in ("deviance", "top20OfOracle", "top100OfOracle")},
                        "ridge": {k: r["ridge"][k] for k in ("deviance", "top20OfOracle", "top100OfOracle")}}
                       for r in backtest["years"] if "ridge" in r],

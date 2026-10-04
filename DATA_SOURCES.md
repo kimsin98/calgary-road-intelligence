@@ -52,3 +52,11 @@ Source JSON stays in `public/data` for offline analysis. Build creates level-9 g
 [Calgary terms](https://data.calgary.ca/stories/s/Open-Calgary-Terms-of-Use/u45n-7awa), [ECCC terms](https://www.canada.ca/en/environment-climate-change/corporate/transparency/terms-conditions.html), [OpenStreetMap attribution](https://www.openstreetmap.org/copyright).
 
 Report coverage and count prediction are proxies. They do not demonstrate injury prevention, causal effects, verified exposure or operational safety. Preserve provider attribution.
+
+## Annual EB data and units
+
+The separate annual pipeline uses the official incident archive from local 2017 onward, 120,567 road segments and 46,007 derived intersections. Events prefer an intersection within 76 m, otherwise a segment within 50 m. These units differ from the reactive dashboard's nearest-road/grid locations. Shared source IDs provide associations, not interchangeable location IDs.
+
+Annual traffic exposure uses City yearly volume counts from 2016–2019 and 2022–2024, restricted to count years at or before each cutoff; 2020–2021 were unpublished. Coverage is approximately 23% of segments and 33% of intersections. Actual release dates and historical road geometry remain unverified. Annual EB does not use weather, time of day or event categories. See [analysis documentation](analysis/README.md) for source preparation and limitations.
+
+The annual export carries the prepared-data fingerprint, fitted history, latest complete date, predictive intervals and source examples. Build deploys its gzip snapshot (~0.22 MB). The original starter comparison remains a 2025 provenance check and does not describe this longer archive.

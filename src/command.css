@@ -1968,3 +1968,9 @@ body:has(.admin-dashboard) > #root > footer {
   opacity: 0.45;
   cursor: default;
 }
+
+@media (max-width: 760px) {
+  .admin-sidebar {
+    overflow-x: hidden;
+  }
+}

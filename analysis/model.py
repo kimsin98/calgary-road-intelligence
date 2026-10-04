@@ -22,6 +22,7 @@ https://doi.org/10.3141/1784-16
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
+import hashlib
 
 import numpy as np
 import pandas as pd
@@ -44,6 +45,12 @@ class Inputs:
     event_unit: np.ndarray  # unit row number per event
     event_day: np.ndarray  # local date ordinal per event
     last_complete: date  # latest local date with a full day of records
+
+    def fingerprint(self):
+        digest = hashlib.sha256(pd.util.hash_pandas_object(self.units.astype(str), index=True).values.tobytes())
+        digest.update(self.event_unit.tobytes())
+        digest.update(self.event_day.tobytes())
+        return digest.hexdigest()
 
     def counts(self, start, end):
         """Reports per unit with local date in [start, end] (dates, inclusive)."""
@@ -187,10 +194,14 @@ def ridge_features(inputs, cutoff):
     return np.column_stack((np.log1p(last), np.log1p(recent), np.log1p(earlier), active))
 
 
+def annual_target_end(cutoff):
+    return date(cutoff.year + 1, 12, 31)
+
+
 def fit_ridge(inputs, training_cutoffs):
     """Train on (cutoff, next 365 days) pairs; predictions are expected reports per 365 days."""
     x = np.vstack([ridge_features(inputs, c) for c in training_cutoffs])
-    y = np.concatenate([inputs.counts(c + timedelta(days=1), c + timedelta(days=365)) for c in training_cutoffs])
+    y = np.concatenate([inputs.counts(c + timedelta(days=1), annual_target_end(c)) * 365 / (annual_target_end(c) - c).days for c in training_cutoffs])
     return PoissonRegressor(alpha=RIDGE_ALPHA, solver="newton-cholesky", max_iter=1000).fit(x, y)
 
 

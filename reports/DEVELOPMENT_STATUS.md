@@ -46,4 +46,22 @@ Future research: confirmed crashes/severity, verified traffic exposure, reviewed
 README.md, DATA_SOURCES.md and the English DEVELOPMENT_PLAN.md provide usage, provenance and the full original development plan. Latest local changes require a push before appearing in the linked Vercel deployment.
 
 
-Full regression rerun: 38 unit tests, production build, all 13 browser suites and production gzip/forecast-worker smoke check passed. `npm run test:browser` now runs the complete suite. Generated screenshots/downloads use temporary paths rather than maintained reports. Tests check application behavior; they do not establish model accuracy or operational safety.
+Full regression rerun: 38 unit tests, production build, all 14 browser suites and production gzip/forecast-worker smoke check passed. `npm run test:browser` now runs the complete suite. Generated screenshots/downloads use temporary paths rather than maintained reports. Tests check application behavior; they do not establish model accuracy or operational safety.
+
+## Annual research integration
+
+Annual planning mode loads precomputed EB forecast through gzip, with intervals, source samples, independent units and dashboard associations based on common record IDs. No cross-unit overlap percentage is claimed. Python environment installed; full archive preparation and annual backtest/export reproduced. Leap-year ridge targets corrected, data fingerprint guards exports, simple yearly-count/rate baselines added. Five Python tests pass; Node suite remains 38 passing. Annual browser loading/source evidence/navigation check passes.
+
+## Same-unit short-model experiment
+
+Six 2026 next30 windows compared recent count rate, 3-year EB, converged pooled temporal Poisson and EB+recent+seasonal Poisson on 166,574 identical annual units. Expanding 2023→2024 / 2023–2024→2025 CV selects alpha; final training uses 2023–2025. Mean Top20 33.0/36.7/32.8/35.7; mean Top100 70.7/85.3/67.8/73.2. Mean deviance .1020/.0222/.0427/.0420. Hybrid improves over Poisson in 5/6 Top20 windows but does not improve over pure EB overall. Python fits converge without warnings (2/3 final iterations). Full results and tuning folds: short-model-comparison.json.
+
+This is an exploratory offline experiment on annual units, not an exact replica of browser solver/regularization or direct evidence to replace its default. All-report targets only, 3-year EB history fixed, seasonal features limited, current geometry/publication caveats persist. Nine Python tests pass. Browser behavior was unchanged in this experiment. Further untouched evaluation and consistent location units are required before default replacement.
+
+## PR #1 closeout verification
+
+Annual integration and export corrections complete. Verification: 38 Node tests, nine Python tests, production build, and all 14 browser suites pass (the dashboard mobile case passed after correcting sidebar overflow). Production preview confirms native and fallback annual gzip decoding, JSON export, four-model backtest columns and gzip-only data delivery. MapLibre remains a separately loaded large chunk and produces a non-failing size warning.
+
+Python dependencies are pinned to the reproduced environment. Stale preliminary short-comparison output was removed in favour of the six-window report. Annual mode shows scored-through dates and last-year/historical-rate baselines. Data provenance documents current-geometry, volume release-date and junction-assignment limitations; these require external/manual validation and are not marked resolved.
+
+Pure EB remains the annual method. The short-term default is retained: EB wins several exploratory aggregate metrics but not every window or active-site error, and the Python comparison is not an exact browser-model replication. Seven-day evaluation, tuned EB history, consistent units and later uninspected validation remain explicit research gates before replacement.

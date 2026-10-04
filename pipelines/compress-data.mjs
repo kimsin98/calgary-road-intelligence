@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {gzipSync} from 'node:zlib';
-for(const name of ['dataset','weather']) {
+for(const name of ['dataset','weather','forecast-annual']) {
  const raw=fs.readFileSync(`public/data/${name}.json`);
  const zipped=gzipSync(raw,{level:9});
  fs.writeFileSync(`public/data/${name}.json.gz`,zipped);

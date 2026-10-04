@@ -83,10 +83,16 @@ npm run compress:data
 
 Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 13 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 14 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
 ## Interpretation and attribution
 
 This prioritizes reported disruptions for review. It does not establish fewer crashes, verified severity, road safety or causal weather effects. Text-derived categories, incomplete reporting, current road geometry, ambiguous junction/parallel matches and unverified traffic exposure limit conclusions. Candidate locations must be known at each forecast cutoff; later reports at unseen locations are reported separately.
 
 Sources: City of Calgary Traffic Incidents, Street Centreline and Traffic Volumes 2024; ECCC CALGARY INTL A; OpenFreeMap/OpenMapTiles/OpenStreetMap; optional Google Fonts. Hackathon context comes from [industry-hackathon-lab](https://github.com/nagusubra/industry-hackathon-lab). Snow-route reference, voice narration, LLM integration and live ingestion remain future work.
+
+## Annual planning research
+
+Forward outlook now includes **Annual · 12 months**, a precomputed Empirical Bayes outlook on an independent full road/intersection inventory. It displays expected reports, 90% predictive intervals, prior/history contributions and unit-specific source examples. Shared source IDs link annual units to dashboard locations; they are not interchangeable units or directly comparable Top20 populations. Annual mode ignores weather/time/type controls. See [analysis/README.md](analysis/README.md) for the offline Python workflow.
+
+The annual pipeline now normalizes complete calendar-year ridge targets to 365-day rates (including leap years) and validates dataset fingerprints before export. Updated backtests include last-year counts and historical-rate baselines. Current road inventory and volume release-time limitations remain. Same-unit short-horizon EB comparisons are exploratory, not proof the short-term model should be replaced.

@@ -1,10 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { Map, GeoJSONSource } from "maplibre-gl";
 import type { FeatureCollection, Point } from "geojson";
-import type { ForecastResult } from "../domain/types";
+export interface ForecastMapInput {
+  historyLabel?: string;
+  cutoff: string;
+  end: string;
+  objective: "all" | "collision";
+  top: { id: string }[];
+  rows: {
+    id: string;
+    name: string;
+    lon: number;
+    lat: number;
+    predicted: number;
+    count: number;
+  }[];
+}
 
 /** Isolated forecast layer: no playback, reactive filters or future outcomes. */
-export function ForecastMap({ result }: { result: ForecastResult }) {
+export function ForecastMap({ result }: { result: ForecastMapInput }) {
   const container = useRef<HTMLDivElement>(null);
   const shell = useRef<HTMLElement>(null);
   const map = useRef<Map | null>(null);
@@ -146,7 +160,7 @@ export function ForecastMap({ result }: { result: ForecastResult }) {
       {opened && (
         <p className="notice">
           {location
-            ? `${location.name} · ${location.predicted.toFixed(2)} expected reports · ${location.count} reports in past 90 days`
+            ? `${location.name} · ${location.predicted.toFixed(2)} expected reports · ${location.count} reports in ${result.historyLabel ?? "past 90 days"}`
             : "Click a point to inspect its forecast. Colours show model shortlist membership; observed future outcomes are excluded from this preview."}
         </p>
       )}

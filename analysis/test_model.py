@@ -46,3 +46,18 @@ def test_forecasts_ignore_events_after_cutoff(inputs):
     assert np.allclose(model.eb_forecast(inputs, cutoff, 3, 365)["expected"],
                        model.eb_forecast(past, cutoff, 3, 365)["expected"])
     assert np.allclose(model.ridge_features(inputs, cutoff), model.ridge_features(past, cutoff))
+
+
+def test_annual_target_includes_leap_year_end():
+    assert model.annual_target_end(date(2023, 12, 31)) == date(2024, 12, 31)
+    assert (model.annual_target_end(date(2023, 12, 31)) - date(2023, 12, 31)).days == 366
+
+
+def test_export_rejects_stale_or_missing_fingerprint():
+    from export import validate_backtest
+    from types import SimpleNamespace
+    inputs = SimpleNamespace(fingerprint=lambda: "current")
+    validate_backtest({"dataFingerprint": "current"}, inputs)
+    for report in ({}, {"dataFingerprint": "stale"}):
+        with pytest.raises(ValueError, match="rerun backtest"):
+            validate_backtest(report, inputs)

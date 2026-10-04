@@ -366,3 +366,9 @@ Validation: calculate at multiple cutoffs using earlier records, then measure su
 Historical coverage is limited, reporting incomplete, injury/severity information absent, road associations ambiguous and airport weather unrepresentative of individual roads. Forward indicators are not validated crash probabilities, ice predictions or safety promises.
 
 Future improvements: multi-year records with consistent time conventions, confirmed collision/severity data, better intersection aggregation, matching traffic exposure and forecasts available at prediction time. Assess practical value through additional independent periods and road-operations feedback.
+
+## 17. Annual EB Integration and Model Replacement Gate
+
+Provide a separate precomputed 12-month Empirical Bayes outlook following PR #1: use the full road/intersection inventory, site-only SPF, shrinkage, uncertainty and source evidence. Keep its units distinct from reactive locations, compare against ridge, last-year counts and historical rates, and expose partial-year evaluation dates. Reproduce offline fits with pinned dependencies and reject exports whose prepared-data fingerprint differs from the backtest.
+
+Retain the short-term model until controlled comparisons support replacement. Evaluate pure EB on identical units at 7- and 30-day horizons, select history windows using earlier expanding-year folds, and freeze the protocol before evaluating later uninspected periods. Report Top20/Top100 coverage, count calibration and active-site error, including losses. Existing repeatedly inspected 2026 experiments are exploratory. Verify historical geometry, volume publication dates and junction assignments before claiming operational or fully point-in-time validation.

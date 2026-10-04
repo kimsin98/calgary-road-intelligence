@@ -7,7 +7,7 @@ export default defineConfig({
       name: "compressed-snapshot-output",
       closeBundle() {
         /* public files are copied before closeBundle */
-        for (const name of ["dataset", "weather"]) {
+        for (const name of ["dataset", "weather", "forecast-annual"]) {
           const file = "dist/data/" + name + ".json";
           if (existsSync(file)) unlinkSync(file);
         }
