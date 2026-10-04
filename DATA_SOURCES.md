@@ -60,3 +60,7 @@ The separate annual pipeline uses the official incident archive from local 2017 
 Annual traffic exposure uses City yearly volume counts from 2016–2019 and 2022–2024, restricted to count years at or before each cutoff; 2020–2021 were unpublished. Coverage is approximately 23% of segments and 33% of intersections. Actual release dates and historical road geometry remain unverified. Annual EB does not use weather, time of day or event categories. See [analysis documentation](analysis/README.md) for source preparation and limitations.
 
 The annual export carries the prepared-data fingerprint, fitted history, latest complete date, predictive intervals and source examples. Build deploys its gzip snapshot (~0.22 MB). The original starter comparison remains a 2025 provenance check and does not describe this longer archive.
+
+## Thirty-day EB snapshot
+
+`forecast-eb30.json.gz` (~0.94 MB) contains six replay cutoffs and the latest complete-date next30 forecast on the annual pipeline's 166,574 units. It uses fixed three-year pooled-report history and the same site SPF/exposure restrictions. It contains independent source samples and does not inherit reactive categories, weather filters or learned type weights. Only the top 1,000 predictions are shipped for each cutoff; evaluation totals and baseline coverage are computed over the complete inventory. Future outcomes are null.

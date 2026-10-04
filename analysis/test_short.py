@@ -25,3 +25,14 @@ def test_metrics_distinguish_sparse_and_active_errors():
 def test_training_windows_finish_inside_year():
     from datetime import timedelta
     assert all((c+timedelta(days=30)).year==c.year for c in windows(2024))
+
+
+def test_seven_day_target_and_rate_scale():
+    from compare_short import target_and_rate
+    cutoff = date(2026, 3, 31)
+    offsets = [0, 89, 90, -1, -7, -8]
+    inputs = model.Inputs(pd.DataFrame({'unit_id': ['a']}), np.zeros(len(offsets), dtype=int),
+                          np.array([cutoff.toordinal()-d for d in offsets]), cutoff)
+    actual, rate = target_and_rate(inputs, cutoff, 7)
+    assert actual[0] == 2
+    assert rate[0] == 2 * 7 / 90

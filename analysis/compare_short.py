@@ -1,4 +1,5 @@
 """Same-unit short-model experiment; 2026 results are exploratory, not untouched tests."""
+import argparse
 import json
 from datetime import date, timedelta
 import warnings
@@ -7,7 +8,6 @@ from sklearn.linear_model import PoissonRegressor
 from sklearn.exceptions import ConvergenceWarning
 import model
 
-HORIZON = 30
 ALPHAS = (.001, .01, .1, 1.)
 
 
@@ -41,18 +41,28 @@ def fit(x,y,alpha):
     return fitted, {'iterations':int(fitted.n_iter_), 'convergenceWarning':any(issubclass(w.category,ConvergenceWarning) for w in caught)}
 
 
+def target_and_rate(inputs, cutoff, horizon):
+    actual = inputs.counts(cutoff + timedelta(days=1), cutoff + timedelta(days=horizon))
+    rate = inputs.counts(cutoff - timedelta(days=89), cutoff) * horizon / 90
+    return actual, rate
+
+
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--horizon', type=int, choices=(7, 30), default=30)
+    args = parser.parse_args()
+    horizon = args.horizon
     inputs=model.load();ids=inputs.units.unit_id.to_numpy()
     training=windows(2023)+windows(2024)+windows(2025)
     testing=[date(2026,m,d) for m,d in [(1,31),(3,31),(5,31),(6,30),(7,31),(8,31)]]
     cache={}
     for cutoff in training+testing:
-        eb=model.eb_forecast(inputs,cutoff,3,HORIZON)['expected']
+        eb=model.eb_forecast(inputs,cutoff,3,horizon)['expected']
         x=features(inputs,cutoff)
         season=[np.sin(2*np.pi*cutoff.timetuple().tm_yday/365.25),np.cos(2*np.pi*cutoff.timetuple().tm_yday/365.25)]
         hybrid=np.column_stack([x,np.log1p(eb),np.tile(season,(len(x),1))])
-        cache[cutoff]={'x':x,'hybrid':hybrid,'eb':eb,'y':inputs.counts(cutoff+timedelta(days=1),cutoff+timedelta(days=HORIZON)),
-                       'rate':inputs.counts(cutoff-timedelta(days=89),cutoff)/3}
+        actual, rate = target_and_rate(inputs, cutoff, horizon)
+        cache[cutoff]={'x':x,'hybrid':hybrid,'eb':eb,'y':actual, 'rate':rate}
         print('Prepared',cutoff,flush=True)
     results={};selection={}
     for name,key in [('poisson','x'),('ebRecentSeason','hybrid')]:
@@ -74,12 +84,12 @@ def main():
         print('Fitted',name,chosen['alpha'],flush=True)
     rows=[]
     for i,c in enumerate(testing):
-        row={'cutoff':c.isoformat(),'end':(c+timedelta(days=30)).isoformat(),
+        row={'cutoff':c.isoformat(),'end':(c+timedelta(days=horizon)).isoformat(),
              'rate':metrics(cache[c]['y'],cache[c]['rate'],ids),'eb':metrics(cache[c]['y'],cache[c]['eb'],ids),
              **{name:scores[i] for name,scores in results.items()}}
         rows.append(row)
         print(c,{k:v['top20'] for k,v in row.items() if isinstance(v,dict)},flush=True)
-    report={'experimental':True,'dataFingerprint':inputs.fingerprint(),'sameUnits':True,'units':len(ids),'horizonDays':30,
+    report={'experimental':True,'dataFingerprint':inputs.fingerprint(),'sameUnits':True,'units':len(ids),'horizonDays':horizon,
             'selectionMetric':'Equal-fold mean per-window Poisson deviance; no 2026 selection',
             'caveats':['Current geometry and volume publication-time limitations remain.',
                        'This reproduces pooled temporal Poisson features on annual units, not the browser fit/penalty.',
@@ -87,6 +97,11 @@ def main():
                        '2026 has been inspected repeatedly; results are exploratory. EB history fixed at 3 years, not tuned here.',
                        'All reports pooled; no collision-type weighting. Seasonal effects have only two validation years.'],
             'selection':selection,'results':rows}
-    (model.DATA.parent.parent/'reports/short-model-comparison.json').write_text(json.dumps(report,indent=2))
+    report['summary'] = {name: {metric: float(np.mean([r[name][metric] for r in rows]))
+                        for metric in ('top20', 'top100', 'deviance', 'mae', 'activeSiteMAE', 'expected', 'observed')}
+                        for name in ('rate', 'eb', 'poisson', 'ebRecentSeason')}
+    filename = 'short-model-comparison.json' if horizon == 30 else 'short-model-comparison-7.json'
+    (model.DATA.parent.parent/'reports'/filename).write_text(json.dumps(report,indent=2))
+    print(json.dumps(report['summary'], indent=2), flush=True)
 
 if __name__=='__main__':main()

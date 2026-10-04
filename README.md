@@ -56,14 +56,14 @@ Forward outlook has two independent controls:
 
 Equal mode pools report types in historical temporal features. Learned mode fits ten type-specific features: `log(1 + count)` for five categories over days 1–30 and 31–90. Both predict the selected target; a collision-related target does not imply confirmed crashes or injury risk.
 
-The ridge-regularized Poisson model predicts expected report counts for the next **7 or 30 days**, then ranks locations. Learned coefficients and transformed-input rate multipliers describe predictive associations, not per-event importance or causal effects.
+The next **7 days** uses ridge-regularized Poisson; the next **30 days** uses precomputed pure Empirical Bayes on separate full-inventory units. Both rank expected report activity. Learned coefficients and transformed-input rate multipliers describe predictive associations, not per-event importance or causal effects.
 
 - **Historical backtest:** choose a 2026 cutoff with a fully observed forecast window. Later outcomes are revealed explicitly.
 - **Future forecast:** cutoff is fixed to the latest dataset date, currently October 3, 2026. No future observed counts or accuracy metrics are fabricated.
 - **Time cross-validation:** train 2023 → validate 2024; train 2023–2024 → validate 2025. Each validation year has four rolling forecast windows. Select L2 strength from 0.001, 0.01, 0.1 and 1 using mean Poisson deviance, then refit on quarterly 2023–2025 windows. **2026 never selects parameters.**
 - Forecast map, historical shortlist comparison, separate JSON export, rate baseline, equal-weight shortlist coverage, MAE, deviance and calibration totals.
 
-This is rolling next-week/next-month prediction within the next year, **not a one-shot annual forecast**. Future weather is excluded. Models can reach the 600-iteration limit; diagnostics remain visible. Neither model has demonstrated consistent superiority over simple historical baselines. See [current status](reports/DEVELOPMENT_STATUS.md) for evaluation files and limits.
+The Poisson training protocol simulates rolling next-week forecasts within the next year, **not a one-shot annual forecast**. The separate EB30 snapshot uses fixed three-year history. Future weather is excluded. Models can reach the 600-iteration limit; diagnostics remain visible. Neither model has demonstrated consistent superiority over simple historical baselines. See [current status](reports/DEVELOPMENT_STATUS.md) for evaluation files and limits.
 
 ## Deployment
 
@@ -83,7 +83,7 @@ npm run compress:data
 
 Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 14 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 15 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
 ## Interpretation and attribution
 
@@ -96,3 +96,9 @@ Sources: City of Calgary Traffic Incidents, Street Centreline and Traffic Volume
 Forward outlook now includes **Annual · 12 months**, a precomputed Empirical Bayes outlook on an independent full road/intersection inventory. It displays expected reports, 90% predictive intervals, prior/history contributions and unit-specific source examples. Shared source IDs link annual units to dashboard locations; they are not interchangeable units or directly comparable Top20 populations. Annual mode ignores weather/time/type controls. See [analysis/README.md](analysis/README.md) for the offline Python workflow.
 
 The annual pipeline now normalizes complete calendar-year ridge targets to 365-day rates (including leap years) and validates dataset fingerprints before export. Updated backtests include last-year counts and historical-rate baselines. Current road inventory and volume release-time limitations remain. Same-unit short-horizon EB comparisons are exploratory, not proof the short-term model should be replaced.
+
+## Thirty-day EB default
+
+The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export_short.py` on the same full-inventory road/intersection units as the comparison. Three-year history is fixed, not tuned; all report types are pooled. Six historical cutoffs and a latest-complete-date future forecast are exported to `public/data/forecast-eb30.json.gz`. Future outcomes are null. Refresh the offline pipeline to add cutoffs or newer data.
+
+Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.

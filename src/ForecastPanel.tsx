@@ -1,3 +1,4 @@
+import { EBForecastPanel } from "./EBForecastPanel";
 import { AnnualForecastPanel } from "./AnnualForecastPanel";
 import type { Dataset, ForecastInput, ForecastResult } from "./domain/types";
 import { ForecastMap } from "./components/ForecastMap";
@@ -77,6 +78,8 @@ export function ForecastPanel({
       </div>
       {view === "annual" ? (
         <AnnualForecastPanel />
+      ) : horizon === 30 ? (
+        <EBForecastPanel onSeven={() => setHorizon(7)} />
       ) : (
         <div className="decision-panel">
           <div className="decision-heading">

@@ -17,7 +17,7 @@ Ranking combines frequency, 30-day growth and recurring dates. Equal event weigh
 
 Automatic priority-mix search uses six 2023–2025 windows and independently checks July 2026 outcomes. Historical evaluation uses March/May/July 2026 cutoffs.
 
-## Forecast Workflow
+## Seven-day Poisson Workflow
 
 Separate historical backtest and future forecast modes. Targets: all reports or collision-related reports. Weighting: equal event types or learned type contributions (experimental). Equal mode pools temporal count features; learned mode uses ten log-count features across five categories and two history bins. Coefficients are predictive associations, not per-event importance or causal effects.
 
@@ -65,3 +65,15 @@ Annual integration and export corrections complete. Verification: 38 Node tests,
 Python dependencies are pinned to the reproduced environment. Stale preliminary short-comparison output was removed in favour of the six-window report. Annual mode shows scored-through dates and last-year/historical-rate baselines. Data provenance documents current-geometry, volume release-date and junction-assignment limitations; these require external/manual validation and are not marked resolved.
 
 Pure EB remains the annual method. The short-term default is retained: EB wins several exploratory aggregate metrics but not every window or active-site error, and the Python comparison is not an exact browser-model replication. Seven-day evaluation, tuned EB history, consistent units and later uninspected validation remain explicit research gates before replacement.
+
+## Seven-day EB validation
+
+Same units, cutoffs and expanding-year CV as the 30-day experiment; report `short-model-comparison-7.json`. Mean Top20 rate/EB/Poisson/hybrid: 6.17/5.83/5.83/6.00; Top100: 14.17/18.33/13.17/15.00. EB has lowest deviance (0.00790), but does not win Top20 and underpredicts totals by approximately 11%. Active-site MAE favours recent rate (0.981 vs EB 1.002). Both fitted models converge with alpha 0.001. Ten Python tests pass, including seven-day outcome boundaries and rate scaling. No frontend/default-model change; these are exploratory windows, not exact browser-model predictions or prospective validation.
+
+## Thirty-day EB default (supersedes earlier replacement gate)
+
+The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export_short.py` on the same full-inventory road/intersection units as the comparison. Three-year history is fixed, not tuned; all report types are pooled. Six historical cutoffs and a latest-complete-date future forecast are exported to `public/data/forecast-eb30.json.gz`. Future outcomes are null. Refresh the offline pipeline to add cutoffs or newer data.
+
+Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.
+
+EB30 integration verification: 38 Node tests, 11 Python tests, production build and all 15 browser suites passed (the general browser suite was rerun after narrowing its duplicate-date locator). Production preview also passed EB30 fallback gzip decoding. Exported backtest Top20/deviance matches the same-unit comparison; future rows and evaluation remain null. No change to seven-day or historical ranking algorithms.

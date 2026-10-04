@@ -1,0 +1,563 @@
+{
+  "experimental": true,
+  "dataFingerprint": "8c215768ddcc79a59ca7eaa8ab836c2a1582e2bb8b711c1b150e8d3fbfb9e70f",
+  "sameUnits": true,
+  "units": 166574,
+  "horizonDays": 7,
+  "selectionMetric": "Equal-fold mean per-window Poisson deviance; no 2026 selection",
+  "caveats": [
+    "Current geometry and volume publication-time limitations remain.",
+    "This reproduces pooled temporal Poisson features on annual units, not the browser fit/penalty.",
+    "Hybrid jointly learns temporal signals, log EB expectation and seasonal sin/cos; not a fixed EB offset.",
+    "2026 has been inspected repeatedly; results are exploratory. EB history fixed at 3 years, not tuned here.",
+    "All reports pooled; no collision-type weighting. Seasonal effects have only two validation years."
+  ],
+  "selection": {
+    "poisson": {
+      "selectedAlpha": 0.001,
+      "trials": [
+        {
+          "alpha": 0.001,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.01105311780619684,
+              "top20Mean": 4.5
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.01291356411342539,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.011983340959811115
+        },
+        {
+          "alpha": 0.01,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011141208811720375,
+              "top20Mean": 4.5
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.013001902323042321,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.012071555567381348
+        },
+        {
+          "alpha": 0.1,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011150063373301978,
+              "top20Mean": 4.5
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.013010780307006059,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.012080421840154018
+        },
+        {
+          "alpha": 1.0,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 1,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011150949243022918,
+              "top20Mean": 4.5
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 1,
+                "convergenceWarning": false
+              },
+              "deviance": 0.013011668510507134,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.012081308876765026
+        }
+      ],
+      "finalDiagnostics": {
+        "iterations": 2,
+        "convergenceWarning": false
+      }
+    },
+    "ebRecentSeason": {
+      "selectedAlpha": 0.001,
+      "trials": [
+        {
+          "alpha": 0.001,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011036461076040624,
+              "top20Mean": 4.75
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.012905928247333288,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.011971194661686956
+        },
+        {
+          "alpha": 0.01,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011138477492143329,
+              "top20Mean": 4.75
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.013000379002929644,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.012069428247536486
+        },
+        {
+          "alpha": 0.1,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011149771696412273,
+              "top20Mean": 4.75
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 2,
+                "convergenceWarning": false
+              },
+              "deviance": 0.01301061432255353,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.0120801930094829
+        },
+        {
+          "alpha": 1.0,
+          "folds": [
+            {
+              "trainYears": [
+                2023
+              ],
+              "validationYear": 2024,
+              "diagnostics": {
+                "iterations": 1,
+                "convergenceWarning": false
+              },
+              "deviance": 0.011150919877262333,
+              "top20Mean": 4.75
+            },
+            {
+              "trainYears": [
+                2023,
+                2024
+              ],
+              "validationYear": 2025,
+              "diagnostics": {
+                "iterations": 1,
+                "convergenceWarning": false
+              },
+              "deviance": 0.013011651764392021,
+              "top20Mean": 5.75
+            }
+          ],
+          "deviance": 0.012081285820827178
+        }
+      ],
+      "finalDiagnostics": {
+        "iterations": 2,
+        "convergenceWarning": false
+      }
+    }
+  },
+  "results": [
+    {
+      "cutoff": "2026-01-31",
+      "end": "2026-02-07",
+      "rate": {
+        "deviance": 0.023067048898645835,
+        "mae": 0.0017897284223361521,
+        "activeSiteMAE": 1.0067901234567902,
+        "expected": 177.41111111111113,
+        "observed": 133,
+        "top20": 2,
+        "top100": 6
+      },
+      "eb": {
+        "deviance": 0.007092419324392231,
+        "mae": 0.0015841651256995326,
+        "activeSiteMAE": 1.0240518747050082,
+        "expected": 138.81964922261184,
+        "observed": 133,
+        "top20": 2,
+        "top100": 10
+      },
+      "poisson": {
+        "deviance": 0.011420339091128303,
+        "mae": 0.0016378783159789057,
+        "activeSiteMAE": 1.0546607749784038,
+        "expected": 140.0534273113126,
+        "observed": 133,
+        "top20": 2,
+        "top100": 7
+      },
+      "ebRecentSeason": {
+        "deviance": 0.011418847187215017,
+        "mae": 0.0016407877163696447,
+        "activeSiteMAE": 1.0546565705241666,
+        "expected": 140.53911729446725,
+        "observed": 133,
+        "top20": 2,
+        "top100": 9
+      }
+    },
+    {
+      "cutoff": "2026-03-31",
+      "end": "2026-04-07",
+      "rate": {
+        "deviance": 0.02861384504536367,
+        "mae": 0.0018478273920299684,
+        "activeSiteMAE": 0.9894986449864498,
+        "expected": 155.24444444444447,
+        "observed": 172,
+        "top20": 7,
+        "top100": 15
+      },
+      "eb": {
+        "deviance": 0.00892301547990649,
+        "mae": 0.0018057008700137155,
+        "activeSiteMAE": 1.0126986734058376,
+        "expected": 140.6176518445499,
+        "observed": 172,
+        "top20": 4,
+        "top100": 18
+      },
+      "poisson": {
+        "deviance": 0.01424898415247736,
+        "mae": 0.0018713742097393401,
+        "activeSiteMAE": 1.0478798731776797,
+        "expected": 140.017689210842,
+        "observed": 172,
+        "top20": 4,
+        "top100": 13
+      },
+      "ebRecentSeason": {
+        "deviance": 0.01427355763361977,
+        "mae": 0.0018206191360588002,
+        "activeSiteMAE": 1.0479331814282444,
+        "expected": 131.5457284613944,
+        "observed": 172,
+        "top20": 4,
+        "top100": 13
+      }
+    },
+    {
+      "cutoff": "2026-05-31",
+      "end": "2026-06-07",
+      "rate": {
+        "deviance": 0.026794155987906798,
+        "mae": 0.0018422242766978445,
+        "activeSiteMAE": 0.9778451178451177,
+        "expected": 156.17777777777778,
+        "observed": 172,
+        "top20": 9,
+        "top100": 18
+      },
+      "eb": {
+        "deviance": 0.008313559306467724,
+        "mae": 0.0018020021485238124,
+        "activeSiteMAE": 0.9989004590882594,
+        "expected": 142.5295543890799,
+        "observed": 172,
+        "top20": 7,
+        "top100": 19
+      },
+      "poisson": {
+        "deviance": 0.014205733403150709,
+        "mae": 0.0018713803451754201,
+        "activeSiteMAE": 1.041515165701932,
+        "expected": 140.02330493561297,
+        "observed": 172,
+        "top20": 10,
+        "top100": 20
+      },
+      "ebRecentSeason": {
+        "deviance": 0.01423587864539894,
+        "mae": 0.0018106895612380156,
+        "activeSiteMAE": 1.041579505684938,
+        "expected": 129.89256609763174,
+        "observed": 172,
+        "top20": 10,
+        "top100": 21
+      }
+    },
+    {
+      "cutoff": "2026-06-30",
+      "end": "2026-07-07",
+      "rate": {
+        "deviance": 0.028908008298882792,
+        "mae": 0.0018760430799524535,
+        "activeSiteMAE": 0.9843809523809526,
+        "expected": 150.96666666666667,
+        "observed": 183,
+        "top20": 6,
+        "top100": 18
+      },
+      "eb": {
+        "deviance": 0.008510414422691872,
+        "mae": 0.0018615875843410903,
+        "activeSiteMAE": 1.0009464384469229,
+        "expected": 142.76083681760971,
+        "observed": 183,
+        "top20": 9,
+        "top100": 24
+      },
+      "poisson": {
+        "deviance": 0.015029137972101498,
+        "mae": 0.0019372762724963236,
+        "activeSiteMAE": 1.044815021202291,
+        "expected": 140.01460039400064,
+        "observed": 183,
+        "top20": 6,
+        "top100": 15
+      },
+      "ebRecentSeason": {
+        "deviance": 0.015055475117372031,
+        "mae": 0.0018931947682807755,
+        "activeSiteMAE": 1.0448608053561907,
+        "expected": 132.65574345693517,
+        "observed": 183,
+        "top20": 7,
+        "top100": 18
+      }
+    },
+    {
+      "cutoff": "2026-07-31",
+      "end": "2026-08-07",
+      "rate": {
+        "deviance": 0.023822422848892452,
+        "mae": 0.0017140196615985156,
+        "activeSiteMAE": 0.9852895148669796,
+        "expected": 155.7111111111111,
+        "observed": 150,
+        "top20": 6,
+        "top100": 14
+      },
+      "eb": {
+        "deviance": 0.007379860266980663,
+        "mae": 0.0016700129444534044,
+        "activeSiteMAE": 1.0028625787428038,
+        "expected": 143.3677638464251,
+        "observed": 150,
+        "top20": 9,
+        "top100": 19
+      },
+      "poisson": {
+        "deviance": 0.012637472943269612,
+        "mae": 0.0017395190583713747,
+        "activeSiteMAE": 1.0554311489136334,
+        "expected": 140.01620133768154,
+        "observed": 150,
+        "top20": 7,
+        "top100": 13
+      },
+      "ebRecentSeason": {
+        "deviance": 0.012636750336705143,
+        "mae": 0.0017233932371894685,
+        "activeSiteMAE": 1.0554466878202031,
+        "expected": 137.3256457506609,
+        "observed": 150,
+        "top20": 7,
+        "top100": 14
+      }
+    },
+    {
+      "cutoff": "2026-08-31",
+      "end": "2026-09-07",
+      "rate": {
+        "deviance": 0.021853897608378862,
+        "mae": 0.0016634582161014855,
+        "activeSiteMAE": 0.9447619047619047,
+        "expected": 155.55555555555557,
+        "observed": 143,
+        "top20": 7,
+        "top100": 14
+      },
+      "eb": {
+        "deviance": 0.0071935412594439025,
+        "mae": 0.0016410211068757672,
+        "activeSiteMAE": 0.972605070720664,
+        "expected": 144.02203005493806,
+        "observed": 143,
+        "top20": 4,
+        "top100": 20
+      },
+      "poisson": {
+        "deviance": 0.012039334589648298,
+        "mae": 0.0016975195533925455,
+        "activeSiteMAE": 1.0205119452450084,
+        "expected": 140.01927741820757,
+        "observed": 143,
+        "top20": 6,
+        "top100": 11
+      },
+      "ebRecentSeason": {
+        "deviance": 0.012036111095006172,
+        "mae": 0.0017132996454761267,
+        "activeSiteMAE": 1.0204929051033214,
+        "expected": 142.65316171661038,
+        "observed": 143,
+        "top20": 6,
+        "top100": 15
+      }
+    }
+  ],
+  "summary": {
+    "rate": {
+      "top20": 6.166666666666667,
+      "top100": 14.166666666666666,
+      "deviance": 0.025509896448011733,
+      "mae": 0.0017888835081194031,
+      "activeSiteMAE": 0.9814277097163657,
+      "expected": 158.51111111111112,
+      "observed": 158.83333333333334
+    },
+    "eb": {
+      "top20": 5.833333333333333,
+      "top100": 18.333333333333332,
+      "deviance": 0.007902135009980481,
+      "mae": 0.0017274149633178873,
+      "activeSiteMAE": 1.002010849184916,
+      "expected": 142.0195810292024,
+      "observed": 158.83333333333334
+    },
+    "poisson": {
+      "top20": 5.833333333333333,
+      "top100": 13.166666666666666,
+      "deviance": 0.013263500358629297,
+      "mae": 0.0017924912925256515,
+      "activeSiteMAE": 1.0441356548698248,
+      "expected": 140.02408343460954,
+      "observed": 158.83333333333334
+    },
+    "ebRecentSeason": {
+      "top20": 6.0,
+      "top100": 15.0,
+      "deviance": 0.013276103335886177,
+      "mae": 0.0017669973441021387,
+      "activeSiteMAE": 1.0441616093195107,
+      "expected": 135.76866046294995,
+      "observed": 158.83333333333334
+    }
+  }
+}

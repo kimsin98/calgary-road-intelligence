@@ -372,3 +372,7 @@ Future improvements: multi-year records with consistent time conventions, confir
 Provide a separate precomputed 12-month Empirical Bayes outlook following PR #1: use the full road/intersection inventory, site-only SPF, shrinkage, uncertainty and source evidence. Keep its units distinct from reactive locations, compare against ridge, last-year counts and historical rates, and expose partial-year evaluation dates. Reproduce offline fits with pinned dependencies and reject exports whose prepared-data fingerprint differs from the backtest.
 
 Retain the short-term model until controlled comparisons support replacement. Evaluate pure EB on identical units at 7- and 30-day horizons, select history windows using earlier expanding-year folds, and freeze the protocol before evaluating later uninspected periods. Report Top20/Top100 coverage, count calibration and active-site error, including losses. Existing repeatedly inspected 2026 experiments are exploratory. Verify historical geometry, volume publication dates and junction assignments before claiming operational or fully point-in-time validation.
+
+### Thirty-day product decision
+
+Use precomputed pure EB for next30 on the validated full-inventory unit definition, with six replay cutoffs and latest-complete-date future output. Retain seven-day Poisson separately. State pooled types, fixed three-year history and exploratory evidence; preserve source evidence and intervals. Further tuning and prospective validation remain required before claims of reliable improvement.

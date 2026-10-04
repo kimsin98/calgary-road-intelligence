@@ -165,3 +165,15 @@ Run `python compare_short.py` for exploratory EB versus recent-count forecasts o
 Mean Top20 report coverage: rate33.0, EB36.7, Poisson32.8, hybrid35.7. Mean Top100: 70.7/85.3/67.8/73.2. EB has lowest deviance; the hybrid does not consistently improve on EB and has worse active-site count error than the rate baseline. The Python Poisson uses browser-like pooled temporal features, but its solver, scaling of regularization and candidate universe differ from the browser model. It is not an exact reproduction of current browser predictions.
 
 See `reports/short-model-comparison.json` for every window, metrics, folds and convergence diagnostics. Neither this comparison nor repeated 2026 exploration justifies replacing the default model. Python tests cover model, export fingerprint and short-feature boundaries. Next work: consistent browser/annual unit mapping, additional untouched periods, and a controlled negative-binomial comparison.
+
+## Seven-day comparison
+
+Run `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python compare_short.py --horizon 7`; the default remains 30 days and retains its existing output path. Seven-day targets exclude the cutoff and include day seven; the 90-day baseline scales by 7/90. Report: `reports/short-model-comparison-7.json`.
+
+Across the same six exploratory 2026 cutoffs, mean Top20 coverage for rate/EB/Poisson/hybrid is 6.17/5.83/5.83/6.00; Top100 is 14.17/18.33/13.17/15.00. EB has lowest deviance (0.00790) and all-site MAE, but loses Top20 to the rate baseline and hybrid, and has worse active-site error than the rate baseline. EB predicts 142 reports per window versus 159 observed, approximately 11% low in aggregate. Poisson and hybrid select alpha 0.001 and converge without warnings. These sparse, repeatedly inspected windows do not support replacing the seven-day default.
+
+## Thirty-day EB default
+
+The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export_short.py` on the same full-inventory road/intersection units as the comparison. Three-year history is fixed, not tuned; all report types are pooled. Six historical cutoffs and a latest-complete-date future forecast are exported to `public/data/forecast-eb30.json.gz`. Future outcomes are null. Refresh the offline pipeline to add cutoffs or newer data.
+
+Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.
