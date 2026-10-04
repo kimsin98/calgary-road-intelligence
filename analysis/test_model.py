@@ -46,3 +46,14 @@ def test_forecasts_ignore_events_after_cutoff(inputs):
     assert np.allclose(model.eb_forecast(inputs, cutoff, 3, 365)["expected"],
                        model.eb_forecast(past, cutoff, 3, 365)["expected"])
     assert np.allclose(model.ridge_features(inputs, cutoff), model.ridge_features(past, cutoff))
+
+
+def test_asset_features_only_count_installs_by_cutoff(inputs):
+    signals = inputs.asset_type == "signal"
+    late = signals & (inputs.asset_day > date(2020, 12, 31).toordinal())
+    assert late.any(), "expected some signals installed after 2020"
+    before, after = inputs.assets_at("signal", date(2020, 12, 31)), inputs.assets_at("signal", date(2026, 1, 1))
+    assert before.sum() < after.sum()
+    assert np.array_equal(before, np.bincount(inputs.asset_unit[signals & ~late], minlength=len(inputs.units)))
+    undated = inputs.asset_type == "crosswalk"
+    assert inputs.assets_at("crosswalk", model.FIRST_DATE).sum() == undated.sum()

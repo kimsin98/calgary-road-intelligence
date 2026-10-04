@@ -58,6 +58,8 @@ def main():
     ridge_rank = np.empty(len(ids), int)
     ridge_rank[model.rank(ridge, ids)] = np.arange(1, len(ids) + 1)
     recent = inputs.counts(cutoff - timedelta(days=364), cutoff)
+    assets = {name: inputs.assets_at(name, cutoff) for name in
+              ("signal", "pedestrian_signal", "stop_sign", "yield_sign", "crosswalk", "school_crosswalk")}
 
     rows = []
     for position, i in enumerate(model.rank(eb["expected"], ids)[: args.top], start=1):
@@ -84,6 +86,12 @@ def main():
                 "priorWeight": round(float(eb["priorWeight"][i]), 3),
                 "ridgeExpected": round(float(ridge[i]), 3),
                 "ridgeRank": int(ridge_rank[i]),
+                "signalized": bool(assets["signal"][i]),
+                "pedestrianSignal": bool(assets["pedestrian_signal"][i]),
+                "stopSigns": int(assets["stop_sign"][i]),
+                "yieldSigns": int(assets["yield_sign"][i]),
+                "crosswalks": int(assets["crosswalk"][i]),
+                "schoolCrosswalk": bool(assets["school_crosswalk"][i]),
             }
         )
 
@@ -97,7 +105,8 @@ def main():
         "history": {"start": history_start.isoformat(), "end": cutoff.isoformat(), "years": history_years or "all"},
         "model": {
             "method": "Empirical Bayes (Hauer): w * SPF + (1 - w) * history, w = k / (k + SPF); "
-                      "Poisson SPF on site characteristics, negative binomial shape k per unit kind",
+                      "Poisson SPF on road class, size, volume, traffic control, crossings and location; "
+                      "negative binomial shape k per unit kind",
             "k": eb["k"],
             "intersectionRadiusM": INTERSECTION_METRES,
             "units": backtest["units"],
