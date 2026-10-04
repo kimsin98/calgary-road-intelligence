@@ -1,7 +1,127 @@
 {
-  "downloadedAt": "2026-10-03T09:53:59.888Z",
+  "downloadedAt": "2026-10-04T00:51:11.676Z",
   "stationID": 50430,
   "files": [
+    {
+      "path": "data/raw/weather/2023-01.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=1&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "776267b309406de14698b6d56b405cbb351fe8c358fdd7c33b9ff0190ac01136"
+    },
+    {
+      "path": "data/raw/weather/2023-02.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=2&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "07a7ec16950154e0649d59f7b4d34763b4dcf223e13e2313f96e9d83352e5f36"
+    },
+    {
+      "path": "data/raw/weather/2023-03.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=3&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "3754942cddcfcbe3cff40dd5e5d1ae751ee0beb5db93fdfbc7d36a620b4a13f8"
+    },
+    {
+      "path": "data/raw/weather/2023-04.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=4&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "e91865f43c7046c65e4c1a9d8cdc23ed82bdbd57f783d58a63a8c05ed68a51d6"
+    },
+    {
+      "path": "data/raw/weather/2023-05.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=5&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "6876804f8103508eaf5220042fb7cd459d81c3db312b991995f4985f885bfcb6"
+    },
+    {
+      "path": "data/raw/weather/2023-06.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=6&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "ff77bae2e90572af3a91287d28cb3c58be775cc634037cd9c02b9af80dc53311"
+    },
+    {
+      "path": "data/raw/weather/2023-07.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=7&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "d0f9c493857c654eaaef19c9dfadeb1f88b9675c4051dce69b6b81c763fbd200"
+    },
+    {
+      "path": "data/raw/weather/2023-08.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=8&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "84e2eb7d6380d31451604e1ac6476050b0dc361d19f5c36d332855ddcee24968"
+    },
+    {
+      "path": "data/raw/weather/2023-09.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=9&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "a15dde3a02f4971e3066aea7a246782c56d2bd394a5f42c71411dbf961326155"
+    },
+    {
+      "path": "data/raw/weather/2023-10.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=10&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "ddf6986ec3cbf0bfe3603abbb592fd39ce4e0807feace988516156f308a5562c"
+    },
+    {
+      "path": "data/raw/weather/2023-11.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=11&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "ac5b9175240a92894f862b6c5077ca4d4b17fb1705be2b65405cd4f324053f77"
+    },
+    {
+      "path": "data/raw/weather/2023-12.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2023&Month=12&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "1fe6b5e09d31eee585fff447102fbe9424a2b65a617e6a13e7f1a550c12e844a"
+    },
+    {
+      "path": "data/raw/weather/2024-01.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=1&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "3568140c039a88f6b381afc89c8ccc2a85f8edcabe4e7ec1250d9f397306c8a9"
+    },
+    {
+      "path": "data/raw/weather/2024-02.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=2&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "01042fdde7d3b174d4777306f8da441b357b13cb84037fb6dedc5be304529318"
+    },
+    {
+      "path": "data/raw/weather/2024-03.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=3&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "45da2a24d46cf97f96a38ae23bdd1b97129ef08b88a8b0919cab9082e39c4475"
+    },
+    {
+      "path": "data/raw/weather/2024-04.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=4&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "db3715f872169a4de1afd8d892fb72481c1a28085eba73535e5d15c301d5f972"
+    },
+    {
+      "path": "data/raw/weather/2024-05.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=5&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "248079198e0f7b6f029173f294d4f97ad476303bb0f2da833e4df78cab765d67"
+    },
+    {
+      "path": "data/raw/weather/2024-06.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=6&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "f31fbd6cd2f5412e5cd94009581f3dfab2e654800674eb33f2d16fd03b06017e"
+    },
+    {
+      "path": "data/raw/weather/2024-07.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=7&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "d3577911dd6922a66cdd1f959aefbb2220643fef5fdf600df84b7c969577b9ba"
+    },
+    {
+      "path": "data/raw/weather/2024-08.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=8&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "a2deb8495b8e019cae814877c39705a56fca0a7c794df9308893efa05e009b56"
+    },
+    {
+      "path": "data/raw/weather/2024-09.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=9&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "563d6f34cb7395e026a61625d6d9edcde6ad3abda79490c77824e870ea048e04"
+    },
+    {
+      "path": "data/raw/weather/2024-10.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=10&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "8300c6883a4640fc64b5e20028c3919c1aa4e5cc2fd5bc5e7a383f7bb83ccb0f"
+    },
+    {
+      "path": "data/raw/weather/2024-11.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=11&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "eb8a75edc9c5f3207a628b942a302846ac40014875e71653dee0a0c9dbdaa81f"
+    },
+    {
+      "path": "data/raw/weather/2024-12.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2024&Month=12&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "e96dc5f68fae007cacd4015129d0add111e8efc78bcd9f94f7bac3028cb8aa07"
+    },
     {
       "path": "data/raw/weather/2025-01.csv",
       "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2025&Month=1&Day=1&timeframe=1&submit=Download+Data",
@@ -61,6 +181,56 @@
       "path": "data/raw/weather/2025-12.csv",
       "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2025&Month=12&Day=1&timeframe=1&submit=Download+Data",
       "sha256": "394728fd9c44ed749c5f71fd55f599df78ac12da915cbba76290d8d7cbe966ef"
+    },
+    {
+      "path": "data/raw/weather/2026-01.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=1&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "66d98c881c8936300498366425e001dca62d1bc7cfbc8f6408c24296318cb91b"
+    },
+    {
+      "path": "data/raw/weather/2026-02.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=2&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "fc4625e694094d51729884907866e10d374c885dabb79998a3fbd245d7c1dccf"
+    },
+    {
+      "path": "data/raw/weather/2026-03.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=3&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "553ccecd5b84477823f3cd7814c1cafc56da3c46ac1a17b5fef95fe16cff2d7c"
+    },
+    {
+      "path": "data/raw/weather/2026-04.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=4&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "f38a1597588032f86e7ddee6309e7eca7b876e0407aa074dc6b3b28f6391f319"
+    },
+    {
+      "path": "data/raw/weather/2026-05.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=5&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "369787257b4e63c805cb60d6f77f27101bcab99367af45e4811b61c238ac3dfe"
+    },
+    {
+      "path": "data/raw/weather/2026-06.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=6&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "ef440474e3aa65432fa459def59712cafa8d7eeaf43d885719df587f0c50e012"
+    },
+    {
+      "path": "data/raw/weather/2026-07.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=7&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "70d8f9b71a90a77f0e30175b82e92ed65c3bdc61af0faed3faa85fcb150d79c5"
+    },
+    {
+      "path": "data/raw/weather/2026-08.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=8&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "b265d9126154522554824717869a501a2136ba907f7c7c266693182b9a3eb8f9"
+    },
+    {
+      "path": "data/raw/weather/2026-09.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=9&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "a677fe2bac163540fe952d9c6b6db2396fb49baaa6cc9c4ca0bdd5fcb032737b"
+    },
+    {
+      "path": "data/raw/weather/2026-10.csv",
+      "url": "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2026&Month=10&Day=1&timeframe=1&submit=Download+Data",
+      "sha256": "59314946b039458416db825345004ea943a8bb6fae1aa36d340a2c5dae255c15"
     }
   ]
 }

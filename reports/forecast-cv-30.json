@@ -1,0 +1,474 @@
+{
+  "strategy": "expanding-year",
+  "folds": [
+    {
+      "trainYears": [
+        2023
+      ],
+      "validationYear": 2024
+    },
+    {
+      "trainYears": [
+        2023,
+        2024
+      ],
+      "validationYear": 2025
+    }
+  ],
+  "selectedLambda": 0.001,
+  "selectionMetric": "mean per-window Poisson deviance, equal fold weights",
+  "trials": [
+    {
+      "lambda": 0.001,
+      "folds": [
+        {
+          "trainYears": [
+            2023
+          ],
+          "validationYear": 2024,
+          "diagnostics": {
+            "iterations": 600,
+            "converged": false,
+            "gradientNorm": 0.006259080076384828,
+            "loss": 0.3702723242477147,
+            "initialLoss": 0.3907510716673636,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2024-03-31",
+              "end": "2024-04-30",
+              "modelDeviance": 0.39940730366842864,
+              "baselineDeviance": 1.4483589961270664,
+              "modelCoverage": 17,
+              "baselineCoverage": 15,
+              "modelMAE": 0.16687872502804035
+            },
+            {
+              "cutoff": "2024-06-30",
+              "end": "2024-07-30",
+              "modelDeviance": 0.44396447614717227,
+              "baselineDeviance": 2.073521766082733,
+              "modelCoverage": 17,
+              "baselineCoverage": 17,
+              "modelMAE": 0.1719801034042574
+            },
+            {
+              "cutoff": "2024-09-30",
+              "end": "2024-10-30",
+              "modelDeviance": 0.4510435256445037,
+              "baselineDeviance": 2.1796309848830075,
+              "modelCoverage": 27,
+              "baselineCoverage": 29,
+              "modelMAE": 0.17588623478559487
+            },
+            {
+              "cutoff": "2024-11-30",
+              "end": "2024-12-30",
+              "modelDeviance": 0.38356992209803487,
+              "baselineDeviance": 1.5702051053783503,
+              "modelCoverage": 26,
+              "baselineCoverage": 26,
+              "modelMAE": 0.15850911909902635
+            }
+          ],
+          "deviance": 0.4194963068895349
+        },
+        {
+          "trainYears": [
+            2023,
+            2024
+          ],
+          "validationYear": 2025,
+          "diagnostics": {
+            "iterations": 600,
+            "converged": false,
+            "gradientNorm": 0.006707236318692376,
+            "loss": 0.3019843630883575,
+            "initialLoss": 0.3197336896520695,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2025-03-31",
+              "end": "2025-04-30",
+              "modelDeviance": 0.3490222938730961,
+              "baselineDeviance": 1.4951200487512672,
+              "modelCoverage": 19,
+              "baselineCoverage": 14,
+              "modelMAE": 0.1380606040598682
+            },
+            {
+              "cutoff": "2025-06-30",
+              "end": "2025-07-30",
+              "modelDeviance": 0.3974915547881213,
+              "baselineDeviance": 2.0892819188953022,
+              "modelCoverage": 20,
+              "baselineCoverage": 20,
+              "modelMAE": 0.1398225294501299
+            },
+            {
+              "cutoff": "2025-09-30",
+              "end": "2025-10-30",
+              "modelDeviance": 0.37528735555533366,
+              "baselineDeviance": 1.6057652071899151,
+              "modelCoverage": 21,
+              "baselineCoverage": 22,
+              "modelMAE": 0.14075593033005251
+            },
+            {
+              "cutoff": "2025-11-30",
+              "end": "2025-12-30",
+              "modelDeviance": 0.34735953498281985,
+              "baselineDeviance": 1.5770344943475612,
+              "modelCoverage": 21,
+              "baselineCoverage": 21,
+              "modelMAE": 0.13279791974926303
+            }
+          ],
+          "deviance": 0.3672901847998427
+        }
+      ],
+      "validationDeviance": 0.3933932458446888
+    },
+    {
+      "lambda": 0.01,
+      "folds": [
+        {
+          "trainYears": [
+            2023
+          ],
+          "validationYear": 2024,
+          "diagnostics": {
+            "iterations": 600,
+            "converged": false,
+            "gradientNorm": 0.003231996659483526,
+            "loss": 0.3761708158257421,
+            "initialLoss": 0.3907510716673636,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2024-03-31",
+              "end": "2024-04-30",
+              "modelDeviance": 0.40526121137231635,
+              "baselineDeviance": 1.4483589961270666,
+              "modelCoverage": 17,
+              "baselineCoverage": 15,
+              "modelMAE": 0.1702741564382173
+            },
+            {
+              "cutoff": "2024-06-30",
+              "end": "2024-07-30",
+              "modelDeviance": 0.44934178548869874,
+              "baselineDeviance": 2.0735217660827336,
+              "modelCoverage": 18,
+              "baselineCoverage": 17,
+              "modelMAE": 0.1766312532097131
+            },
+            {
+              "cutoff": "2024-09-30",
+              "end": "2024-10-30",
+              "modelDeviance": 0.4569843168548316,
+              "baselineDeviance": 2.1796309848830075,
+              "modelCoverage": 29,
+              "baselineCoverage": 29,
+              "modelMAE": 0.18076232963082067
+            },
+            {
+              "cutoff": "2024-11-30",
+              "end": "2024-12-30",
+              "modelDeviance": 0.39095019199618075,
+              "baselineDeviance": 1.5702051053783508,
+              "modelCoverage": 27,
+              "baselineCoverage": 26,
+              "modelMAE": 0.163098700908087
+            }
+          ],
+          "deviance": 0.42563437642800683
+        },
+        {
+          "trainYears": [
+            2023,
+            2024
+          ],
+          "validationYear": 2025,
+          "diagnostics": {
+            "iterations": 600,
+            "converged": false,
+            "gradientNorm": 0.0034006303283690203,
+            "loss": 0.30786795267546796,
+            "initialLoss": 0.3197336896520695,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2025-03-31",
+              "end": "2025-04-30",
+              "modelDeviance": 0.353601788936311,
+              "baselineDeviance": 1.4951200487512672,
+              "modelCoverage": 19,
+              "baselineCoverage": 14,
+              "modelMAE": 0.14020760777636107
+            },
+            {
+              "cutoff": "2025-06-30",
+              "end": "2025-07-30",
+              "modelDeviance": 0.4014774410214196,
+              "baselineDeviance": 2.0892819188953022,
+              "modelCoverage": 20,
+              "baselineCoverage": 20,
+              "modelMAE": 0.1434833653736317
+            },
+            {
+              "cutoff": "2025-09-30",
+              "end": "2025-10-30",
+              "modelDeviance": 0.38195659494938533,
+              "baselineDeviance": 1.6057652071899151,
+              "modelCoverage": 21,
+              "baselineCoverage": 22,
+              "modelMAE": 0.14375395334612204
+            },
+            {
+              "cutoff": "2025-11-30",
+              "end": "2025-12-30",
+              "modelDeviance": 0.35168493566902387,
+              "baselineDeviance": 1.5770344943475612,
+              "modelCoverage": 21,
+              "baselineCoverage": 21,
+              "modelMAE": 0.1354027183548248
+            }
+          ],
+          "deviance": 0.372180190144035
+        }
+      ],
+      "validationDeviance": 0.3989072832860209
+    },
+    {
+      "lambda": 0.1,
+      "folds": [
+        {
+          "trainYears": [
+            2023
+          ],
+          "validationYear": 2024,
+          "diagnostics": {
+            "iterations": 578,
+            "converged": true,
+            "gradientNorm": 0.000009871190920764975,
+            "loss": 0.3872480567541907,
+            "initialLoss": 0.3907510716673636,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2024-03-31",
+              "end": "2024-04-30",
+              "modelDeviance": 0.4282311328673705,
+              "baselineDeviance": 1.4483589961270666,
+              "modelCoverage": 13,
+              "baselineCoverage": 15,
+              "modelMAE": 0.18037837412043786
+            },
+            {
+              "cutoff": "2024-06-30",
+              "end": "2024-07-30",
+              "modelDeviance": 0.4707866387938232,
+              "baselineDeviance": 2.0735217660827336,
+              "modelCoverage": 18,
+              "baselineCoverage": 17,
+              "modelMAE": 0.1900525692309824
+            },
+            {
+              "cutoff": "2024-09-30",
+              "end": "2024-10-30",
+              "modelDeviance": 0.48248691125152177,
+              "baselineDeviance": 2.1796309848830075,
+              "modelCoverage": 28,
+              "baselineCoverage": 29,
+              "modelMAE": 0.19478312157214156
+            },
+            {
+              "cutoff": "2024-11-30",
+              "end": "2024-12-30",
+              "modelDeviance": 0.41879216910820805,
+              "baselineDeviance": 1.570205105378351,
+              "modelCoverage": 30,
+              "baselineCoverage": 26,
+              "modelMAE": 0.1762413804417901
+            }
+          ],
+          "deviance": 0.45007421300523087
+        },
+        {
+          "trainYears": [
+            2023,
+            2024
+          ],
+          "validationYear": 2025,
+          "diagnostics": {
+            "iterations": 576,
+            "converged": true,
+            "gradientNorm": 0.000009948856895096335,
+            "loss": 0.31732632901295765,
+            "initialLoss": 0.3197336896520695,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2025-03-31",
+              "end": "2025-04-30",
+              "modelDeviance": 0.37048813118179497,
+              "baselineDeviance": 1.4951200487512672,
+              "modelCoverage": 19,
+              "baselineCoverage": 14,
+              "modelMAE": 0.1456653213509176
+            },
+            {
+              "cutoff": "2025-06-30",
+              "end": "2025-07-30",
+              "modelDeviance": 0.41563414294135154,
+              "baselineDeviance": 2.0892819188953022,
+              "modelCoverage": 20,
+              "baselineCoverage": 20,
+              "modelMAE": 0.152354427774165
+            },
+            {
+              "cutoff": "2025-09-30",
+              "end": "2025-10-30",
+              "modelDeviance": 0.4036982683284021,
+              "baselineDeviance": 1.6057652071899151,
+              "modelCoverage": 21,
+              "baselineCoverage": 22,
+              "modelMAE": 0.15093454821403754
+            },
+            {
+              "cutoff": "2025-11-30",
+              "end": "2025-12-30",
+              "modelDeviance": 0.3672721159247463,
+              "baselineDeviance": 1.5770344943475612,
+              "modelCoverage": 21,
+              "baselineCoverage": 21,
+              "modelMAE": 0.14190482074225563
+            }
+          ],
+          "deviance": 0.38927316459407374
+        }
+      ],
+      "validationDeviance": 0.4196736887996523
+    },
+    {
+      "lambda": 1,
+      "folds": [
+        {
+          "trainYears": [
+            2023
+          ],
+          "validationYear": 2024,
+          "diagnostics": {
+            "iterations": 254,
+            "converged": true,
+            "gradientNorm": 0.000009843385703512003,
+            "loss": 0.39034674704731703,
+            "initialLoss": 0.3907510716673636,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2024-03-31",
+              "end": "2024-04-30",
+              "modelDeviance": 0.4379986239382494,
+              "baselineDeviance": 1.4483589961270666,
+              "modelCoverage": 13,
+              "baselineCoverage": 15,
+              "modelMAE": 0.18392275782300482
+            },
+            {
+              "cutoff": "2024-06-30",
+              "end": "2024-07-30",
+              "modelDeviance": 0.4798066348264552,
+              "baselineDeviance": 2.0735217660827336,
+              "modelCoverage": 18,
+              "baselineCoverage": 17,
+              "modelMAE": 0.19465871114641117
+            },
+            {
+              "cutoff": "2024-09-30",
+              "end": "2024-10-30",
+              "modelDeviance": 0.4935304118002816,
+              "baselineDeviance": 2.1796309848830075,
+              "modelCoverage": 28,
+              "baselineCoverage": 29,
+              "modelMAE": 0.19953025145218284
+            },
+            {
+              "cutoff": "2024-11-30",
+              "end": "2024-12-30",
+              "modelDeviance": 0.4301349917234635,
+              "baselineDeviance": 1.5702051053783508,
+              "modelCoverage": 29,
+              "baselineCoverage": 26,
+              "modelMAE": 0.18074206612334978
+            }
+          ],
+          "deviance": 0.4603676655721124
+        },
+        {
+          "trainYears": [
+            2023,
+            2024
+          ],
+          "validationYear": 2025,
+          "diagnostics": {
+            "iterations": 273,
+            "converged": true,
+            "gradientNorm": 0.000009899185157284675,
+            "loss": 0.3194696816515084,
+            "initialLoss": 0.3197336896520695,
+            "tolerance": 0.00001
+          },
+          "windows": [
+            {
+              "cutoff": "2025-03-31",
+              "end": "2025-04-30",
+              "modelDeviance": 0.37643564347866426,
+              "baselineDeviance": 1.4951200487512672,
+              "modelCoverage": 19,
+              "baselineCoverage": 14,
+              "modelMAE": 0.14718535523230275
+            },
+            {
+              "cutoff": "2025-06-30",
+              "end": "2025-07-30",
+              "modelDeviance": 0.42061965171221083,
+              "baselineDeviance": 2.0892819188953022,
+              "modelCoverage": 20,
+              "baselineCoverage": 20,
+              "modelMAE": 0.15471870399983048
+            },
+            {
+              "cutoff": "2025-09-30",
+              "end": "2025-10-30",
+              "modelDeviance": 0.4108073747386563,
+              "baselineDeviance": 1.6057652071899151,
+              "modelCoverage": 21,
+              "baselineCoverage": 22,
+              "modelMAE": 0.15286509263138923
+            },
+            {
+              "cutoff": "2025-11-30",
+              "end": "2025-12-30",
+              "modelDeviance": 0.3725668619248498,
+              "baselineDeviance": 1.5770344943475612,
+              "modelCoverage": 21,
+              "baselineCoverage": 21,
+              "modelMAE": 0.14371625878443467
+            }
+          ],
+          "deviance": 0.39510738296359527
+        }
+      ],
+      "validationDeviance": 0.42773752426785383
+    }
+  ]
+}

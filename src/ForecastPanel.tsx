@@ -11,7 +11,7 @@ export function ForecastPanel({
   onSelect: (id: string) => void;
 }) {
   const [mode, setMode] = useState<"backtest" | "future">("backtest");
-  const [cutoff, setCutoff] = useState("2025-11-30"),
+  const [cutoff, setCutoff] = useState("2026-06-30"),
     [horizon, setHorizon] = useState(30),
     [revealed, setRevealed] = useState(false);
   const {
@@ -63,9 +63,10 @@ export function ForecastPanel({
       >
         <strong>Experimental demo</strong>
         <p>
-          The model has not consistently outperformed historical ranking in the
-          evaluated windows. Use it to explore possible priorities; it is not
-          validated for operational decisions or crash-risk prediction.
+          The expanded model has not consistently outperformed simple historical
+          baselines in independent 2026 backtests. Use it to explore possible
+          priorities; it is not validated for operational decisions or
+          crash-risk prediction.
         </p>
       </div>
       <div className="forecast-modes" role="group" aria-label="Forecast mode">
@@ -101,8 +102,12 @@ export function ForecastPanel({
           <input
             aria-label="Forecast cutoff"
             type="date"
-            min="2025-10-31"
-            max="2025-12-01"
+            min="2026-01-01"
+            max={new Date(
+              Date.parse(data.audit.last + "T00:00:00Z") - horizon * 86400000,
+            )
+              .toISOString()
+              .slice(0, 10)}
             value={effectiveCutoff}
             disabled={mode === "future"}
             onChange={(e) => setCutoff(e.target.value)}
@@ -158,7 +163,7 @@ export function ForecastPanel({
             </div>
             <div>
               <span>Training / tuning</span>
-              <strong>Mar–Jun / Aug</strong>
+              <strong>2023–25 / rolling CV</strong>
             </div>
             <div>
               <span>Selected regularization</span>
@@ -296,6 +301,44 @@ export function ForecastPanel({
             </div>
           )}
           <details>
+            <summary>Time-based cross-validation results</summary>
+            <p>
+              Train 2023 → validate 2024; train 2023–2024 → validate 2025. Four
+              historical forecast windows per validation year. Select
+              regularization by mean Poisson deviance, then refit on 2023–2025.
+              The 2026 test year is excluded from parameter selection.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Regularization</th>
+                  <th>2024 fold deviance</th>
+                  <th>2025 fold deviance</th>
+                  <th>Mean deviance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.crossValidation.trials.map((t) => (
+                  <tr key={t.lambda}>
+                    <td>
+                      {t.lambda}
+                      {t.lambda === result.lambda ? " · selected" : ""}
+                    </td>
+                    {t.folds.map((f) => (
+                      <td key={f.validationYear}>{f.deviance.toFixed(3)}</td>
+                    ))}
+                    <td>{t.validationDeviance.toFixed(3)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p>
+              Lower deviance is better. Inputs at each validation cutoff may use
+              earlier reports from that validation year, simulating rolling
+              7/30-day forecasts rather than a one-shot annual forecast.
+            </p>
+          </details>
+          <details>
             <summary>Model and validation details</summary>
             <p>
               Training: {result.diagnostics.iterations} iterations ·{" "}
@@ -308,10 +351,10 @@ export function ForecastPanel({
             <p>
               Shared ridge-regularized Poisson regression; inputs are log event
               counts over 1–7, 8–14, 15–30 and 31–90 days, recurring dates, and
-              recent share. Train using historical cutoffs March 31, April 30,
-              May 31 and June 30; select regularization using the period after
-              the August 31 cutoff. Freeze the model before the demo test
-              cutoff. Future weather is excluded.
+              recent share. Expanding-year cross-validation selects
+              regularization using 2024 and 2025 only. The final model fits
+              quarterly 2023–2025 windows and stays frozen for independent 2026
+              backtests. Future weather is excluded.
             </p>
             <p>
               Baseline: 90-day count × horizon / 90. No pseudo-count smoothing

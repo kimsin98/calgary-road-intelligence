@@ -17,6 +17,11 @@ export function WeatherPanel({ data, config }: any) {
         weather context, not conditions at an individual road. Choose a weather
         condition in Analysis controls above to update the ranking.
       </p>
+      <p className="notice">
+        Weather snapshot covers 2023 through the latest available 2026
+        observations. Missing measurements and blank weather descriptions do not
+        imply clear weather.
+      </p>
       <table>
         <thead>
           <tr>

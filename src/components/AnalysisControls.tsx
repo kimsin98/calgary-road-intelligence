@@ -41,8 +41,8 @@ export function AnalysisControls({
                   <input
                     aria-label="Start date"
                     type="date"
-                    min="2025-01-01"
-                    max="2025-12-31"
+                    min={data.audit.first}
+                    max={data.audit.last}
                     value={config.start}
                     onChange={(e) =>
                       e.target.value &&

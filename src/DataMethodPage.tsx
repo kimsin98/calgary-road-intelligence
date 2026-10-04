@@ -15,7 +15,7 @@ export function DataMethodPage() {
             "Traffic Incidents",
             "City of Calgary",
             "https://data.calgary.ca/Transportation-Transit/Traffic-Incidents/35ra-9556",
-            "7,015 UTC-year 2025 reports. Primary event evidence, ranking and forecasting. Includes generic and unverified traffic disruptions.",
+            "27,805 reports from UTC January 2023 through October 2026. Primary event evidence, ranking and forecasting. Includes generic and unverified traffic disruptions.",
           ],
           [
             "Street Centreline",
@@ -33,7 +33,7 @@ export function DataMethodPage() {
             "Hourly Historical Weather",
             "Environment and Climate Change Canada",
             "https://climate.weather.gc.ca/climate_data/hourly_data_e.html?StationID=50430",
-            "8,760 hours at CALGARY INTL A, station 50430. Temperature, reported weather and visibility; source MST timestamps are converted to UTC before event matching. Airport observations are not road-surface measurements.",
+            "2023–2026 snapshot: 32,922 hours at CALGARY INTL A, station 50430. Temperature, reported weather and visibility; source MST timestamps are converted to UTC before event matching. Airport observations are not road-surface measurements.",
           ],
           [
             "Hackathon Starter Dataset",
@@ -71,18 +71,21 @@ export function DataMethodPage() {
       </div>
       <h3>Why totals differ from the starter dataset</h3>
       <p>
-        The starter has 6,984 records; the official UTC-year snapshot has 7,015.
-        A one-to-one comparison matched 6,980 starter records by location,
-        nearby coordinates and time offsets. After whitespace normalization,
-        matched descriptions, quadrants and counts agree. Four starter records
-        and 35 official records remained unmatched; this does not mean all 35
-        are newly added events.
+        The historical comparison below concerns the 2025 subset only. The app
+        now includes 2023–2026 reports, so its full totals are not directly
+        comparable to the starter. The starter has 6,984 records; the original
+        official UTC-year 2025 snapshot has 7,015. A one-to-one comparison
+        matched 6,980 starter records by location, nearby coordinates and time
+        offsets. After whitespace normalization, matched descriptions, quadrants
+        and counts agree. Four starter records and 35 official records remained
+        unmatched; this does not mean all 35 are newly added events.
       </p>
       <p>
         Seventeen official records occur in early UTC January 1 but still fall
-        on local December 31, 2024. The default local-2025 view excludes them,
-        producing 6,998 displayed events. The 4,100 locations are our road/grid
-        aggregation of that view, not a location count supplied by the starter.
+        on local December 31, 2024. A local-2025 view of that original snapshot
+        excludes them, producing 6,998 displayed events. The 4,100 locations are
+        our road/grid aggregation of that view, not a location count supplied by
+        the starter.
       </p>
       <p>
         Starter timestamps have mixed apparent time conventions: 1,538 matched
@@ -96,11 +99,14 @@ export function DataMethodPage() {
       </p>
       <h3>Scoring and interpretation</h3>
       <p>
-        Frequency uses normalized log count; recent growth compares two 30-day
-        windows with smoothing; recurrence uses distinct event dates. Forecasts
-        estimate report counts, not crash probabilities. Road matching,
-        incomplete reporting and sparse location histories limit the
-        conclusions.
+        Forecast fitting uses 2023–2025 histories and internal 2025 tuning; 2026
+        is held out for evaluation. The default map scope is the latest 90 days.
+        Weather observations cover January 2023 through October 2026; missing
+        station measurements remain explicitly unavailable. Frequency uses
+        normalized log count; recent growth compares two 30-day windows with
+        smoothing; recurrence uses distinct event dates. Forecasts estimate
+        report counts, not crash probabilities. Road matching, incomplete
+        reporting and sparse location histories limit the conclusions.
       </p>
       <p>
         <a

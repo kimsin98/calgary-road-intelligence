@@ -120,9 +120,9 @@ export function OptimizationPanel({
         </button>
       </div>
       <p>
-        Search 21 weight combinations using 90-day histories ending April 30 and
-        July 31. Freeze the winner, then check December 1–30 events using
-        history ending November 30. The selected date window is used when
+        Search 21 weight combinations across six 90-day windows in 2023–2025.
+        Freeze the winner, then independently check July 1–30, 2026 events using
+        history ending June 30, 2026. The selected date window is used when
         applying the result, not for the historical search.
       </p>
       <p className="hint">

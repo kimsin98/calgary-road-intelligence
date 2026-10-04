@@ -164,22 +164,33 @@ export function forecast(
   events,
   locations,
   {
-    cutoff = "2025-11-30",
+    cutoff = "2026-06-30",
     horizon = 30,
     capacity = 20,
     mode = "backtest",
     dataEnd,
   } = {},
 ) {
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(cutoff) ||
+    !Number.isFinite(Date.parse(cutoff)) ||
+    dateShift(cutoff, 0) !== cutoff
+  )
+    throw Error("Invalid forecast cutoff date");
   if (![7, 30].includes(horizon))
     throw Error("Forecast horizon must be 7 or 30 days");
   if (!["backtest", "future"].includes(mode))
     throw Error("Invalid forecast mode");
   const latest =
     dataEnd ?? events.reduce((end, e) => (e.date > end ? e.date : end), "");
-  if (mode === "backtest" && (cutoff < "2025-10-31" || cutoff > "2025-12-01"))
-    throw Error("Backtest cutoff must be between October 31 and December 1");
-  if (mode === "future" && (cutoff !== latest || cutoff < "2025-10-31"))
+  if (
+    mode === "backtest" &&
+    (cutoff < "2026-01-01" || dateShift(cutoff, horizon) > latest)
+  )
+    throw Error(
+      "Choose a 2026 backtest cutoff with a complete observed forecast window",
+    );
+  if (mode === "future" && (cutoff !== latest || cutoff < "2026-01-01"))
     throw Error(
       "Future forecast must start at the latest dataset date after the training period",
     );
@@ -187,27 +198,64 @@ export function forecast(
     throw Error(
       "Backtest requires observations through the entire forecast window",
     );
-  const trainEnds = ["2025-03-31", "2025-04-30", "2025-05-31", "2025-06-30"];
-  const validationEnd = "2025-08-31";
-  const training = trainEnds.flatMap((end) =>
-    examples(events, locations, end, horizon),
+  const yearWindows = (year) =>
+    ["03-31", "06-30", "09-30", "11-30"].map((day) => year + "-" + day);
+  const trainEnds = [2023, 2024, 2025].flatMap(yearWindows);
+  const folds = [
+    { trainYears: [2023], validationYear: 2024 },
+    { trainYears: [2023, 2024], validationYear: 2025 },
+  ];
+  const cache = new Map(
+    trainEnds.map((end) => [end, examples(events, locations, end, horizon)]),
   );
-  const validation = examples(events, locations, validationEnd, horizon);
-  const trials = [0.001, 0.01, 0.1]
+  const trials = [0.001, 0.01, 0.1, 1]
     .map((lambda) => {
-      const fitted = fitPoisson(training, lambda),
-        coefficients = fitted.coefficients,
-        metrics = metric(validation, coefficients, capacity);
+      const scores = folds.map((fold) => {
+        const fitted = fitPoisson(
+          fold.trainYears.flatMap(yearWindows).flatMap((end) => cache.get(end)),
+          lambda,
+        );
+        const windows = yearWindows(fold.validationYear).map((end) => {
+          const m = metric(cache.get(end), fitted.coefficients, capacity);
+          return {
+            cutoff: end,
+            end: dateShift(end, horizon),
+            modelDeviance: m.modelDeviance,
+            baselineDeviance: m.baselineDeviance,
+            modelCoverage: m.modelCoverage,
+            baselineCoverage: m.baselineCoverage,
+            modelMAE: m.modelMAE,
+          };
+        });
+        return {
+          ...fold,
+          diagnostics: fitted.diagnostics,
+          windows,
+          deviance:
+            windows.reduce((sum, w) => sum + w.modelDeviance, 0) /
+            windows.length,
+        };
+      });
       return {
         lambda,
-        coefficients,
-        diagnostics: fitted.diagnostics,
-        validationMAE: metrics.modelMAE,
-        validationDeviance: metrics.modelDeviance,
+        folds: scores,
+        validationDeviance:
+          scores.reduce((sum, f) => sum + f.deviance, 0) / scores.length,
       };
     })
-    .sort((a, b) => a.validationDeviance - b.validationDeviance);
-  const chosen = trials[0];
+    .sort(
+      (a, b) =>
+        a.validationDeviance - b.validationDeviance || b.lambda - a.lambda,
+    );
+  const selected = trials[0];
+  // Freeze CV-selected regularization, then fit the final model on 2023–2025 only.
+  const finalFit = fitPoisson(
+    trainEnds.flatMap((end) => cache.get(end)),
+    selected.lambda,
+  );
+  const chosen = { lambda: selected.lambda, ...finalFit };
+  const validationEnds = [2024, 2025].flatMap(yearWindows);
+  const validationEnd = validationEnds.at(-1);
   const rows = examples(
     events,
     locations,
@@ -248,6 +296,14 @@ export function forecast(
     trials,
     trainEnds,
     validationEnd,
+    validationEnds,
+    crossValidation: {
+      strategy: "expanding-year",
+      folds,
+      selectedLambda: selected.lambda,
+      selectionMetric: "mean per-window Poisson deviance, equal fold weights",
+      trials,
+    },
     evaluation: mode === "backtest" ? evaluation : null,
     top: evaluation.rows
       .slice(0, capacity)
@@ -261,6 +317,6 @@ export function forecast(
               e.date <= dateShift(cutoff, horizon) &&
               !rows.some((r) => r.id === e.location),
           ).length,
-    version: "poisson-ridge-v4",
+    version: "poisson-ridge-v6",
   };
 }

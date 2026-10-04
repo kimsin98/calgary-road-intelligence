@@ -4,10 +4,23 @@ export function fitPoisson(
   { maxIterations = 600, tolerance = 1e-5 } = {},
 ) {
   if (!rows.length) throw Error("No training locations available");
+  // Identical feature vectors share a Poisson sufficient statistic; preserve
+  // sample weights while avoiding repeated work at sparse zero-history sites.
+  const sampleCount = rows.length;
+  const grouped = new Map();
+  for (const r of rows) {
+    const key = JSON.stringify(r.x);
+    const g = grouped.get(key);
+    if (g) {
+      g.weight++;
+      g.target += r.target;
+    } else grouped.set(key, { x: r.x, weight: 1, target: r.target });
+  }
+  rows = [...grouped.values()];
   const n = rows[0].x.length + 1,
     b = Array(n).fill(0);
   b[0] = Math.log(
-    Math.max(0.001, rows.reduce((s, r) => s + r.target, 0) / rows.length),
+    Math.max(0.001, rows.reduce((s, r) => s + r.target, 0) / sampleCount),
   );
   let loss = Infinity,
     gradientNorm = Infinity,
@@ -22,7 +35,7 @@ export function fitPoisson(
           coeff[0] + r.x.reduce((s, v, i) => s + v * coeff[i + 1], 0),
         ),
       );
-      value += (Math.exp(eta) - r.target * eta) / rows.length;
+      value += (r.weight * Math.exp(eta) - r.target * eta) / sampleCount;
     }
     return value + (lambda * coeff.slice(1).reduce((s, v) => s + v * v, 0)) / 2;
   };
@@ -30,17 +43,13 @@ export function fitPoisson(
   for (; iteration < maxIterations; iteration++) {
     const gradient = Array(n).fill(0);
     for (const r of rows) {
-      const x = [1, ...r.x],
-        eta = Math.max(
-          -12,
-          Math.min(
-            6,
-            x.reduce((s, v, i) => s + v * b[i], 0),
-          ),
-        ),
-        mu = Math.exp(eta);
-      for (let i = 0; i < n; i++)
-        gradient[i] += ((mu - r.target) * x[i]) / rows.length;
+      let eta = b[0];
+      for (let i = 0; i < r.x.length; i++) eta += r.x[i] * b[i + 1];
+      const residual =
+        (r.weight * Math.exp(Math.max(-12, Math.min(6, eta))) - r.target) /
+        sampleCount;
+      gradient[0] += residual;
+      for (let i = 1; i < n; i++) gradient[i] += residual * r.x[i - 1];
     }
     for (let i = 1; i < n; i++) gradient[i] += lambda * b[i];
     gradientNorm = Math.hypot(...gradient);

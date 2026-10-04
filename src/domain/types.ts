@@ -144,6 +144,25 @@ export interface ForecastChange {
   explanation: string;
 }
 export interface ForecastResult {
+  crossValidation: {
+    strategy: string;
+    selectedLambda: number;
+    selectionMetric: string;
+    trials: {
+      lambda: number;
+      validationDeviance: number;
+      folds: {
+        trainYears: number[];
+        validationYear: number;
+        deviance: number;
+        windows: {
+          cutoff: string;
+          modelCoverage: number;
+          baselineCoverage: number;
+        }[];
+      }[];
+    }[];
+  };
   mode: "backtest" | "future";
   dataEnd: string;
   rows: ForecastRow[];

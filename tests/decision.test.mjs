@@ -5,9 +5,9 @@ import {rank,defaults} from '../src/analysis.mjs';
 const locations=['a','b','c'].map(id=>({id,name:id}));
 const event=(location,date)=>({id:location+date,location,date,hour:8,weekend:false,category:'Signals'});
 test('validation records cannot change chosen search weights',()=>{
- const history=[event('a','2025-04-05'),event('a','2025-05-05'),event('b','2025-07-05'),event('b','2025-08-05'),event('c','2025-11-05')];
+ const history=[event('a','2025-04-05'),event('a','2025-05-05'),event('b','2025-07-05'),event('b','2025-08-05'),event('c','2026-06-05')];
  const a=optimize(history,locations,{...defaults,capacity:1});
- const b=optimize([...history,...Array.from({length:40},(_,i)=>({...event('c','2025-12-05'),id:'future'+i}))],locations,{...defaults,capacity:1});
+ const b=optimize([...history,...Array.from({length:40},(_,i)=>({...event('c','2026-07-05'),id:'future'+i}))],locations,{...defaults,capacity:1});
  assert.deepEqual(a.weights,b.weights);assert.deepEqual(a.candidates,b.candidates);assert.equal(b.validation.candidate-a.validation.candidate,40);
  assert.equal(a.candidates.length,21);
 });

@@ -80,6 +80,18 @@ function App() {
     [mapNotice, setMapNotice] = useState(""),
     [expanded, setExpanded] = useState(false),
     [fullscreen, setFullscreen] = useState(false);
+  useEffect(() => {
+    if (data)
+      setConfig((c) => ({
+        ...c,
+        start: new Date(
+          Date.parse(data.audit.last + "T00:00:00Z") - 89 * 86400000,
+        )
+          .toISOString()
+          .slice(0, 10),
+        end: data.audit.last,
+      }));
+  }, [data]);
   const {
     playing,
     setPlaying,
@@ -382,7 +394,7 @@ function App() {
           Workspace <span>/</span> <strong>{tab}</strong>
         </div>
         <div className="header-note">
-          <i /> HISTORICAL OPERATIONS LAB <span>2025 SNAPSHOT · MT</span>
+          <i /> HISTORICAL OPERATIONS LAB <span>2023–2026 SNAPSHOT · MT</span>
         </div>
         <div className="export-actions">
           {tab !== "Forward outlook" && (

@@ -88,3 +88,8 @@ Selected Evidence now includes geometric review flags and competing road IDs/dis
 ## Experimental forward outlook
 
 Open Forward outlook to generate a 7/30-day expected-report forecast at a historical cutoff. The shared regularized Poisson model trains on March–June windows and tunes on August outcomes. Reveal later events to compare count error and Top20 coverage with the smoothed rate baseline. Default model coverage is 20 vs baseline21 despite lower count MAE, so it does not establish a better inspection policy. Future weather is excluded; full-year known-location inventory and repeated test exploration limit prospective interpretation. See reports/forecast-windows.json. Run `node tests/forecast-browser.mjs` for interaction verification.
+
+
+## Expanded snapshot (2026-10-04)
+
+The current traffic snapshot contains 27,805 UTC records from January 2023 through October 2026 (Calgary local date range 2022-12-31 to 2026-10-03). Local boundary records are retained; the latest UTC date is October 4. The default analysis shows the latest 90 days, with the full snapshot available in date controls. Forecast fitting uses quarterly 2023–2024 windows plus March/June 2025, with August/September/November 2025 internal tuning. 2026 outcomes are reserved for independent backtests. Future prediction starts at the latest observed local date. Weather remains a 2025-only snapshot; 2024 volume is proximity context across years, not verified exposure. The current local date is still an incomplete reporting day. See reports/forecast-2026-evaluation.json for current evaluation; earlier reports describe older snapshots.

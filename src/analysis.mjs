@@ -117,7 +117,7 @@ export function compare(a, b) {
   };
 }
 export function evaluate(events, locations, c) {
-  const windows = ["2025-06-30", "2025-08-31", "2025-10-31"];
+  const windows = ["2026-03-31", "2026-05-31", "2026-07-31"];
   return windows.map((end) => {
     const cutoff = Date.parse(end + "T00:00:00Z");
     const start = new Date(cutoff - 89 * day).toISOString().slice(0, 10),

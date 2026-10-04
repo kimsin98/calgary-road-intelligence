@@ -1,31 +1,32 @@
 {
-  "downloadedAt": "2026-10-03T07:58:08.937Z",
-  "rawEvents": 7015,
-  "events": 7015,
+  "downloadedAt": "2026-10-04T00:48:52.454Z",
+  "rawEvents": 27805,
+  "events": 27805,
   "duplicates": 0,
   "rejected": 0,
   "roads": 120567,
-  "matched": 7009,
-  "matchRate": 0.999144689950107,
-  "locations": 4105,
-  "first": "2024-12-31",
-  "last": "2025-12-31",
+  "matched": 27775,
+  "matchRate": 0.9989210573637834,
+  "locations": 9661,
+  "first": "2022-12-31",
+  "last": "2026-10-03",
   "timezone": "America/Edmonton",
   "sourceTime": "UTC",
   "countValues": [
-    "1"
+    "1",
+    "1.0"
   ],
   "projection": "Local equirectangular metre approximation at latitude 51N; 50m matching threshold",
   "categories": {
-    "Other / unverified": 5252,
-    "Signals": 253,
-    "Collision-related": 1354,
-    "Stalled vehicle": 136,
-    "Road conditions": 20
+    "Other / unverified": 19732,
+    "Collision-related": 6298,
+    "Stalled vehicle": 803,
+    "Signals": 898,
+    "Road conditions": 74
   },
   "volumes": {
     "sections": 334,
-    "matchedLocations": 1219,
+    "matchedLocations": 2416,
     "thresholdMeters": 30,
     "note": "Proximity association only, not verified section linkage; 2024 average weekday volume vs 2025 events."
   }

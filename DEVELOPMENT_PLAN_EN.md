@@ -28,3 +28,5 @@ In the pitch, explain these limits and future improvements: multi-year data, con
 - [Calgary Traffic Volumes 2024](https://data.calgary.ca/dataset/Traffic-Volumes-for-2024/cauu-7hnw): Traffic-volume context.
 - [ECCC Historical Weather](https://climate.weather.gc.ca/historical_data/search_historic_data_e.html): Historical weather patterns and scenario evidence.
 - [Calgary Snow-Clearing Priority Routes](https://data.calgary.ca/Health-and-Safety/Snow-and-Ice-Clearing-Priority-Routes-Map/fuea-eg5z): Reference existing winter priorities.
+
+Forecast validation: use expanding-year cross-validation (2023→2024; 2023–2024→2025) to select regularization, refit on 2023–2025, and reserve 2026 for independent rolling 7/30-day evaluation. Compare with historical count priorities; publish all fold and holdout results rather than assuming the model improves ranking.

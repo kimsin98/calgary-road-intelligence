@@ -1,7 +1,14 @@
 import { rank, selectEvents, compare } from "./analysis.mjs";
 const DAY = 86400000;
-export const SEARCH_ENDS = ["2025-04-30", "2025-07-31"];
-export const TEST_END = "2025-11-30";
+export const SEARCH_ENDS = [
+  "2023-06-30",
+  "2023-11-30",
+  "2024-06-30",
+  "2024-11-30",
+  "2025-04-30",
+  "2025-07-31",
+];
+export const TEST_END = "2026-06-30";
 export function scoreWindow(events, locations, config, end) {
   const cutoff = Date.parse(end + "T00:00:00Z");
   const date = (offset) =>
@@ -67,7 +74,7 @@ export function optimize(events, locations, config) {
       capacity: config.capacity,
     },
     tuningTotal: winner.windows.reduce((s, w) => s + w.total, 0),
-    version: "bounded-search-v1",
+    version: "bounded-search-v2",
   };
 }
 const signals = ["frequency", "recent growth", "recurring dates"];

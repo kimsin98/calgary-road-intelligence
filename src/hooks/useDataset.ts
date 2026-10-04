@@ -1,3 +1,4 @@
+import { loadSnapshot } from "../domain/loadSnapshot";
 import type { Dataset, TrafficEvent } from "../domain/types";
 import { useCallback, useEffect, useState } from "react";
 import { validateDataset, validateWeather } from "../domain/dataset.mjs";
@@ -9,16 +10,12 @@ export function useDataset() {
     [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
-    const read = async (url: string) => {
-      const r = await fetch(url, { signal: controller.signal });
-      if (!r.ok) throw Error("Unable to load " + url);
-      return r.json();
-    };
+    const read = (url: string) => loadSnapshot(url, controller.signal);
     setError("");
     setWarning("");
     Promise.allSettled([
-      read("/data/dataset.json").then(validateDataset),
-      read("/data/weather.json").then(validateWeather),
+      read("/data/dataset.json.gz").then(validateDataset),
+      read("/data/weather.json.gz").then(validateWeather),
     ]).then(([traffic, weather]) => {
       if (controller.signal.aborted) return;
       if (traffic.status === "rejected") {

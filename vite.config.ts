@@ -1,6 +1,19 @@
+import { existsSync, unlinkSync } from "node:fs";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  plugins: [
+    {
+      name: "compressed-snapshot-output",
+      closeBundle() {
+        /* public files are copied before closeBundle */
+        for (const name of ["dataset", "weather"]) {
+          const file = "dist/data/" + name + ".json";
+          if (existsSync(file)) unlinkSync(file);
+        }
+      },
+    },
+  ],
   build: {
     rollupOptions: {
       output: {

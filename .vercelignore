@@ -9,3 +9,7 @@
 *.tar.gz
 !public/data/
 !public/data/**
+
+!pipelines/
+/pipelines/*
+!pipelines/compress-data.mjs

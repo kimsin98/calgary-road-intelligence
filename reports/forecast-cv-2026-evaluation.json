@@ -1,0 +1,180 @@
+{
+  "version": "poisson-ridge-v6",
+  "datasetVersion": "2026-10-04T00:48:52.454Z",
+  "results": [
+    {
+      "cutoff": "2026-03-31",
+      "horizon": 7,
+      "evaluation": {
+        "total": 115,
+        "knownLocations": 8553,
+        "zeroMAE": 0.01344557465216883,
+        "modelExpected": 158.4805195418877,
+        "baselineExpected": 155.2444444444499,
+        "modelDeviance": 0.11665743854380149,
+        "baselineDeviance": 0.27749416961796075,
+        "modelMAE": 0.031443369939022255,
+        "baselineMAE": 0.029486729802409278,
+        "modelCoverage": 3,
+        "baselineCoverage": 6,
+        "reactiveCoverage": 5
+      },
+      "unseenFutureEvents": 57,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.00345874446664351,
+        "loss": 0.09041412216731232,
+        "initialLoss": 0.0918572189962678,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.521198533
+    },
+    {
+      "cutoff": "2026-06-30",
+      "horizon": 7,
+      "evaluation": {
+        "total": 135,
+        "knownLocations": 9148,
+        "zeroMAE": 0.014757324005247048,
+        "modelExpected": 168.95552083490168,
+        "baselineExpected": 151.04444444444957,
+        "modelDeviance": 0.12429229807210226,
+        "baselineDeviance": 0.30759580725560115,
+        "modelMAE": 0.03264699626078229,
+        "baselineMAE": 0.028836904241364925,
+        "modelCoverage": 10,
+        "baselineCoverage": 10,
+        "reactiveCoverage": 8
+      },
+      "unseenFutureEvents": 49,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.00345874446664351,
+        "loss": 0.09041412216731232,
+        "initialLoss": 0.0918572189962678,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.486976018
+    },
+    {
+      "cutoff": "2026-08-31",
+      "horizon": 7,
+      "evaluation": {
+        "total": 106,
+        "knownLocations": 9508,
+        "zeroMAE": 0.011148506520824568,
+        "modelExpected": 175.53331474548386,
+        "baselineExpected": 155.7888888888948,
+        "modelDeviance": 0.101320267507059,
+        "baselineDeviance": 0.2405457096651108,
+        "modelMAE": 0.029138709216286553,
+        "baselineMAE": 0.025343570326743028,
+        "modelCoverage": 4,
+        "baselineCoverage": 4,
+        "reactiveCoverage": 4
+      },
+      "unseenFutureEvents": 37,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.00345874446664351,
+        "loss": 0.09041412216731232,
+        "initialLoss": 0.0918572189962678,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.3520572909999997
+    },
+    {
+      "cutoff": "2026-03-31",
+      "horizon": 30,
+      "evaluation": {
+        "total": 454,
+        "knownLocations": 8553,
+        "zeroMAE": 0.053080790365953465,
+        "modelExpected": 655.5566387341032,
+        "baselineExpected": 665.3333333333371,
+        "modelDeviance": 0.3128966884143327,
+        "baselineDeviance": 1.080570850323704,
+        "modelMAE": 0.11965917284667164,
+        "baselineMAE": 0.10561596320979048,
+        "modelCoverage": 23,
+        "baselineCoverage": 28,
+        "reactiveCoverage": 26
+      },
+      "unseenFutureEvents": 194,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.0070171160350448085,
+        "loss": 0.26971504733189094,
+        "initialLoss": 0.28449631382478385,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.5213781340000005
+    },
+    {
+      "cutoff": "2026-06-30",
+      "horizon": 30,
+      "evaluation": {
+        "total": 521,
+        "knownLocations": 9148,
+        "zeroMAE": 0.05695233930913861,
+        "modelExpected": 693.2477560560902,
+        "baselineExpected": 647.3333333333354,
+        "modelDeviance": 0.32257245676839363,
+        "baselineDeviance": 1.1313116933583631,
+        "modelMAE": 0.12194653234341024,
+        "baselineMAE": 0.09987611135403035,
+        "modelCoverage": 36,
+        "baselineCoverage": 42,
+        "reactiveCoverage": 36
+      },
+      "unseenFutureEvents": 185,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.0070171160350448085,
+        "loss": 0.26971504733189094,
+        "initialLoss": 0.28449631382478385,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.4015617940000002
+    },
+    {
+      "cutoff": "2026-08-31",
+      "horizon": 30,
+      "evaluation": {
+        "total": 508,
+        "knownLocations": 9508,
+        "zeroMAE": 0.053428691628102654,
+        "modelExpected": 721.957656239638,
+        "baselineExpected": 667.6666666666647,
+        "modelDeviance": 0.3132980937554136,
+        "baselineDeviance": 1.1203002329526393,
+        "modelMAE": 0.11873150816059239,
+        "baselineMAE": 0.09616463329126373,
+        "modelCoverage": 38,
+        "baselineCoverage": 37,
+        "reactiveCoverage": 28
+      },
+      "unseenFutureEvents": 148,
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.0070171160350448085,
+        "loss": 0.26971504733189094,
+        "initialLoss": 0.28449631382478385,
+        "tolerance": 0.00001
+      },
+      "seconds": 1.4344205419999998
+    }
+  ]
+}
