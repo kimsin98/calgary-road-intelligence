@@ -95,6 +95,7 @@ export function AnnualForecastPanel() {
   return (
     <div className="decision-panel">
       {controls}
+      <p className="notice">Improvement suggestions follow PR #2’s rule-based CMF demo. A Skeletal Road leg triggers a ramp-meter candidate without confirming ramp geometry. The displayed change is expected activity × (CMF − 1), an illustrative calculation using crash-study factors; it is not a validated reduction in reports or crashes. Confirm local engineering applicability.</p>
       {data.observation&&<p className="notice">Historical replay · observed through {data.observation.through}. {data.observation.complete?"Full 365-day observation window available.":"Partial observation window; this is not a complete annual backtest."} Forecast covers 365 days. {data.historySelection}</p>}
       <div className="decision-heading">
         <h2>Annual planning outlook</h2>
@@ -154,7 +155,7 @@ export function AnnualForecastPanel() {
                 {Math.round(r.priorWeight * 100)}%
                 <small>Ridge rank {r.ridgeRank}</small>
               </td>
-              {future&&<td className="suggestion-cell">{suggestImprovement(siteControl(r))?<button onClick={()=>setSelected(r.id)}>{suggestImprovement(siteControl(r))!.action}</button>:"No supported treatment match"}<small>Verify mapped facilities and study applicability</small></td>}
+              {future&&<td className="suggestion-cell">{suggestImprovement(siteControl(r),r.expected)?<button onClick={()=>setSelected(r.id)}>{suggestImprovement(siteControl(r),r.expected)!.action}</button>:"No supported treatment match"}<small>CMF demo estimate: {suggestImprovement(siteControl(r),r.expected)?.expectedChange.toFixed(2)??"—"} · not validated report reduction</small></td>}
               {revealed&&<td>{r.observedReports??"Unavailable"}</td>}
             </tr>
           ))}
@@ -163,7 +164,7 @@ export function AnnualForecastPanel() {
       {focus && (
         <section>
           <h3>{focus.name ?? focus.id} · annual-unit evidence</h3>
-          {future&&<section aria-label="Annual candidate improvement"><h4>Candidate improvement · expert review required</h4>{suggestImprovement(siteControl(focus))?<><p>{suggestImprovement(siteControl(focus))!.action}</p><p>{suggestImprovement(siteControl(focus))!.source}</p><p>External study CMF: {suggestImprovement(siteControl(focus))!.cmf}. It applies to crashes in the study population, not predicted reductions in traffic reports. Verify mapped assets, local geometry and engineering warrants.</p></>:<p>No supported treatment match. Facility absence and treatment suitability cannot be established from nearby mapped records alone.</p>}</section>}
+          {future&&<section aria-label="Annual candidate improvement"><h4>Candidate improvement · expert review required</h4>{suggestImprovement(siteControl(focus),focus.expected)?<><p>{suggestImprovement(siteControl(focus),focus.expected)!.action}</p><p>{suggestImprovement(siteControl(focus),focus.expected)!.source}</p><p>External study CMF: {suggestImprovement(siteControl(focus),focus.expected)!.cmf}. It applies to crashes in the study population, not predicted reductions in traffic reports. Verify mapped assets, local geometry and engineering warrants.</p></>:<p>No supported treatment match. Facility absence and treatment suitability cannot be established from nearby mapped records alone.</p>}</section>}
           <p>
             {focus.historyReports} reports in fitted history;{" "}
             {focus.last365Reports} in last 365 days. Records below belong to

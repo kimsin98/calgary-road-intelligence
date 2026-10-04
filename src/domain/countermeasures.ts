@@ -1,4 +1,8 @@
-// Research candidates only. CMFs describe crashes in external studies, not changes in Calgary traffic reports.
+// Proof of concept: suggest one countermeasure per forecast location from its traffic control
+// (public/data/site-controls.json, written by analysis/export.py) and apply a crash modification
+// factor (CMF) from the FHWA CMF Clearinghouse. CMFs are hardcoded for a handful of situations;
+// they describe crash changes in other cities, so applying them to incident reports is indicative.
+
 export interface SiteControl {
   kind: "intersection" | "segment";
   name: string | null;
@@ -24,12 +28,12 @@ interface Countermeasure {
 
 export interface Suggestion extends Countermeasure {
   current: string;
-
+  expectedChange: number; // change in expected reports over the forecast horizon (negative = fewer)
 }
 
-const CMF: Record<"signal" | "signalVisibility" | "variableSpeed", Countermeasure> = {
+const CMF: Record<"signal" | "signalVisibility" | "rampMeter" | "variableSpeed", Countermeasure> = {
   signal: {
-    action: "Review signal warrants",
+    action: "Install traffic signal",
     cmf: 0.84,
     source: "CMF Clearinghouse #9144, Sacchia et al. 2016 (Canada), 4★: urban/suburban stop-controlled, all crashes",
   },
@@ -38,8 +42,13 @@ const CMF: Record<"signal" | "signalVisibility" | "variableSpeed", Countermeasur
     cmf: 0.949,
     source: "CMF Clearinghouse #8927, Le et al. 2017, 4★: urban signalized intersections, all crashes",
   },
+  rampMeter: {
+    action: "Install ramp meter",
+    cmf: 0.86,
+    source: "CMF Clearinghouse #11029, Haule et al. 2021, 4★: interstate ramps, all crashes",
+  },
   variableSpeed: {
-    action: "Assess variable-speed feasibility",
+    action: "Install variable speed limit",
     cmf: 0.927,
     source: "CMF Clearinghouse #11834, Chakraborty & Mahmud 2024, 4★: freeways and expressways, all crashes",
   },
@@ -62,16 +71,19 @@ function describe(c: SiteControl) {
   return c.kind === "intersection" ? "No signal or stop/yield signs" : (c.roadClass ?? "Segment");
 }
 
-export function suggestImprovement(c: SiteControl | undefined): Suggestion | null {
+export function suggestImprovement(c: SiteControl | undefined, expected = 0): Suggestion | null {
   if (!c) return null;
   let measure: Countermeasure | null = null;
   if (c.kind === "intersection") {
+    // An unsignalized node with a freeway (skeletal) leg is an interchange ramp merge or terminal.
+    const interchange = c.roadClass === FREEWAY;
     if (c.signalized) measure = CMF.signalVisibility;
+    else if (interchange) measure = CMF.rampMeter;
     else if (c.stopSigns > 0 && ARTERIAL.has(c.roadClass ?? "") && ARTERIAL.has(c.minorRoadClass ?? ""))
       measure = CMF.signal;
   } else if (c.roadClass === FREEWAY) {
     measure = CMF.variableSpeed;
   }
   if (!measure) return null;
-  return { ...measure, current: describe(c),  };
+  return { ...measure, current: describe(c), expectedChange: expected * (measure.cmf - 1) };
 }
