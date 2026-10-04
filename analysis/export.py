@@ -5,6 +5,9 @@ the next 365 days, and adds the ridge baseline (trained on all complete calendar
 comparison. Writes the top units with geometry to ../public/data/forecast-annual.json and .json.gz.
 The schema is documented in README.md.
 
+Also writes ../public/data/site-controls.json(.gz): traffic control at each dashboard location
+(public/data/dataset.json), used by the Forward outlook's suggested improvements.
+
 Run backtest.py first. Usage: .venv/bin/python export.py [--top 1000]
 """
 
@@ -14,12 +17,15 @@ import json
 from datetime import date, datetime, timedelta, timezone
 
 import numpy as np
+import shapely
 
 import model
 from backtest import FIRST_RIDGE_TRAINING, REPORT
-from prepare import INTERSECTION_METRES
+from prepare import INTERSECTION_METRES, to_metres
 
 OUT = model.DATA.parent.parent / "public/data/forecast-annual.json"
+CONTROLS_OUT = OUT.with_name("site-controls.json")
+DASHBOARD = OUT.with_name("dataset.json")
 HORIZON_DAYS = 365
 CAVEATS = [
     "Counts are City traffic incident reports (including stalls and signal faults), not confirmed collisions.",
@@ -138,6 +144,51 @@ def main():
     for r in rows[:5]:
         print(f"  {r['rank']:>2}. {r['name']} ({r['kind']}): {r['expected']:.1f} [{r['low90']}-{r['high90']}], "
               f"history {r['historyReports']}, ridge rank {r['ridgeRank']}")
+
+    export_site_controls(inputs, cutoff)
+
+
+def write_json(path, value):
+    text = json.dumps(value, separators=(",", ":"))
+    path.write_text(text)
+    path.with_suffix(".json.gz").write_bytes(gzip.compress(text.encode(), compresslevel=9))
+    return text
+
+
+def export_site_controls(inputs, cutoff):
+    """Traffic control at each dashboard location: the intersection within 76 m, else its segment."""
+    locations = json.loads(DASHBOARD.read_text())["locations"]
+    units = inputs.units
+    nodes = np.flatnonzero(units.kind.to_numpy() == "intersection")
+    tree = shapely.STRtree(shapely.points(*to_metres(units.lon.to_numpy()[nodes], units.lat.to_numpy()[nodes])))
+    points = shapely.points(*to_metres([l["lon"] for l in locations], [l["lat"] for l in locations]))
+    (located, node), _ = tree.query_nearest(points, max_distance=INTERSECTION_METRES, return_distance=True,
+                                            all_matches=False)
+    nearest = dict(zip(located, nodes[node]))
+    row_of = dict(zip(units.unit_id, range(len(units))))
+    count = {name: inputs.assets_at(name, cutoff) for name in ("signal", "stop_sign", "yield_sign", "crosswalk")}
+    text = lambda v: v if isinstance(v, str) else None
+    controls = {}
+    for i, location in enumerate(locations):
+        row = nearest.get(i, row_of.get(location["id"]))
+        if row is None:  # grid cells away from any road segment
+            continue
+        u = units.iloc[row]
+        node = u.kind == "intersection"
+        controls[location["id"]] = {
+            "kind": u.kind,
+            "name": text(u["name"]),
+            "roadClass": text(u.major if node else u.road_class),
+            "minorRoadClass": text(u.minor) if node else None,
+            "legs": int(u.legs) if node else 0,
+            "signalized": bool(count["signal"][row]),
+            "stopSigns": int(count["stop_sign"][row]),
+            "yieldSigns": int(count["yield_sign"][row]),
+            "crosswalks": int(count["crosswalk"][row]),
+        }
+    payload = write_json(CONTROLS_OUT, {"dataThrough": cutoff.isoformat(), "controls": controls})
+    print(f"Wrote {CONTROLS_OUT.name}: {len(controls)} of {len(locations)} dashboard locations, "
+          f"{len(gzip.compress(payload.encode())) / 1e3:.0f} KB gzipped")
 
 
 if __name__ == "__main__":

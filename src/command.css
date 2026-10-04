@@ -589,6 +589,17 @@ footer {
   color: #7699ac;
   font-size: 11px;
 }
+.suggestion-change {
+  margin-left: 6px;
+  color: #7bc6b2;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.suggestion-cell small {
+  display: block;
+  color: #7699ac;
+  font-size: 11px;
+}
 /* Page navigation and independent analysis surfaces. The map stays mounted. */
 [hidden] {
   display: none !important;

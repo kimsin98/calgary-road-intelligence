@@ -1,8 +1,10 @@
 import type { Dataset, ForecastInput, ForecastResult } from "./domain/types";
 import { ForecastMap } from "./components/ForecastMap";
 import { downloadJson } from "./domain/download";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWorkerTask } from "./hooks/useWorkerTask";
+import { loadSnapshot } from "./domain/loadSnapshot";
+import { suggestImprovement, type SiteControls } from "./domain/countermeasures";
 export function ForecastPanel({
   data,
   onSelect,
@@ -18,6 +20,7 @@ export function ForecastPanel({
   const [cutoff, setCutoff] = useState("2026-06-30"),
     [horizon, setHorizon] = useState(30),
     [revealed, setRevealed] = useState(false);
+  const [controls, setControls] = useState<SiteControls | null>(null);
   const {
     result,
     busy,
@@ -29,6 +32,15 @@ export function ForecastPanel({
         type: "module",
       }),
   );
+  const showSuggestions = result?.mode === "future";
+  useEffect(() => {
+    if (!showSuggestions || controls) return;
+    const controller = new AbortController();
+    loadSnapshot("/data/site-controls.json.gz", controller.signal)
+      .then((value) => setControls(value as SiteControls))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [showSuggestions, controls]);
   const effectiveCutoff = mode === "future" ? data.audit.last : cutoff;
   const stale =
     result &&
@@ -334,6 +346,7 @@ export function ForecastPanel({
                 <th>Expected reports</th>
                 <th>Rate baseline</th>
                 {revealed && <th>Actual reports</th>}
+                {showSuggestions && <th>Suggested improvement</th>}
               </tr>
             </thead>
             <tbody>
@@ -352,6 +365,12 @@ export function ForecastPanel({
                   <td>{r.predicted.toFixed(2)}</td>
                   <td>{r.baseline.toFixed(2)}</td>
                   {revealed && <td>{r.target}</td>}
+                  {showSuggestions && (
+                    <SuggestionCell
+                      loaded={controls !== null}
+                      suggestion={suggestImprovement(controls?.controls[r.id], r.predicted)}
+                    />
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -473,5 +492,32 @@ export function ForecastPanel({
         </>
       )}
     </div>
+  );
+}
+
+function SuggestionCell({
+  loaded,
+  suggestion,
+}: {
+  loaded: boolean;
+  suggestion: ReturnType<typeof suggestImprovement>;
+}) {
+  if (!loaded) return <td className="suggestion-cell">…</td>;
+  if (!suggestion)
+    return (
+      <td className="suggestion-cell">
+        —<small>No matching CMF</small>
+      </td>
+    );
+  return (
+    <td className="suggestion-cell" title={suggestion.source}>
+      {suggestion.action}{" "}
+      <span className="suggestion-change">
+        {suggestion.expectedChange.toFixed(2).replace("-", "−")} reports
+      </span>
+      <small>
+        {suggestion.current} · CMF {suggestion.cmf}
+      </small>
+    </td>
   );
 }
