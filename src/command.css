@@ -2054,3 +2054,31 @@ body:has(.admin-dashboard) > #root > footer {
 .agent-markdown code { color:#ffd98a; }
 .agent-markdown blockquote { margin-left:0; padding-left:18px; border-left:3px solid var(--amber); color:#b8cbd7; }
 .agent-markdown table { display:block; max-width:100%; overflow-x:auto; }
+
+/* Readable contrast across the dashboard's dark surfaces. */
+:root { color:#e8f0f5; --line:#526f82; --ice:#b3e4f3; }
+.decision-panel { color:#e4edf3; }
+.decision-panel p,.algorithm-note p,.outlook-context,.agent-markdown blockquote { color:#c8d8e4; }
+.decision-panel small,.outlook-stats span,.outlook-stats small,.sidebar-footer,.panel-subtitle { color:#b3c7d5; }
+.decision-panel label { color:#dbe7ef; }
+.decision-panel input,.decision-panel select,.decision-panel textarea {
+  background:#0b1721; color:#f0f5f8; border-color:#647f92;
+}
+.decision-panel textarea::placeholder,.decision-panel input::placeholder { color:#a8bdcc; opacity:1; }
+.decision-panel button { border-color:#587589; color:#e9f2f7; background-color:#203747; }
+.decision-panel button:hover { background-color:#2d4b5f; border-color:#b3e4f3; }
+.decision-panel button:disabled { opacity:1; color:#9eb0bd; background-color:#152530; border-color:#3d5362; cursor:not-allowed; }
+.decision-panel button[aria-pressed="true"] { color:#ffe1a3; border-color:#ffca85; background-color:#493923; }
+.decision-panel :is(button,input,select,textarea,a):focus-visible { outline:2px solid #b3e4f3; outline-offset:3px; }
+.decision-panel th { background:#203849; color:#e8f2f7; border-color:#526f82; }
+.decision-panel td { border-color:#3c5769; }
+.outlook-table tbody tr:nth-child(even) { background:#172a38; }
+.outlook-table tbody tr:hover { background:#203849; }
+.outlook-intro,.algorithm-note,.outlook-evidence,.outlook-stats>div,.outlook-table,.agent-messages { border-color:#526f82; }
+.outlook-tags span,.review-status { color:#d4e3ed; border-color:#607c8e; background:#203543; }
+.agent-message { background:#193343; border:1px solid #486879; }
+.agent-message.user { background:#2a3c49; border-color:#627583; }
+.agent-markdown a,.decision-panel a { color:#a9e3ff; text-decoration:underline; text-underline-offset:3px; }
+.admin-sidebar .dashboard-nav button { color:#c6d8e5; }
+.admin-sidebar .dashboard-nav button .nav-index { color:#a0b8c9; }
+.admin-sidebar .dashboard-nav button.active { color:#ffe1a3; }
