@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SiteControl } from "./domain/countermeasures";
 export interface InspectionRecord { status:string; notes:string; checks:string[]; savedAt:string }
 export type InspectionRecords=Record<string,InspectionRecord>;
@@ -7,6 +7,20 @@ export function readReviews(key:string):InspectionRecords {
 }
 export function InspectionReview({control,record,onSave}:{control?:SiteControl;record?:InspectionRecord;onSave:(record:InspectionRecord)=>boolean}) {
  const [status,setStatus]=useState(record?.status??'Needs more information'),[notes,setNotes]=useState(record?.notes??''),[checks,setChecks]=useState<string[]>(record?.checks??[]),[message,setMessage]=useState('');
+ const dirty=status!==(record?.status??'Needs more information')||notes!==(record?.notes??'')||JSON.stringify(checks)!==JSON.stringify(record?.checks??[]);
+ useEffect(()=>{
+   if(!dirty)return;
+   const unload=(e:BeforeUnloadEvent)=>{e.preventDefault();e.returnValue=''};
+   const navigate=(e:MouseEvent)=>{
+     const target=e.target as Element;
+     if(target.closest('.inspection-review'))return;
+     if(target.closest('button,a,.forecast-map canvas')&&!window.confirm('You have unsaved inspection notes. Discard these changes and continue?')) {e.preventDefault();e.stopImmediatePropagation()}
+   };
+   const change=(e:Event)=>{const target=e.target as HTMLSelectElement;if(target.closest('.inspection-review'))return;if(target.tagName==='SELECT'&&!window.confirm('You have unsaved inspection notes. Discard these changes and continue?')){target.value=target.dataset.previousValue??target.value;e.stopImmediatePropagation()}};
+   const remember=(e:FocusEvent)=>{const t=e.target as HTMLSelectElement;if(t.tagName==='SELECT')t.dataset.previousValue=t.value};
+   window.addEventListener('beforeunload',unload);document.addEventListener('click',navigate,true);document.addEventListener('change',change,true);document.addEventListener('focusin',remember,true);
+   return()=>{window.removeEventListener('beforeunload',unload);document.removeEventListener('click',navigate,true);document.removeEventListener('change',change,true);document.removeEventListener('focusin',remember,true)};
+ },[dirty]);
  const tasks=['Confirm exact location and approach geometry','Check whether recent reports describe the same issue',...(control?.signalized?['Check signal visibility, obstruction and equipment condition']:['Verify mapped traffic control and approach signage']),...(control?.crosswalks?['Check crossing markings, visibility and pedestrian access']:[]),'Confirm existing works and maintenance before proposing changes'];
  return <section className="inspection-review" aria-label="Inspection review"><h4>Inspection checklist</h4><p>Confirm these items during desk review or a site visit. Checking an item records your review; it does not verify the model.</p>{tasks.map(task=><label className="inspection-check" key={task}><input type="checkbox" checked={checks.includes(task)} onChange={e=>{setChecks(v=>e.target.checked?[...v,task]:v.filter(c=>c!==task));setMessage('Unsaved changes')}}/>{task}</label>)}<div className="inspection-fields"><label>Review decision<select aria-label="Review decision" value={status} onChange={e=>{setStatus(e.target.value);setMessage('Unsaved changes')}}>{['Needs more information','Worth inspecting','Already addressed','Not applicable'].map(v=><option key={v}>{v}</option>)}</select></label><label>Reviewer notes<textarea aria-label="Reviewer notes" maxLength={3000} value={notes} onChange={e=>{setNotes(e.target.value);setMessage('Unsaved changes')}} placeholder="Record the evidence, uncertainty and next action."/></label></div><button onClick={()=>setMessage(onSave({status,notes,checks,savedAt:new Date().toISOString()})?'Review saved on this device':'Could not save. Browser storage is unavailable.')}>Save review</button><p role="status">{message|| (record?'Saved review loaded':'No saved review for this forecast and location.')}</p><small>Stored on this device for this snapshot, forecast period and location. Saved reviews are included in forecast exports; they are not shared with teammates automatically.</small></section>;
 }

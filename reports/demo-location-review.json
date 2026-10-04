@@ -1,0 +1,417 @@
+{
+  "cutoff": "2026-10-02",
+  "dataFingerprint": "a2ec4bb2cec89395450812bc4683d1373248085e6939bd3b72658e74043a914a",
+  "method": "Top10 source-ID/date/facility desk check; no field or imagery verification",
+  "locations": [
+    {
+      "rank": 1,
+      "id": "node:4246:-648",
+      "name": "GLENMORE TR SE & DEERFOOT TR SE",
+      "coordinates": [
+        -114.03925608011444,
+        50.9941726618705
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "GLENMORE TR SE & DEERFOOT TR SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 1,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-28 13:40:37+00:0050.994171041580366-114.03925199779404",
+          "date": "2026-09-28",
+          "description": "Stalled vehicle. Blocking the right lane"
+        },
+        {
+          "id": "2026-09-18 23:31:40+00:0050.994171041580366-114.03925199779404",
+          "date": "2026-09-18",
+          "description": "Traffic incident.  Blocking the left lane"
+        },
+        {
+          "id": "2026-09-14T22:55:3950.994171041580366-114.03925199779404",
+          "date": "2026-09-14",
+          "description": "Single vehicle incident."
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "node:-113:-401",
+      "name": "GLENMORE TR SW & 14 ST SW",
+      "coordinates": [
+        -114.10161659513591,
+        50.996393884892086
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "GLENMORE TR SW & 14 ST SW",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-24 20:51:34+00:0050.9963940307993-114.10160849287034",
+          "date": "2026-09-24",
+          "description": "Single vehicle incident."
+        },
+        {
+          "id": "2026-09-22 13:01:21+00:0050.9963940307993-114.10160849287034",
+          "date": "2026-09-22",
+          "description": "Traffic incident. Blocking the left lane"
+        },
+        {
+          "id": "2026-09-16T23:53:4950.9963940307993-114.10160849287034",
+          "date": "2026-09-16",
+          "description": "Traffic incident."
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "node:4993:7493",
+      "name": "DEERFOOT TR NE & 16 AV NE",
+      "coordinates": [
+        -114.02856938483548,
+        51.06738309352518
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "DEERFOOT TR NE & 16 AV NE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Urban Boulevard",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-14T04:58:3151.06738599262929-114.0285645441459",
+          "date": "2026-09-13",
+          "description": "Two vehicle incident.  Blocking the left lane"
+        },
+        {
+          "id": "2026-09-06T13:13:4151.06738599262929-114.0285645441459",
+          "date": "2026-09-06",
+          "description": "Traffic incident."
+        },
+        {
+          "id": "2026-08-14T11:51:0551.06738599262929-114.0285645441459",
+          "date": "2026-08-14",
+          "description": "Multi-vehicle incident. Blocking multiple lanes"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "road:127378",
+      "name": "DEERFOOT TR SE",
+      "coordinates": [
+        -114.03088817575963,
+        51.00216210379895
+      ],
+      "facilities": {
+        "kind": "segment",
+        "name": "DEERFOOT TR SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": null,
+        "legs": 0,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-08-25T00:09:3451.00584033930652-114.0284057597295",
+          "date": "2026-08-24",
+          "description": "Two vehicle incident. Blocking the right lane"
+        },
+        {
+          "id": "2026-08-21T17:02:1651.001195175055464-114.03172838035049",
+          "date": "2026-08-21",
+          "description": "Two vehicle incident."
+        },
+        {
+          "id": "2026-08-14T15:50:2451.00159251706534-114.03142233226603",
+          "date": "2026-08-14",
+          "description": "Multi-vehicle incident. Blocking the SB right lane"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "node:5606:5421",
+      "name": "MEMORIAL DR NE & MEMORIAL DR SE",
+      "coordinates": [
+        -114.01979971387696,
+        51.04875
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "MEMORIAL DR NE & MEMORIAL DR SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-10-02 13:25:44+00:0051.0487470064063-114.01979843515299",
+          "date": "2026-10-02",
+          "description": "Traffic incident.  Blocking the left lane"
+        },
+        {
+          "id": "2026-09-29 13:05:05+00:0051.0487470064063-114.01979843515299",
+          "date": "2026-09-29",
+          "description": "Two vehicle incident.  Blocking the SB right lane"
+        },
+        {
+          "id": "2026-09-14T02:48:3151.0487470064063-114.01979843515299",
+          "date": "2026-09-13",
+          "description": "Two vehicle incident.  Blocking the SB lanes and the left WB lane."
+        }
+      ]
+    },
+    {
+      "rank": 6,
+      "id": "node:6281:4121",
+      "name": "DEERFOOT TR SE & 17 AV SE",
+      "coordinates": [
+        -114.01014306151644,
+        51.037059352517986
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "DEERFOOT TR SE & 17 AV SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Arterial Street",
+        "legs": 4,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 1
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-10-03 00:34:27+00:0051.037056011647046-114.01014602121316",
+          "date": "2026-10-02",
+          "description": "Traffic incident.  Blocking the left lane"
+        },
+        {
+          "id": "2026-09-25 22:55:27+00:0051.037056011647046-114.01014602121316",
+          "date": "2026-09-25",
+          "description": "Two vehicle incident. Blocking the right lane"
+        },
+        {
+          "id": "2026-09-22 23:25:20+00:0051.037056011647046-114.01014602121316",
+          "date": "2026-09-22",
+          "description": "Traffic incident. Blocking the right lane"
+        }
+      ]
+    },
+    {
+      "rank": 7,
+      "id": "node:4331:9635",
+      "name": "DEERFOOT TR NE & 32 AV NE",
+      "coordinates": [
+        -114.0380400572246,
+        51.086645683453234
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "DEERFOOT TR NE & 32 AV NE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-08T13:09:4151.08664602697578-114.038046024028",
+          "date": "2026-09-08",
+          "description": "Traffic incident. Blocking the merge lane."
+        },
+        {
+          "id": "2026-08-27T16:48:5051.08664602697578-114.038046024028",
+          "date": "2026-08-27",
+          "description": "Multi-vehicle incident. Blocking the NB left lane"
+        },
+        {
+          "id": "2026-08-15T22:20:1451.08664602697578-114.038046024028",
+          "date": "2026-08-15",
+          "description": "Two vehicle incident. Blocking the right EB lane."
+        }
+      ]
+    },
+    {
+      "rank": 8,
+      "id": "node:4636:-207",
+      "name": "DEERFOOT TR SE",
+      "coordinates": [
+        -114.03367668097282,
+        50.998138489208635
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "DEERFOOT TR SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-27 21:13:06+00:0050.99817756484388-114.0336659634719",
+          "date": "2026-09-27",
+          "description": "Multi-vehicle incident. Blocking the SB right lanes"
+        },
+        {
+          "id": "2026-08-26T15:56:1350.99816685716144-114.03370000450107",
+          "date": "2026-08-26",
+          "description": "Multi-vehicle incident. Blocking the SB right lane"
+        },
+        {
+          "id": "2026-08-22T21:28:5550.99797354686329-114.03380201038829",
+          "date": "2026-08-22",
+          "description": "Multi-vehicle incident. Blocking multiple lanes"
+        }
+      ]
+    },
+    {
+      "rank": 9,
+      "id": "node:6511:1448",
+      "name": "PEIGAN TR SE & DEERFOOT TR SE",
+      "coordinates": [
+        -114.00685264663805,
+        51.01302158273381
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "PEIGAN TR SE & DEERFOOT TR SE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-09-28 18:22:25+00:0051.01301699257556-114.00685195313773",
+          "date": "2026-09-28",
+          "description": "Two vehicle incident.  Blocking the left lane"
+        },
+        {
+          "id": "2026-09-26 00:36:08+00:0051.01301699257556-114.00685195313773",
+          "date": "2026-09-25",
+          "description": "Two vehicle incident.  Blocking multiple lanes"
+        },
+        {
+          "id": "2026-09-24 22:04:50+00:0051.01301699257556-114.00685195313773",
+          "date": "2026-09-24",
+          "description": "Two vehicle incident.   Blocking the left lane"
+        }
+      ]
+    },
+    {
+      "rank": 10,
+      "id": "node:3763:13586",
+      "name": "DEERFOOT TR NE & BEDDINGTON TR NE",
+      "coordinates": [
+        -114.04616595135907,
+        51.12217625899281
+      ],
+      "facilities": {
+        "kind": "intersection",
+        "name": "DEERFOOT TR NE & BEDDINGTON TR NE",
+        "roadClass": "Skeletal Road",
+        "minorRoadClass": "Skeletal Road",
+        "legs": 3,
+        "signalized": false,
+        "stopSigns": 0,
+        "yieldSigns": 0,
+        "crosswalks": 0
+      },
+      "sampleCount": 3,
+      "matchedDashboardSourceIds": 3,
+      "datesWithinHistory": true,
+      "review": "Desk review only: spatial association not field verified",
+      "samples": [
+        {
+          "id": "2026-08-02T23:11:3451.122168998221674-114.0461684824993",
+          "date": "2026-08-02",
+          "description": "Multi-vehicle incident. Blocking the right lane"
+        },
+        {
+          "id": "2026-07-15T13:07:0751.122168998221674-114.0461684824993",
+          "date": "2026-07-15",
+          "description": "Traffic incident. Partially blocking on-ramp to Deerfoot Tr"
+        },
+        {
+          "id": "2026-07-16T00:15:3351.122168998221674-114.0461684824993",
+          "date": "2026-07-15",
+          "description": "Traffic incident."
+        }
+      ]
+    }
+  ]
+}
