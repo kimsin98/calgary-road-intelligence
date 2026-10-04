@@ -18,7 +18,9 @@ export interface ForecastMapInput {
 }
 
 /** Isolated forecast layer: no playback, reactive filters or future outcomes. */
-export function ForecastMap({ result }: { result: ForecastMapInput }) {
+export function ForecastMap({ result, selectedId, onSelect }: { result: ForecastMapInput; selectedId?: string | null; onSelect?: (id: string) => void }) {
+  const selection = useRef({selectedId, onSelect});
+  selection.current = {selectedId, onSelect};
   const container = useRef<HTMLDivElement>(null);
   const shell = useRef<HTMLElement>(null);
   const map = useRef<Map | null>(null);
@@ -66,10 +68,11 @@ export function ForecastMap({ result }: { result: ForecastMapInput }) {
             },
           });
           update(m);
+          focusLocation(m);
         });
         m.on("click", "forecast-points", (e) => {
           const id = e.features?.[0]?.properties?.id;
-          if (typeof id === "string") setSelected(id);
+          if (typeof id === "string") { setSelected(id); selection.current.onSelect?.(id); }
         });
         m.on("mouseenter", "forecast-points", () => {
           m.getCanvas().style.cursor = "pointer";
@@ -104,14 +107,20 @@ export function ForecastMap({ result }: { result: ForecastMapInput }) {
     };
     (m.getSource("forecast") as GeoJSONSource | undefined)?.setData(features);
   }
+  function focusLocation(m: Map) {
+    const id = selection.current.selectedId;
+    const row = latest.current.rows.find(r => r.id === id);
+    if (row) m.easeTo({center: [row.lon, row.lat], zoom: Math.max(m.getZoom(), 13), duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650});
+  }
+  useEffect(() => { if (map.current?.getSource('forecast')) focusLocation(map.current); }, [selectedId]);
   // The load handler uses the latest result if a new prediction arrives while tiles load.
   const latest = useRef(result);
   latest.current = result;
   useEffect(() => {
     if (map.current?.getSource("forecast")) update(map.current);
     setSelected(null);
-  }, [result]);
-  const location = result.rows.find((r) => r.id === selected);
+  }, [result.cutoff, result.end, result.objective, result.rows]);
+  const location = result.rows.find((r) => r.id === (selectedId === undefined ? selected : selectedId));
   return (
     <section className="forecast-map-section" ref={shell}>
       <div className="decision-heading">
@@ -151,7 +160,7 @@ export function ForecastMap({ result }: { result: ForecastMapInput }) {
             </span>
             <span className="hud-item">
               <span className="teal-dot" />
-              Other known locations
+              Other forecast locations
             </span>
           </div>
         </div>
