@@ -2082,3 +2082,21 @@ body:has(.admin-dashboard) > #root > footer {
 .admin-sidebar .dashboard-nav button { color:#c6d8e5; }
 .admin-sidebar .dashboard-nav button .nav-index { color:#a0b8c9; }
 .admin-sidebar .dashboard-nav button.active { color:#ffe1a3; }
+
+/* Stronger reading contrast for evidence and conversation. */
+:root { color:#f2f6fa; }
+.decision-panel { color:#f0f5f9; }
+.decision-panel p,.algorithm-note p,.outlook-context,.agent-markdown blockquote { color:#e0eaf2; }
+.decision-panel small,.outlook-stats span,.outlook-stats small,.sidebar-footer,.panel-subtitle { color:#ccdae5; }
+.decision-panel label,.admin-sidebar .dashboard-nav button { color:#e0eaf2; }
+.decision-panel th { background:#284558; color:#ffffff; }
+.decision-panel td { color:#edf4f8; border-color:#597487; }
+.outlook-table tbody tr:nth-child(even) { background:#1b3040; }
+.outlook-table tbody tr:hover { background:#2b495e; }
+.agent-message { background:#102937; border-color:#678899; }
+.agent-message.user { background:#2b4152; border-color:#829aaa; }
+.agent-messages,.outlook-table,.algorithm-note,.outlook-evidence { border-color:#6d889b; }
+.agent-markdown a,.decision-panel a { color:#c0ecff; }
+.review-status,.outlook-tags span { color:#eef6fb; border-color:#8299aa; }
+.decision-panel textarea::placeholder,.decision-panel input::placeholder { color:#c2d2df; }
+.admin-sidebar .dashboard-nav button .nav-index { color:#c1d4e1; }
