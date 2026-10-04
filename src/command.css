@@ -2100,3 +2100,32 @@ body:has(.admin-dashboard) > #root > footer {
 .review-status,.outlook-tags span { color:#eef6fb; border-color:#8299aa; }
 .decision-panel textarea::placeholder,.decision-panel input::placeholder { color:#c2d2df; }
 .admin-sidebar .dashboard-nav button .nav-index { color:#c1d4e1; }
+
+/* Site-wide contrast: navigation, controls, reactive evidence and summaries. */
+:root { --surface:#182c3c; --line:#6a879b; }
+body { color:#eef5fa; background-color:#060e16; }
+.admin-topbar { background:#142838; border-bottom-color:#6a879b; }
+.admin-sidebar { background:#102232; border-right-color:#607e93; }
+.admin-workspace { background-color:#0a1722; }
+.admin-dashboard :is(p,label,summary,td) { color:#dfeaf3; }
+.admin-dashboard :is(h1,h2,h3,h4,strong) { color:#f2f7fb; }
+.admin-dashboard :is(small,.panel-subtitle,.header-note,.sidebar-footer,.topbar-breadcrumb,.nav-index) { color:#c3d4e2; }
+.admin-dashboard :is(.dashboard-summary,.dashboard-controls,.page-controls,.shortlist,.evidence,.notice,.optimization-summary>div) {
+  border-color:#648397;
+}
+.admin-dashboard :is(.dashboard-summary,.dashboard-controls,.shortlist,.evidence) { background-color:#162b3b; }
+.admin-dashboard .dashboard-summary span { color:#c9dbe8; }
+.admin-dashboard .dashboard-summary strong { color:#f4f8fc; }
+.admin-dashboard :is(input,select,textarea) { color:#f5f8fb; background-color:#0a1722; border-color:#7793a6; }
+.admin-dashboard :is(input,textarea)::placeholder { color:#c2d3e0; opacity:1; }
+.admin-dashboard button { color:#eaf4fa; border-color:#637f93; }
+.admin-dashboard button:not(.active):not([aria-pressed="true"]):hover { background-color:#2a4b61; border-color:#c1eaff; }
+.admin-dashboard button:disabled { opacity:1; color:#aabdc9; background-color:#172b38; border-color:#486273; }
+.admin-dashboard :is(button,input,select,textarea,a):focus-visible { outline:2px solid #b3e4f3; outline-offset:3px; }
+.admin-dashboard th { color:#f5f9fc; background-color:#284558; border-color:#648397; }
+.admin-dashboard td { border-color:#536e81; }
+.admin-sidebar .dashboard-nav button { color:#d9e8f2; }
+.admin-sidebar .dashboard-nav button.active { color:#ffe0a0; border-color:#ffca85; background-color:#43341f; }
+.admin-dashboard :is(.panel-heading span,.stat-label,.muted) { color:#c5d8e6; }
+.admin-dashboard .notice { background-color:#203847; color:#dceaf3; }
+.admin-dashboard a { color:#b7e7ff; }
