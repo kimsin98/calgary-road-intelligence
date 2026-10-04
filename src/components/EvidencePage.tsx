@@ -48,6 +48,12 @@ export function EvidencePage({
             <h2>{focus.name}</h2>
             <p>
               {focus.count} events across {focus.days} dates ·{" "}
+              {config.typeWeights && config.typeWeightMode !== "equal" && (
+                <span>
+                  Weighted activity: {focus.weightedActivity.toFixed(2)} · raw
+                  reports: {focus.count}.{" "}
+                </span>
+              )}
               {focus.lowEvidence ? "Limited evidence" : "Repeated observations"}
             </p>
             {focus.volume && (

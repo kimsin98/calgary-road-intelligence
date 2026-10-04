@@ -7,3 +7,16 @@ test('morning peak excludes weekends and other hours',()=>{assert.equal(selectEv
 test('capacity and comparison account for actual membership',()=>{const a=rank(events,locations,{...defaults,capacity:1}),b=rank(events,locations,{...defaults,capacity:2});const c=compare(a,b);assert.equal(c.entered.length,1);assert.equal(c.exited.length,0);assert.equal(c.retained,1)});
 test('empty views produce no candidates',()=>{assert.equal(rank(events,locations,{...defaults,category:'Road conditions'}).top.length,0)});
 test('evaluation future windows do not train on future location',()=>{const r=evaluate([event('1','a','2026-03-15'),event('2','b','2026-04-01')],locations,{...defaults,capacity:1});assert.equal(r[0].total,1);assert.equal(r[0].candidate,0)});
+
+test('type weights change frequency ranking without changing raw counts',()=>{
+ const records=[event('1','a','2025-12-02'),event('2','b','2025-12-02'),event('3','b','2025-12-03')];records[0].category='Collision-related';
+ const p=rank(records,locations,{...defaults,weights:[1,0,0],typeWeights:{'Collision-related':3,Signals:.5}});
+ assert.equal(p.top[0].id,'a');assert.equal(p.top[0].count,1);assert.equal(p.top[0].weightedActivity,3);assert.equal(p.selected,3);
+});
+
+test('equal mode retains loaded weights but uses raw event counts',()=>{
+ const records=[event('1','a','2025-12-02'),event('2','b','2025-12-02'),event('3','b','2025-12-03')];records[0].category='Collision-related';
+ const config={...defaults,weights:[1,0,0],typeWeights:{'Collision-related':3,Signals:.5}};
+ const equal=rank(records,locations,{...config,typeWeightMode:'equal'}),learned=rank(records,locations,{...config,typeWeightMode:'learned'});
+ assert.equal(equal.top[0].id,'b');assert.equal(learned.top[0].id,'a');assert.equal(equal.rows.find(r=>r.id==='a').weightedActivity,1);
+});

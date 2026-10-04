@@ -72,6 +72,8 @@ export function optimize(events, locations, config) {
       category: config.category,
       weather: config.weather,
       capacity: config.capacity,
+      typeWeights: config.typeWeights ?? null,
+      typeWeightMode: config.typeWeightMode ?? null,
     },
     tuningTotal: winner.windows.reduce((s, w) => s + w.total, 0),
     version: "bounded-search-v2",

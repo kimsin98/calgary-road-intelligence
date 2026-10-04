@@ -1951,3 +1951,20 @@ body:has(.admin-dashboard) > #root > footer {
   color: var(--amber);
   background: #ffca8512;
 }
+
+.scope-apply-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+.scope-apply-actions span {
+  flex-basis: 100%;
+  color: var(--amber);
+  font-size: 15px;
+}
+.scope-apply-actions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

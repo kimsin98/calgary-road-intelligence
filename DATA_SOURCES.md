@@ -1,53 +1,54 @@
 # Data sources and reproducibility
 
-Snapshot retrieved October 3, 2026. No credentials required.
+Current traffic/weather snapshots retrieved October 4, 2026; road inventory and volume context retrieved October 3. No credentials required.
 
-| Source | Original purpose | Use |
+| Source | Original purpose | Current use |
 |---|---|---|
-| [Traffic Incidents](https://data.calgary.ca/Transportation-Transit/Traffic-Incidents/35ra-9556) | Public archive of traffic disruptions, including signal problems, road hazards, stalled vehicles and some unverified collisions | Main evidence; 7,015 UTC-year 2025 records |
-| [Street Centreline](https://data.calgary.ca/Transportation-Transit/Street-Centreline/4dx8-rtm5) | Street right-of-way centreline geometry | 120,567 segments, downloaded across three pages; nearest segment for events |
-| [Traffic Volumes 2024](https://data.calgary.ca/dataset/Traffic-Volumes-for-2024/cauu-7hnw) | Average weekday two-way traffic volume | 334 sections; nearby contextual volume for 1,219 locations |
-| [Prepared case seed](https://github.com/nagusubra/industry-hackathon-lab/tree/main/01-energy-and-infrastructure-systems/Case%205%20-%20Autonomous%20Calgary%20Collision-Hotspot%20Ranking%20Agent) | Hackathon sample | Inspected only; actual analysis uses official records with IDs and UTC fields |
+| [Traffic Incidents](https://data.calgary.ca/Transportation-Transit/Traffic-Incidents/35ra-9556) | Archive of reported traffic disruptions | 27,805 records from UTC January 2023 to download time; reactive and proactive evidence |
+| [Street Centreline](https://data.calgary.ca/Transportation-Transit/Street-Centreline/4dx8-rtm5) | Road centreline geometry | 120,567 segments; nearest-road matching and ambiguity review |
+| [Traffic Volumes 2024](https://data.calgary.ca/dataset/Traffic-Volumes-for-2024/cauu-7hnw) | Average weekday traffic counts | 334 sections, associated by proximity with 2,416 locations; context only |
+| [ECCC hourly weather](https://climate.weather.gc.ca/climate_data/hourly_data_e.html?StationID=50430) | Airport observations | 32,922 hours from January 2023 through October 2026; historical filters and evidence |
+| [Hackathon starter](https://github.com/nagusubra/industry-hackathon-lab) | Case sample | Source comparison and case context; app uses fresh official records |
+| [OpenFreeMap](https://openfreemap.org/) / OpenMapTiles / OpenStreetMap | Vector cartography | Key-free basemap, independent of analytical road matches |
+| [Google Fonts](https://fonts.google.com/) | Typography | Optional DM Sans / Space Grotesk, with fallback fonts |
+| [Snow-clearing routes](https://data.calgary.ca/Health-and-Safety/Snow-and-Ice-Clearing-Priority-Routes-Map/fuea-eg5z) | Existing municipal winter priorities | Planned reference; not imported or scored |
 
-Source portal licenses point to City of Calgary open-data terms. Preserve attribution and review current terms before distribution: https://data.calgary.ca/stories/s/Open-Calgary-Terms-of-Use/u45n-7awa
+## Traffic time and counting
 
-Raw snapshots are stored in data/raw. SHA-256 values are recorded in data/manifest.json for the main snapshots. To rebuild from retained raw files: npm run prepare:data. The manifest tracks source inputs; source retrieval code and the full audit are also retained.
+Paginated source queries use `start_dt_utc >= 2023-01-01` through retrieval time. Source UTC is preserved; local dates/hours/weekends use America/Edmonton with DST. Local snapshot dates are 2022-12-31 through 2026-10-03. The latest reporting day and 2026 year are incomplete.
 
-## Time and counting
+Source count strings `1` and `1.0` both mean one report. Duplicate IDs and invalid records are screened; current snapshot has no rejected or duplicate records. Five categories are text heuristics: Collision-related, Road conditions, Signals, Stalled vehicle, Other / unverified. They are not police-confirmed classifications or severity levels.
 
-`start_dt_utc` is parsed explicitly as UTC and converted with Intl / America/Edmonton, including daylight saving. The source query covers UTC 2025; a few local dates fall on December 31, 2024 and are excluded by the default January–December 2025 UI filter. Thus the raw and displayed totals differ legitimately.
+Raw report counts stay unchanged in weighted mode. Historical weighted activity is a separate frequency input. Forecast targets explicitly distinguish all reports from collision-related reports.
 
-All fetched `count` values are 1. Records are deduplicated by source ID. Recurrence is the number of distinct local dates, not a count of independent causes. Event description categories are deterministic text heuristics and should be manually audited before operational use.
+## Weather time and missingness
 
-## Spatial matching
+ECCC CALGARY INTL A: station 50430, climate ID 3031092, coordinates 51.12 / -114.01. Monthly [CSV endpoint](https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2025&Month=1&Day=1&timeframe=1).
 
-Distance uses a local equirectangular approximation at 51° N (69,900 m per longitude degree, 111,200 m per latitude degree). It is adequate for prototype proximity checks, not surveyed geometry. A metre-based spatial index accelerates the matching. 7,009 events are within 50 m of a road; six use 150 m fallback grid cells. High proximity coverage does not prove correct road identity. Current road inventory is not filtered to its historical 2025 state.
+Source Date/Time (LST) is fixed UTC−7, including summer; conversion to UTC precedes event-hour matching. Local display uses America/Edmonton. Current-month future rows are excluded. All traffic records with local years 2023–2026 match a station hour; seven retained local-2022 boundary reports do not. A matched hour does not guarantee complete measurements.
 
-Volume matches use proximity within 30 m to traffic-count sections. They are displayed only as nearby context: no road-name check or verified section identity has been established, and 2024 average weekday traffic is not 2025 hourly exposure.
+54 hours lack temperature/visibility; 18,172 descriptions are unavailable. Nulls and short rows remain missing. Blank descriptions do not establish clear skies. Snow/rain require explicit descriptions; below freezing means temperature <0°C; low visibility means <1 km. Conditions overlap. Airport weather is not road-surface weather, and per-100-observation-hour rates are not traffic exposure or crash risk. Future weather is excluded from forecasting.
 
-## Remaining limitations
+## Spatial associations
 
-Traffic Incidents is an unofficial archive hosted by the City, with possible collection gaps. It is not a complete police collision dataset. Labels such as collision-related are text classifications, not confirmed severity. Scores are comparative inspection priorities within the selected view. Historical future-record coverage is a reproducible proxy; it cannot prove fewer crashes or useful field inspections.
+A local metre approximation at 51°N and spatial index assign the nearest segment within 50 m. 27,775 reports match roads; 30 use fallback grid cells, producing 9,661 locations. Current geometry is not a historical inventory.
 
-## Historical weather extension
+Review flags: 11,757 junction, 6,976 parallel, 3,052 segment-boundary, 5,990 isolated-proximity and 30 unmatched records. Competing distance gap ≤10 m, crossing angle ≥30° and true polyline ends within 20 m are heuristic thresholds, not confidence probabilities. Assignments are preserved; flags do not prove errors or automatically change scoring. Manual ground-truth review remains pending.
 
-Environment and Climate Change Canada, CALGARY INTL A, station ID 50430 / climate ID 3031092 (51.12, -114.01). Official hourly CSV endpoint: https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=50430&Year=2025&Month=1&Day=1&timeframe=1 . Attribution and reuse terms: https://www.canada.ca/en/environment-climate-change/corporate/transparency/terms-conditions.html .
+Volume association uses a 30 m proximity threshold. No verified section linkage or year/hour-specific exposure is available; 2024 volume is context across the multi-year event snapshot.
 
-Downloaded all 12 months; 8,760 unique hourly timestamps. Source Date/Time (LST) uses fixed UTC-7, converted to UTC before matching the event's UTC hour. Local display and time-of-day filtering use America/Edmonton including DST. Raw hashes and URLs: data/weather-manifest.json. Processed snapshot: public/data/weather.json; audit: reports/weather-audit.json. Rebuild using npm run fetch:weather then npm run prepare:weather. This preparation is separate from the main event pipeline.
+## Starter differences
 
-Eight rows have missing temperature/visibility. Short CSV rows containing only station and timestamp fields are preserved as missing observations. 4,984 weather descriptions are empty/NA; these do not establish clear weather. Hourly precipitation amount is not used. Snow and rain filters use explicit text reports; below-freezing uses temperature <0°C; low visibility uses <1 km. Conditions overlap and do not imply road ice.
+The comparison is specifically against the **original 2025 snapshot**, not current multi-year totals. Starter: 6,984 records; official UTC-year 2025: 7,015. One-to-one matching found 6,980 pairs, four unmatched starter and 35 unmatched official records. Normalized descriptions/quadrants/counts agreed. Mixed apparent offsets (0/+6/+7 hours), seconds and coordinate precision differ; the conversion history is unconfirmed. Seventeen early UTC-year records lie on local December 31, 2024. See `reports/starter-official-comparison.json`.
 
-6,998 of 7,015 UTC-year events match a weather hour. The unmatched 17 precede the local-year station snapshot; the default local-2025 view excludes them. One default-view event matches an hour with missing temperature. Airport weather is city-wide context, not measured conditions at each road. Station exposure hours are filtered by date and time-of-day; category filters events only. Per-100-hour counts are not traffic-normalized risk and do not imply causality.
+## Reproducibility and delivery
 
-## Competing-road screening
+`data/manifest.json` and `data/weather-manifest.json` record hashes and weather download URLs. Raw files in `data/raw` are not committed. Rebuild using the fetch/prepare scripts documented in README. Audits are in `reports/data-audit.json`, `reports/spatial-audit.json`, and `reports/weather-audit.json`.
 
-`npm run audit:spatial` retains original road assignments and examines alternative segment IDs within 50 m. An alternative with distance gap ≤10 m triggers a heuristic review: ≥30° direction difference is junction ambiguity; smaller direction difference is parallel ambiguity unless same-name polyline ends are both within 20 m (segment boundary). These are review labels, not confidence probabilities. Polyline interior vertices are not treated as endpoints.
+Source JSON stays in `public/data` for offline analysis. Build creates level-9 gzip files and deploys only those copies: ~3.56 MB traffic, ~0.45 MB weather. Browser decoding accepts raw gzip and already HTTP-decoded JSON. Parsed memory remains larger than transfer size.
 
-Results: 3,084 junction flags, 1,750 parallel flags, 726 segment-boundary flags, 1,449 isolated proximity records and six unmatched grid records. No manual ground-truth audit has been completed. Road naming, split geometry and coordinate precision can create false flags. `reports/spatial-audit.json` contains thresholds and deterministic source-record examples. Event evidence displays up to three competing segment IDs and distances; JSON exports include per-event review evidence. Locations are not automatically reassigned, merged or penalized based on these unvalidated heuristics.
+## Terms and interpretation
 
+[Calgary terms](https://data.calgary.ca/stories/s/Open-Calgary-Terms-of-Use/u45n-7awa), [ECCC terms](https://www.canada.ca/en/environment-climate-change/corporate/transparency/terms-conditions.html), [OpenStreetMap attribution](https://www.openstreetmap.org/copyright).
 
-## Expanded snapshot (2026-10-04)
-
-The current traffic snapshot contains 27,805 UTC records from January 2023 through October 2026 (Calgary local date range 2022-12-31 to 2026-10-03). Local boundary records are retained; the latest UTC date is October 4. The default analysis shows the latest 90 days, with the full snapshot available in date controls. Forecast fitting uses quarterly 2023–2024 windows plus March/June 2025, with August/September/November 2025 internal tuning. 2026 outcomes are reserved for independent backtests. Future prediction starts at the latest observed local date. Weather remains a 2025-only snapshot; 2024 volume is proximity context across years, not verified exposure. The current local date is still an incomplete reporting day. See reports/forecast-2026-evaluation.json for current evaluation; earlier reports describe older snapshots.
-
-Weather update: 32,922 hourly ECCC observations now cover January 2023 through the latest available October 2026 hour, replacing the earlier 2025-only snapshot. Missing measurements remain null. Deployment snapshots are gzip-compressed (~3.56 MB traffic + 0.45 MB weather); the browser decompresses before schema validation and UTC-hour matching.
+Report coverage and count prediction are proxies. They do not demonstrate injury prevention, causal effects, verified exposure or operational safety. Preserve provider attribution.

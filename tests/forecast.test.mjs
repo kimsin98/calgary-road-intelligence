@@ -37,3 +37,17 @@ test('expanding CV folds precede validation years and refit excludes 2026',()=>{
  assert.equal(r.crossValidation.trials.length,4);assert.equal(r.trainEnds.length,12);
  for(const trial of r.crossValidation.trials)for(const fold of trial.folds){assert.ok(fold.trainYears.every(y=>y<fold.validationYear));assert.equal(fold.windows.length,4);assert.ok(fold.windows.every(w=>w.end<'2026-01-01'));}
 });
+
+test('type-aware model predicts only collision reports and keeps outcomes independent',()=>{
+ const history=[2023,2024,2025].flatMap(y=>['03-01','04-01','07-01','10-01','12-01'].map(d=>({...e('a',y+'-'+d),category:'Collision-related'}))).concat({...e('a','2026-06-01'),category:'Signals'});
+ const c={weighting:'learned',objective:'collision',cutoff:'2026-06-30',dataEnd:'2026-10-03',horizon:30};
+ const a=forecast(history,locations,c),b=forecast([...history,{...e('a','2026-07-01'),category:'Signals'},{...e('a','2026-07-02'),category:'Collision-related'}],locations,c);
+ assert.equal(b.evaluation.total,1);assert.deepEqual(a.coefficients,b.coefficients);assert.equal(a.features.length,10);assert.equal(a.top[0].count,1);assert.equal(a.top[0].baseline,0);assert.equal(a.top[0].x[4],Math.log(2));assert.ok(a.learnedEffects.every(x=>Number.isFinite(x.rateMultiplier)));
+});
+
+test('forecast equal and learned weighting are independent of target',()=>{
+ const history=[2023,2024,2025].flatMap(y=>['03-01','04-01','07-01','10-01','12-01'].map(d=>({...e('a',y+'-'+d),category:'Collision-related'}))).concat({...e('a','2026-06-01'),category:'Signals'});
+ const c={objective:'collision',cutoff:'2026-06-30',dataEnd:'2026-10-03'};
+ const equal=forecast(history,locations,{...c,weighting:'equal'}),learned=forecast(history,locations,{...c,weighting:'learned'}),all=forecast(history,locations,{...c,objective:'all',weighting:'learned'});
+ assert.equal(equal.features.length,6);assert.equal(learned.features.length,10);assert.equal(all.features.length,10);assert.equal(equal.evaluation.total,learned.evaluation.total);
+});

@@ -1,0 +1,247 @@
+{
+  "version": "poisson-ridge-v7",
+  "objective": "collision",
+  "datasetVersion": "2026-10-04T00:48:52.454Z",
+  "results": [
+    {
+      "cutoff": "2026-03-31",
+      "evaluation": {
+        "total": 125,
+        "knownLocations": 8553,
+        "zeroMAE": 0.01461475505670525,
+        "modelExpected": 158.2187211651466,
+        "baselineExpected": 198.66666666666802,
+        "modelDeviance": 0.12669139609590713,
+        "baselineDeviance": 0.3892285202217314,
+        "modelMAE": 0.03257941579227903,
+        "baselineMAE": 0.03285396936747357,
+        "modelCoverage": 12,
+        "equalWeightCoverage": 10,
+        "baselineCoverage": 13,
+        "reactiveCoverage": 12
+      },
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.003980519594334533,
+        "loss": 0.09007252051222049,
+        "initialLoss": 0.09178899213564067,
+        "tolerance": 0.00001
+      },
+      "learnedEffects": [
+        {
+          "name": "Collision-related · past 30 days",
+          "coefficient": 0.16571831745701268,
+          "rateMultiplier": 1.1802406017217217
+        },
+        {
+          "name": "Collision-related · days 31–90",
+          "coefficient": 0.24894037932193652,
+          "rateMultiplier": 1.2826655573998074
+        },
+        {
+          "name": "Road conditions · past 30 days",
+          "coefficient": -0.000217442814690717,
+          "rateMultiplier": 0.9997825808242847
+        },
+        {
+          "name": "Road conditions · days 31–90",
+          "coefficient": -0.0007242813651397418,
+          "rateMultiplier": 0.9992759808632953
+        },
+        {
+          "name": "Signals · past 30 days",
+          "coefficient": 0.0009697987337752544,
+          "rateMultiplier": 1.0009702691406217
+        },
+        {
+          "name": "Signals · days 31–90",
+          "coefficient": 0.011953266287655348,
+          "rateMultiplier": 1.0120249920760438
+        },
+        {
+          "name": "Stalled vehicle · past 30 days",
+          "coefficient": 0.009497510375220957,
+          "rateMultiplier": 1.0095427548500702
+        },
+        {
+          "name": "Stalled vehicle · days 31–90",
+          "coefficient": 0.033125349625041565,
+          "rateMultiplier": 1.0336801025340463
+        },
+        {
+          "name": "Other / unverified · past 30 days",
+          "coefficient": 0.13697741411139283,
+          "rateMultiplier": 1.1468022466800933
+        },
+        {
+          "name": "Other / unverified · days 31–90",
+          "coefficient": 0.20926467383577924,
+          "rateMultiplier": 1.2327712376469775
+        }
+      ],
+      "unseenFutureEvents": 30
+    },
+    {
+      "cutoff": "2026-06-30",
+      "evaluation": {
+        "total": 144,
+        "knownLocations": 9148,
+        "zeroMAE": 0.015741145605596852,
+        "modelExpected": 168.63757070238063,
+        "baselineExpected": 167.00000000000028,
+        "modelDeviance": 0.1342665803667993,
+        "baselineDeviance": 0.3435647632408669,
+        "modelMAE": 0.03361587534223104,
+        "baselineMAE": 0.02729193995044463,
+        "modelCoverage": 23,
+        "equalWeightCoverage": 25,
+        "baselineCoverage": 28,
+        "reactiveCoverage": 23
+      },
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.003980519594334533,
+        "loss": 0.09007252051222049,
+        "initialLoss": 0.09178899213564067,
+        "tolerance": 0.00001
+      },
+      "learnedEffects": [
+        {
+          "name": "Collision-related · past 30 days",
+          "coefficient": 0.16571831745701268,
+          "rateMultiplier": 1.1802406017217217
+        },
+        {
+          "name": "Collision-related · days 31–90",
+          "coefficient": 0.24894037932193652,
+          "rateMultiplier": 1.2826655573998074
+        },
+        {
+          "name": "Road conditions · past 30 days",
+          "coefficient": -0.000217442814690717,
+          "rateMultiplier": 0.9997825808242847
+        },
+        {
+          "name": "Road conditions · days 31–90",
+          "coefficient": -0.0007242813651397418,
+          "rateMultiplier": 0.9992759808632953
+        },
+        {
+          "name": "Signals · past 30 days",
+          "coefficient": 0.0009697987337752544,
+          "rateMultiplier": 1.0009702691406217
+        },
+        {
+          "name": "Signals · days 31–90",
+          "coefficient": 0.011953266287655348,
+          "rateMultiplier": 1.0120249920760438
+        },
+        {
+          "name": "Stalled vehicle · past 30 days",
+          "coefficient": 0.009497510375220957,
+          "rateMultiplier": 1.0095427548500702
+        },
+        {
+          "name": "Stalled vehicle · days 31–90",
+          "coefficient": 0.033125349625041565,
+          "rateMultiplier": 1.0336801025340463
+        },
+        {
+          "name": "Other / unverified · past 30 days",
+          "coefficient": 0.13697741411139283,
+          "rateMultiplier": 1.1468022466800933
+        },
+        {
+          "name": "Other / unverified · days 31–90",
+          "coefficient": 0.20926467383577924,
+          "rateMultiplier": 1.2327712376469775
+        }
+      ],
+      "unseenFutureEvents": 18
+    },
+    {
+      "cutoff": "2026-08-31",
+      "evaluation": {
+        "total": 127,
+        "knownLocations": 9508,
+        "zeroMAE": 0.013357172907025663,
+        "modelExpected": 175.27846921589335,
+        "baselineExpected": 163.3333333333338,
+        "modelDeviance": 0.11701171118570311,
+        "baselineDeviance": 0.356838314685034,
+        "modelMAE": 0.03126974648629796,
+        "baselineMAE": 0.02492637778712669,
+        "modelCoverage": 20,
+        "equalWeightCoverage": 18,
+        "baselineCoverage": 16,
+        "reactiveCoverage": 15
+      },
+      "lambda": 0.001,
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.003980519594334533,
+        "loss": 0.09007252051222049,
+        "initialLoss": 0.09178899213564067,
+        "tolerance": 0.00001
+      },
+      "learnedEffects": [
+        {
+          "name": "Collision-related · past 30 days",
+          "coefficient": 0.16571831745701268,
+          "rateMultiplier": 1.1802406017217217
+        },
+        {
+          "name": "Collision-related · days 31–90",
+          "coefficient": 0.24894037932193652,
+          "rateMultiplier": 1.2826655573998074
+        },
+        {
+          "name": "Road conditions · past 30 days",
+          "coefficient": -0.000217442814690717,
+          "rateMultiplier": 0.9997825808242847
+        },
+        {
+          "name": "Road conditions · days 31–90",
+          "coefficient": -0.0007242813651397418,
+          "rateMultiplier": 0.9992759808632953
+        },
+        {
+          "name": "Signals · past 30 days",
+          "coefficient": 0.0009697987337752544,
+          "rateMultiplier": 1.0009702691406217
+        },
+        {
+          "name": "Signals · days 31–90",
+          "coefficient": 0.011953266287655348,
+          "rateMultiplier": 1.0120249920760438
+        },
+        {
+          "name": "Stalled vehicle · past 30 days",
+          "coefficient": 0.009497510375220957,
+          "rateMultiplier": 1.0095427548500702
+        },
+        {
+          "name": "Stalled vehicle · days 31–90",
+          "coefficient": 0.033125349625041565,
+          "rateMultiplier": 1.0336801025340463
+        },
+        {
+          "name": "Other / unverified · past 30 days",
+          "coefficient": 0.13697741411139283,
+          "rateMultiplier": 1.1468022466800933
+        },
+        {
+          "name": "Other / unverified · days 31–90",
+          "coefficient": 0.20926467383577924,
+          "rateMultiplier": 1.2327712376469775
+        }
+      ],
+      "unseenFutureEvents": 26
+    }
+  ]
+}

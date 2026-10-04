@@ -216,6 +216,7 @@ function App() {
         name: r.name,
         position: r.position,
         count: r.count,
+        weightedActivity: r.weightedActivity,
         days: r.days,
         recent: r.recent,
         previous: r.previous,
@@ -515,6 +516,41 @@ function App() {
             <div hidden={tab !== "Forward outlook"}>
               <ForecastPanel
                 data={data}
+                onApplyTypeWeights={(result) => {
+                  const values = Array.from({ length: 5 }, (_, i) =>
+                    Math.max(
+                      0,
+                      (result.coefficients[1 + i * 2] +
+                        result.coefficients[2 + i * 2]) /
+                        2,
+                    ),
+                  );
+                  const sum = values.reduce((a, b) => a + b, 0);
+                  if (!sum) return;
+                  const types = [
+                    "Collision-related",
+                    "Road conditions",
+                    "Signals",
+                    "Stalled vehicle",
+                    "Other / unverified",
+                  ];
+                  saveSnapshot(activeConfig);
+                  setConfig((c) => ({
+                    ...c,
+                    typeWeightMode: "learned",
+                    typeWeights: Object.fromEntries(
+                      types.map((t, i) => [t, (values[i] * 5) / sum]),
+                    ),
+                    typeWeightSource: {
+                      version: result.version,
+                      datasetVersion: data.audit.downloadedAt,
+                      horizon: result.horizon,
+                      trainedThrough: "2025-12-31",
+                      method: "positive-bin-mean normalized to mean 1",
+                    },
+                  }));
+                  setTab("Plan comparison");
+                }}
                 onSelect={(id: string) => {
                   setSelected(id);
                   setTab("Evidence");

@@ -3,4 +3,4 @@ await p.getByRole('button',{name:'Open forecast map',exact:true}).click();
 await p.waitForFunction(()=>document.querySelector('.forecast-map canvas'));
 await p.waitForTimeout(2000);
 await p.getByRole('button',{name:'Close preview',exact:true}).click();
-await p.getByRole('button',{name:'Reveal what happened next',exact:true}).click();await p.getByText('Actual reports',{exact:true}).waitFor();await p.screenshot({path:'reports/forward-outlook.png',fullPage:true});assert.deepEqual(errors,[]);console.log('Forecast worker, Top 20 and outcome reveal passed');await b.close();
+await p.getByRole('button',{name:'Reveal what happened next',exact:true}).click();await p.getByText('Actual reports',{exact:true}).waitFor();await p.screenshot({path:'/tmp/calgary-test-forward-outlook.png',fullPage:true});assert.deepEqual(errors,[]);console.log('Forecast worker, Top 20 and outcome reveal passed');await b.close();

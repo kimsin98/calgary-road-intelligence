@@ -111,7 +111,10 @@ export function ForecastMap({ result }: { result: ForecastResult }) {
           <div ref={container} className="forecast-map" />
           <div className="map-title">
             <span>
-              EXPECTED REPORT ACTIVITY · {result.cutoff} ~ {result.end}
+              {result.objective === "collision"
+                ? "COLLISION-RELATED REPORT OUTLOOK"
+                : "EXPECTED REPORT ACTIVITY"}{" "}
+              · {result.cutoff} ~ {result.end}
             </span>
           </div>
           <div className="map-actions">
