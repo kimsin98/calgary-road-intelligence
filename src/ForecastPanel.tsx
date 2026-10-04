@@ -87,7 +87,7 @@ export function ForecastPanel({
             <span>EXPERIMENTAL / POISSON MODEL</span>
           </div>
           <p>
-            Estimate future traffic-event reports at known locations using only
+            Explore next-week traffic-report activity at known locations using
             evidence available at the cutoff. This demo uses all event types and
             all hours, independently of the reactive analysis filters.
           </p>

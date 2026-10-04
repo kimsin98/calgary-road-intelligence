@@ -1974,3 +1974,35 @@ body:has(.admin-dashboard) > #root > footer {
     overflow-x: hidden;
   }
 }
+
+.outlook-intro {
+  padding: 26px 28px;
+  margin: 20px 0;
+  border: 1px solid #344958;
+  border-left: 3px solid var(--amber);
+  border-radius: 12px;
+  background: linear-gradient(120deg, #182c3b, #101c27 70%);
+}
+.outlook-eyebrow { color: var(--amber); font-size: 13px; letter-spacing: 1.8px; }
+.outlook-intro h3 { font-size: clamp(24px, 2.4vw, 34px); margin: 12px 0; }
+.outlook-intro p { max-width: 850px; line-height: 1.65; }
+.outlook-tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.outlook-tags span { border:1px solid #3c5262; padding:7px 12px; border-radius:20px; font-size:14px; color:#bed0dd; }
+.outlook-context { color:#a8bdca; line-height:1.6; }
+.outlook-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:24px 0; }
+.outlook-stats > div { padding:22px; border:1px solid #344958; border-radius:12px; background:#10202b; }
+.outlook-stats span,.outlook-stats small { display:block; color:#aac0cf; }
+.outlook-stats strong { display:block; font-size:34px; color:var(--amber); margin:10px 0; font-variant-numeric:tabular-nums; }
+.outlook-table { max-width:100%; overflow-x:auto; border:1px solid #344958; border-radius:12px; }
+.outlook-table table { margin:0; width:100%; }
+.outlook-table td:not(:first-child) { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.outlook-table button { text-align:left; display:flex; align-items:center; gap:12px; }
+.outlook-table button[aria-pressed="true"] { color:var(--amber); border-color:var(--amber); }
+.outlook-rank { color:var(--amber); font-size:14px; min-width:22px; }
+.outlook-evidence { margin:24px 0; padding:24px; border:1px solid #495c64; border-radius:12px; background:#142430; }
+.outlook-evidence article { padding:16px 0; border-top:1px solid #344958; }
+.outlook-evidence h3 { overflow-wrap:anywhere; }
+@media(max-width:760px) {
+  .outlook-stats { grid-template-columns:1fr; }
+  .outlook-intro,.outlook-evidence { padding:20px; }
+}

@@ -102,3 +102,13 @@ The annual pipeline now normalizes complete calendar-year ridge targets to 365-d
 The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export_short.py` on the same full-inventory road/intersection units as the comparison. Three-year history is fixed, not tuned; all report types are pooled. Six historical cutoffs and a latest-complete-date future forecast are exported to `public/data/forecast-eb30.json.gz`. Future outcomes are null. Refresh the offline pipeline to add cutoffs or newer data.
 
 Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.
+
+## Five-minute demo
+
+1. Start with historical priorities: explain the evidence period, inspect one location and show its source reports. These are reported disruptions, not all confirmed crashes.
+2. Open Forward outlook → next30. Use the June 30 replay, generate the Top20, open the map and select a location to explain own-history versus similar-site contributions.
+3. Reveal later outcomes. Compare EB against the recent-rate baseline; explain that aggregate improvement is experimental and individual windows can lose.
+4. Switch to Future forecast. Show the complete-date cutoff, uncertainty intervals and export. No future accuracy is claimed.
+5. Close with the practical proposal: analysts review a shortlist, confirm local context and record whether inspection was useful. Better crash/severity data, exposure and prospective feedback are the next validation steps.
+
+The next7 Poisson and annual EB modes are additional planning horizons; their units and controls differ. Keep the main presentation focused on historical review and next30 outlook.
