@@ -1,0 +1,14 @@
+node_modules/
+dist/
+data/raw/
+reports/*.png
+
+.env
+.env.local
+.env.*.local
+
+.vercel/
+deployment-packages/
+*.tar.gz
+*.zip
+.env*

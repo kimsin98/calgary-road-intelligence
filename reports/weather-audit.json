@@ -1,0 +1,16 @@
+{
+  "station": "CALGARY INTL A",
+  "stationID": 50430,
+  "climateID": "3031092",
+  "longitude": -114.01,
+  "latitude": 51.12,
+  "timezone": "Source LST = UTC-7; display America/Edmonton",
+  "hours": 8760,
+  "tempMissing": 8,
+  "visibilityMissing": 8,
+  "descriptionUnavailable": 4984,
+  "downloadedAt": "2026-10-03T09:53:59.888Z",
+  "firstUTC": "2025-01-01T07:00:00.000Z",
+  "lastUTC": "2026-01-01T06:00:00.000Z",
+  "note": "Airport station is city-wide context, not local road surface measurements. Weather descriptions identify reported snow/rain; blank descriptions do not prove clear weather. Precipitation amount is not used."
+}

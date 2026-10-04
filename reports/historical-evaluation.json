@@ -1,0 +1,35 @@
+{
+  "config": {
+    "start": "2025-01-01",
+    "end": "2025-12-31",
+    "period": "All hours",
+    "category": "All types",
+    "capacity": 20,
+    "weights": [
+      0.5,
+      0.3,
+      0.2
+    ]
+  },
+  "windows": [
+    {
+      "end": "2025-06-30",
+      "total": 618,
+      "candidate": 20,
+      "baseline": 20
+    },
+    {
+      "end": "2025-08-31",
+      "total": 603,
+      "candidate": 20,
+      "baseline": 20
+    },
+    {
+      "end": "2025-10-31",
+      "total": 819,
+      "candidate": 23,
+      "baseline": 20
+    }
+  ],
+  "metric": "Subsequent recorded-event coverage; not collision risk or safety benefit"
+}

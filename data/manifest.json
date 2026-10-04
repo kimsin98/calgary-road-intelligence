@@ -1,0 +1,50 @@
+{
+  "audit": {
+    "downloadedAt": "2026-10-03T07:58:08.937Z",
+    "rawEvents": 7015,
+    "events": 7015,
+    "duplicates": 0,
+    "rejected": 0,
+    "roads": 120567,
+    "matched": 7009,
+    "matchRate": 0.999144689950107,
+    "locations": 4105,
+    "first": "2024-12-31",
+    "last": "2025-12-31",
+    "timezone": "America/Edmonton",
+    "sourceTime": "UTC",
+    "countValues": [
+      "1"
+    ],
+    "projection": "Local equirectangular metre approximation at latitude 51N; 50m matching threshold",
+    "categories": {
+      "Other / unverified": 5252,
+      "Signals": 253,
+      "Collision-related": 1354,
+      "Stalled vehicle": 136,
+      "Road conditions": 20
+    }
+  },
+  "sources": [
+    {
+      "file": "traffic-official.json",
+      "sha256": "e319936eaba19e3f3661b7312b72d745cd9cb3dea09d181a22cf0797f9bae0bf"
+    },
+    {
+      "file": "roads.json",
+      "sha256": "a26ef0328a57ea0c6505a9fc475309d935f77d700a9090a62534c0f7391a536c"
+    },
+    {
+      "file": "roads-next.json",
+      "sha256": "af4741833baa4d78923c90cb4f2debc833d34c49941a1544d1ab5ba26321f27f"
+    },
+    {
+      "file": "roads-last.json",
+      "sha256": "5fc4640d2371e7416e9ff90d84e348120d473bbf3e63a68bf540f2210fffbbef"
+    },
+    {
+      "file": "volumes.json",
+      "sha256": "72ae63277f7926007f88fb38450f5191c716c47fc73492e07287607eb26fab5d"
+    }
+  ]
+}

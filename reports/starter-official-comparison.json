@@ -1,0 +1,970 @@
+{
+  "starter": 6984,
+  "official": 7015,
+  "matched": 6980,
+  "unmatchedStarter": 4,
+  "officialOnly": 35,
+  "offsets": {
+    "0": {
+      "count": 2328,
+      "first": "2025-09-11 12:24:49",
+      "last": "2025-12-31 23:24:45"
+    },
+    "6": {
+      "count": 3114,
+      "first": "2025-03-09 09:25:19",
+      "last": "2025-09-29 23:26:45"
+    },
+    "7": {
+      "count": 1538,
+      "first": "2025-01-01 00:18:26",
+      "last": "2025-03-08 19:39:38"
+    }
+  },
+  "textDifferences": 0,
+  "quadrantDifferences": 0,
+  "countDifferences": 0,
+  "samples": [
+    {
+      "starter": {
+        "incident_info": " 16 Avenue and 109 Street NW ",
+        "description": "Traffic incident. Blocking the left lane",
+        "start_dt": "2025-12-31 23:24:45",
+        "quadrant": "NW",
+        "longitude": "-114.24875077617234",
+        "latitude": "51.08845567527262",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "16 Avenue and 109 Street NW",
+        "description": "Traffic incident. Blocking the left lane",
+        "start_dt_utc": "2025-12-31T23:24:00.000",
+        "modified_dt_utc": "2026-01-01T01:08:00.000",
+        "quadrant": "NW",
+        "longitude": "-114.2487508",
+        "latitude": "51.08845568",
+        "count": "1",
+        "id": "2025-12-31T23:24:4551.08845567527262-114.24875077617234",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -114.2487508,
+            51.08845568
+          ]
+        }
+      },
+      "offsetHours": 0
+    },
+    {
+      "starter": {
+        "incident_info": " 32 Avenue and 33 Street NW ",
+        "description": "Traffic incident.",
+        "start_dt": "2025-11-21 02:49:32",
+        "quadrant": "NW",
+        "longitude": "-114.1341684703904",
+        "latitude": "51.08142370007353",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "32 Avenue and 33 Street NW",
+        "description": "Traffic incident.",
+        "start_dt_utc": "2025-11-21T02:49:00.000",
+        "modified_dt_utc": "2025-11-21T03:33:00.000",
+        "quadrant": "NW",
+        "longitude": "-114.1341685",
+        "latitude": "51.0814237",
+        "count": "1",
+        "id": "2025-11-21T02:49:3251.08142370007353-114.13416847039039",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -114.1341685,
+            51.0814237
+          ]
+        }
+      },
+      "offsetHours": 0
+    },
+    {
+      "starter": {
+        "incident_info": " Westbound Glenmore Trail at 14 Street SW ",
+        "description": "Traffic incident. Blocking the left lanes",
+        "start_dt": "2025-09-11 12:24:49",
+        "quadrant": "SW",
+        "longitude": "-114.09853881367704",
+        "latitude": "50.99498534940623",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Westbound Glenmore Trail at 14 Street SW",
+        "description": "Traffic incident. Blocking the left lanes",
+        "start_dt_utc": "2025-09-11T12:24:00.000",
+        "modified_dt_utc": "2025-09-11T17:19:00.000",
+        "quadrant": "SW",
+        "longitude": "-114.0985388",
+        "latitude": "50.99498535",
+        "count": "1",
+        "id": "2025-09-11 12:24:00+00:00-114.098538850.99498535",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -114.0985388,
+            50.99498535
+          ]
+        }
+      },
+      "offsetHours": 0
+    },
+    {
+      "starter": {
+        "incident_info": " Skyview Ranch Road and 128 Avenue NE ",
+        "description": "Traffic incident.",
+        "start_dt": "2025-09-29 23:26:45",
+        "quadrant": "NE",
+        "longitude": "-113.96209389166438",
+        "latitude": "51.165432797135566",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Skyview Ranch Road and 128 Avenue NE",
+        "description": "Traffic incident.",
+        "start_dt_utc": "2025-09-30T05:26:00.000",
+        "modified_dt_utc": "2025-09-30T05:27:00.000",
+        "quadrant": "NE",
+        "longitude": "-113.9620939",
+        "latitude": "51.1654328",
+        "count": "1",
+        "id": "2025-09-30 05:26:00+00:00-113.962093951.1654328",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -113.9620939,
+            51.1654328
+          ]
+        }
+      },
+      "offsetHours": 6
+    },
+    {
+      "starter": {
+        "incident_info": " Eastbound Glenmore Trail and 37 Street SW ",
+        "description": "Traffic incident.",
+        "start_dt": "2025-07-13 02:02:30",
+        "quadrant": "SW",
+        "longitude": "-114.13659133556015",
+        "latitude": "51.007349306478616",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Eastbound Glenmore Trail and 37 Street SW",
+        "description": "Traffic incident.",
+        "start_dt_utc": "2025-07-13T08:02:00.000",
+        "modified_dt_utc": "2025-07-13T09:40:00.000",
+        "quadrant": "SW",
+        "longitude": "-114.1365913",
+        "latitude": "51.00734931",
+        "count": "1",
+        "id": "2025-07-13 08:02:00+00:00-114.136591351.00734931",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -114.1365913,
+            51.00734931
+          ]
+        }
+      },
+      "offsetHours": 6
+    },
+    {
+      "starter": {
+        "incident_info": " 114 Avenue and 52 Street SE ",
+        "description": "Traffic signals are flashing red. Crews have been dispatched",
+        "start_dt": "2025-03-09 09:25:19",
+        "quadrant": "NW",
+        "longitude": "-113.9586708474488",
+        "latitude": "50.95059536648394",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "114 Avenue and 52 Street SE",
+        "description": "Traffic signals are flashing red. Crews have been dispatched",
+        "start_dt_utc": "2025-03-09T15:25:00.000",
+        "modified_dt_utc": "2025-03-09T18:56:00.000",
+        "quadrant": "NW",
+        "longitude": "-113.9586708",
+        "latitude": "50.95059537",
+        "count": "1",
+        "id": "2025-03-09 15:25:00+00:00-113.958670850.95059537",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -113.9586708,
+            50.95059537
+          ]
+        }
+      },
+      "offsetHours": 6
+    },
+    {
+      "starter": {
+        "incident_info": " Falconridge Boulevard and Castlebrook Drive NE ",
+        "description": "Traffic incident.",
+        "start_dt": "2025-03-08 19:39:38",
+        "quadrant": "NE",
+        "longitude": "-113.95659808241491",
+        "latitude": "51.10314052439256",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Falconridge Boulevard and Castlebrook Drive NE",
+        "description": "Traffic incident.",
+        "start_dt_utc": "2025-03-09T02:39:00.000",
+        "modified_dt_utc": "2025-03-09T02:47:00.000",
+        "quadrant": "NE",
+        "longitude": "-113.9565981",
+        "latitude": "51.10314052",
+        "count": "1",
+        "id": "2025-03-09 02:39:00+00:00-113.956598151.10314052",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -113.9565981,
+            51.10314052
+          ]
+        }
+      },
+      "offsetHours": 7
+    },
+    {
+      "starter": {
+        "incident_info": " Crowchild Trail and Twelve Mi Coulee Road NW ",
+        "description": "Traffic incident.",
+        "start_dt": "2025-02-04 15:46:34",
+        "quadrant": "NW",
+        "longitude": "-114.25737426844572",
+        "latitude": "51.14286954756273",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Crowchild Trail and Twelve Mi Coulee Road NW",
+        "description": "Traffic incident.",
+        "start_dt_utc": "2025-02-04T22:46:00.000",
+        "modified_dt_utc": "2025-02-05T02:19:00.000",
+        "quadrant": "NW",
+        "longitude": "-114.2573743",
+        "latitude": "51.14286955",
+        "count": "1",
+        "id": "2025-02-04 22:46:00+00:00-114.257374351.14286955",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -114.2573743,
+            51.14286955
+          ]
+        }
+      },
+      "offsetHours": 7
+    },
+    {
+      "starter": {
+        "incident_info": " Westbound McKnight Boulevard at 52 Street NE ",
+        "description": "Traffic incident. Blocking the right lane",
+        "start_dt": "2025-01-01 00:18:26",
+        "quadrant": "NE",
+        "longitude": "-113.95847506888904",
+        "latitude": "51.09541676006189",
+        "incident_count": "1"
+      },
+      "official": {
+        "incident_info": "Westbound McKnight Boulevard at 52 Street NE",
+        "description": "Traffic incident. Blocking the right lane",
+        "start_dt_utc": "2025-01-01T07:18:00.000",
+        "modified_dt_utc": "2025-01-01T07:40:00.000",
+        "quadrant": "NE",
+        "longitude": "-113.9584751",
+        "latitude": "51.09541676",
+        "count": "1",
+        "id": "2025-01-01 07:18:00+00:00-113.958475151.09541676",
+        "point": {
+          "type": "Point",
+          "coordinates": [
+            -113.9584751,
+            51.09541676
+          ]
+        }
+      },
+      "offsetHours": 7
+    }
+  ],
+  "unmatched": [
+    {
+      "incident_info": " Sarcee Trail and Stoney Trail NW ",
+      "description": "Two vehicle incident. Blocking the SB right lanes and NB to WB left turn lane",
+      "start_dt": "2025-09-11 09:57:59",
+      "quadrant": "NW",
+      "longitude": "-114.16478075577037",
+      "latitude": "51.15318778738881",
+      "incident_count": "1"
+    },
+    {
+      "incident_info": " 4 Avenue Flyover from Memorial Drive NE ",
+      "description": "Two vehicle incident.  Blocking the right lane",
+      "start_dt": "2025-09-11 08:37:04",
+      "quadrant": "NE",
+      "longitude": "-114.05487245352212",
+      "latitude": "51.04920057210366",
+      "incident_count": "1"
+    },
+    {
+      "incident_info": " Westbound Glenmore Trail at 14 Street SW ",
+      "description": "Traffic incident. Blocking the left lanes",
+      "start_dt": "2025-09-11 06:24:49",
+      "quadrant": "SW",
+      "longitude": "-114.09853881367704",
+      "latitude": "50.99498534940623",
+      "incident_count": "1"
+    },
+    {
+      "incident_info": " 144 Avenue and 1 Street NE ",
+      "description": "Traffic incident.",
+      "start_dt": "2025-02-10 10:07:25",
+      "quadrant": "NE",
+      "longitude": "-114.0696090398765",
+      "latitude": "51.18346748517511",
+      "incident_count": "1"
+    }
+  ],
+  "extra": [
+    {
+      "incident_info": "Hunterview Drive and 64 Avenue NW",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T00:21:00.000",
+      "modified_dt_utc": "2025-01-01T02:14:00.000",
+      "quadrant": "NW",
+      "longitude": "-114.0780956",
+      "latitude": "51.11028104",
+      "count": "1",
+      "id": "2025-01-01 00:21:00+00:00-114.078095651.11028104",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0780956,
+          51.11028104
+        ]
+      }
+    },
+    {
+      "incident_info": "12 Avenue and 12 Street SW",
+      "description": "Traffic signals are blank.",
+      "start_dt_utc": "2025-01-01T00:22:00.000",
+      "modified_dt_utc": "2025-01-01T01:08:00.000",
+      "quadrant": "NW",
+      "longitude": "-114.091379",
+      "latitude": "51.04221706",
+      "count": "1",
+      "id": "2025-01-01 00:22:00+00:00-114.09137951.04221706",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.091379,
+          51.04221706
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Stoney Trail approaching Glenmore Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T01:07:00.000",
+      "modified_dt_utc": "2025-01-01T02:39:00.000",
+      "quadrant": "SE",
+      "longitude": "-113.9217347",
+      "latitude": "50.99055477",
+      "count": "1",
+      "id": "2025-01-01 01:07:00+00:00-113.921734750.99055477",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9217347,
+          50.99055477
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound 52 Street and Rundlehorn Drive NE",
+      "description": "Traffic incident. Blocking the right lane",
+      "start_dt_utc": "2025-01-01T01:29:00.000",
+      "modified_dt_utc": "2025-01-01T01:35:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9585039",
+      "latitude": "51.0716745",
+      "count": "1",
+      "id": "2025-01-01 01:29:00+00:00-113.958503951.0716745",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9585039,
+          51.0716745
+        ]
+      }
+    },
+    {
+      "incident_info": "Stoney Trail and Bow Trail SW",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T02:13:00.000",
+      "modified_dt_utc": "2025-01-01T03:43:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.2265107",
+      "latitude": "51.05572988",
+      "count": "1",
+      "id": "2025-01-01 02:13:00+00:00-114.226510751.05572988",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.2265107,
+          51.05572988
+        ]
+      }
+    },
+    {
+      "incident_info": "Northbound Deerfoot Trail and Country Hills Boulevard NE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T02:47:00.000",
+      "modified_dt_utc": "2025-01-01T03:43:00.000",
+      "quadrant": "NE",
+      "longitude": "-114.0118715",
+      "latitude": "51.15815489",
+      "count": "1",
+      "id": "2025-01-01 02:47:00+00:00-114.011871551.15815489",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0118715,
+          51.15815489
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Deerfoot Trail after Peigan Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T03:10:00.000",
+      "modified_dt_utc": "2025-01-01T03:30:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0094924",
+      "latitude": "51.01089287",
+      "count": "1",
+      "id": "2025-01-01 03:10:00+00:00-114.009492451.01089287",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0094924,
+          51.01089287
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Deerfoot Trail after Peigan Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T03:10:00.000",
+      "modified_dt_utc": "2025-01-01T04:03:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0247311",
+      "latitude": "51.00830653",
+      "count": "1",
+      "id": "2025-01-01 03:10:00+00:00-114.024731151.00830653",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0247311,
+          51.00830653
+        ]
+      }
+    },
+    {
+      "incident_info": "Northbound Deerfoot Trail and Anderson Road SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T03:28:00.000",
+      "modified_dt_utc": "2025-01-01T03:43:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0288386",
+      "latitude": "50.95587303",
+      "count": "1",
+      "id": "2025-01-01 03:28:00+00:00-114.028838650.95587303",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0288386,
+          50.95587303
+        ]
+      }
+    },
+    {
+      "incident_info": "Northbound Deerfoot Trail after Glenmore Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T04:02:00.000",
+      "modified_dt_utc": "2025-01-01T04:49:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0285604",
+      "latitude": "51.00519366",
+      "count": "1",
+      "id": "2025-01-01 04:02:00+00:00-114.028560451.00519366",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0285604,
+          51.00519366
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Stoney Trail at Nose Hill Drive NW",
+      "description": "Traffic incident. Blocking multiple lanes",
+      "start_dt_utc": "2025-01-01T04:37:00.000",
+      "modified_dt_utc": "2025-01-01T06:33:00.000",
+      "quadrant": "NW",
+      "longitude": "-114.2243351",
+      "latitude": "51.10881729",
+      "count": "1",
+      "id": "2025-01-01 04:37:00+00:00-114.224335151.10881729",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.2243351,
+          51.10881729
+        ]
+      }
+    },
+    {
+      "incident_info": "Eastbound Stoney Trail at Deerfoot Trail NE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T04:48:00.000",
+      "modified_dt_utc": "2025-01-01T06:09:00.000",
+      "quadrant": "NE",
+      "longitude": "-114.001093",
+      "latitude": "51.17391272",
+      "count": "1",
+      "id": "2025-01-01 04:48:00+00:00-114.00109351.17391272",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.001093,
+          51.17391272
+        ]
+      }
+    },
+    {
+      "incident_info": "52 Street and McKenzie Towne Boulevard SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T05:12:00.000",
+      "modified_dt_utc": "2025-01-01T05:17:00.000",
+      "quadrant": "SE",
+      "longitude": "-113.9587165",
+      "latitude": "50.91830077",
+      "count": "1",
+      "id": "2025-01-01 05:12:00+00:00-113.958716550.91830077",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9587165,
+          50.91830077
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Deerfoot Trail at Anderson Road SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T05:16:00.000",
+      "modified_dt_utc": "2025-01-01T07:19:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0266342",
+      "latitude": "50.95406479",
+      "count": "1",
+      "id": "2025-01-01 05:16:00+00:00-114.026634250.95406479",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0266342,
+          50.95406479
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Deerfoot Trail at Memorial Drive SE",
+      "description": "Traffic incident. Blocking multiple lanes",
+      "start_dt_utc": "2025-01-01T06:10:00.000",
+      "modified_dt_utc": "2025-01-01T07:34:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0136315",
+      "latitude": "51.04535659",
+      "count": "1",
+      "id": "2025-01-01 06:10:00+00:00-114.013631551.04535659",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0136315,
+          51.04535659
+        ]
+      }
+    },
+    {
+      "incident_info": "Eastbound 12 Avenue approaching 5 Street SW",
+      "description": "Traffic incident. Blocking multiple lanes",
+      "start_dt_utc": "2025-01-01T06:18:00.000",
+      "modified_dt_utc": "2025-01-01T06:33:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.0753189",
+      "latitude": "51.04175053",
+      "count": "1",
+      "id": "2025-01-01 06:18:00+00:00-114.075318951.04175053",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0753189,
+          51.04175053
+        ]
+      }
+    },
+    {
+      "incident_info": "94 Avenue and Macleod Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-01-01T06:31:00.000",
+      "modified_dt_utc": "2025-01-01T06:55:00.000",
+      "quadrant": "SE",
+      "longitude": "-114.0717071",
+      "latitude": "50.96863232",
+      "count": "1",
+      "id": "2025-01-01 06:31:00+00:00-114.071707150.96863232",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0717071,
+          50.96863232
+        ]
+      }
+    },
+    {
+      "incident_info": "Westbound Glenmore Trail at 14 Street SW",
+      "description": "Traffic incident. Blocking the left lanes",
+      "start_dt_utc": "2025-09-11T18:24:00.000",
+      "modified_dt_utc": "2025-09-11T16:04:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.0985388",
+      "latitude": "50.99498535",
+      "count": "1",
+      "id": "2025-09-11 18:24:00+00:00-114.098538850.99498535",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0985388,
+          50.99498535
+        ]
+      }
+    },
+    {
+      "incident_info": "4 Avenue Flyover from Memorial Drive NE",
+      "description": "Two vehicle incident.  Blocking the right lane",
+      "start_dt_utc": "2025-09-11T20:37:00.000",
+      "modified_dt_utc": "2025-09-11T16:04:00.000",
+      "quadrant": "NE",
+      "longitude": "-114.0548725",
+      "latitude": "51.04920057",
+      "count": "1",
+      "id": "2025-09-11 20:37:00+00:00-114.054872551.04920057",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0548725,
+          51.04920057
+        ]
+      }
+    },
+    {
+      "incident_info": "Sarcee Trail and Stoney Trail NW",
+      "description": "Two vehicle incident. Blocking the SB right lanes and NB to WB left turn lane",
+      "start_dt_utc": "2025-09-11T21:57:00.000",
+      "modified_dt_utc": "2025-09-11T16:04:00.000",
+      "quadrant": "NW",
+      "longitude": "-114.1647808",
+      "latitude": "51.15318779",
+      "count": "1",
+      "id": "2025-09-11 21:57:00+00:00-114.164780851.15318779",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.1647808,
+          51.15318779
+        ]
+      }
+    },
+    {
+      "incident_info": "Westbound 17 Avenue and 14 Street SW",
+      "description": "Traffic incident. Blocking the right lane",
+      "start_dt_utc": "2025-09-30T06:54:00.000",
+      "modified_dt_utc": "2025-09-30T06:55:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.09471",
+      "latitude": "51.03782419",
+      "count": "1",
+      "id": "2025-09-30 06:54:00+00:00-114.0947151.03782419",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.09471,
+          51.03782419
+        ]
+      }
+    },
+    {
+      "incident_info": "Mcknight Boulevard and Stoney Trail NE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-09-30T08:18:00.000",
+      "modified_dt_utc": "2025-09-30T08:19:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9217454",
+      "latitude": "51.09657965",
+      "count": "1",
+      "id": "2025-09-30 08:18:00+00:00-113.921745451.09657965",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9217454,
+          51.09657965
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Stoney Trail and McKnight Boulevard NE",
+      "description": "Traffic incident.  Blocking the right lane",
+      "start_dt_utc": "2025-09-30T16:18:00.000",
+      "modified_dt_utc": "2025-09-30T16:32:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9194111",
+      "latitude": "51.10506187",
+      "count": "1",
+      "id": "2025-09-30 16:18:00+00:00-113.919411151.10506187",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9194111,
+          51.10506187
+        ]
+      }
+    },
+    {
+      "incident_info": "9 Street north of 64 Avenue NE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-09-30T16:30:00.000",
+      "modified_dt_utc": "2025-09-30T16:32:00.000",
+      "quadrant": "NE",
+      "longitude": "-114.0413657",
+      "latitude": "51.11142298",
+      "count": "1",
+      "id": "2025-09-30 16:30:00+00:00-114.041365751.11142298",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0413657,
+          51.11142298
+        ]
+      }
+    },
+    {
+      "incident_info": "68 Street and 16 Avenue NE",
+      "description": "Traffic incident. Blocking multiple lanes",
+      "start_dt_utc": "2025-09-30T17:23:00.000",
+      "modified_dt_utc": "2025-09-30T17:26:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9353724",
+      "latitude": "51.0669749",
+      "count": "1",
+      "id": "2025-09-30 17:23:00+00:00-113.935372451.0669749",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9353724,
+          51.0669749
+        ]
+      }
+    },
+    {
+      "incident_info": "Eastbound 17 Avenue east of Stoney Trail SE",
+      "description": "Traffic incident.",
+      "start_dt_utc": "2025-09-30T18:54:00.000",
+      "modified_dt_utc": "2025-09-30T19:52:00.000",
+      "quadrant": "SE",
+      "longitude": "-113.9141955",
+      "latitude": "51.03769163",
+      "count": "1",
+      "id": "2025-09-30 18:54:00+00:00-113.914195551.03769163",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9141955,
+          51.03769163
+        ]
+      }
+    },
+    {
+      "incident_info": "Southbound Stoney Trail approaching Glenmore Trail SE",
+      "description": "Traffic incident. Blocking the left lane",
+      "start_dt_utc": "2025-09-30T19:14:00.000",
+      "modified_dt_utc": "2025-09-30T20:05:00.000",
+      "quadrant": "SE",
+      "longitude": "-113.9217439",
+      "latitude": "50.98816511",
+      "count": "1",
+      "id": "2025-09-30 19:14:00+00:00-113.921743950.98816511",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9217439,
+          50.98816511
+        ]
+      }
+    },
+    {
+      "incident_info": "Northbound 36 Street and Airport Trail NE",
+      "description": "Traffic incident. Blocking multiple lanes",
+      "start_dt_utc": "2025-09-30T19:23:00.000",
+      "modified_dt_utc": "2025-09-30T19:27:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9815405",
+      "latitude": "51.13829555",
+      "count": "1",
+      "id": "2025-09-30 19:23:00+00:00-113.981540551.13829555",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9815405,
+          51.13829555
+        ]
+      }
+    },
+    {
+      "incident_info": "Northbound 36 Street and Airport Trail NE",
+      "description": "Traffic incident. The road is closed NB",
+      "start_dt_utc": "2025-09-30T19:23:00.000",
+      "modified_dt_utc": "2025-09-30T21:08:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9832426",
+      "latitude": "51.13986745",
+      "count": "1",
+      "id": "2025-09-30 19:23:00+00:00-113.983242651.13986745",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9832426,
+          51.13986745
+        ]
+      }
+    },
+    {
+      "incident_info": "Barlow Trail north of 39 Avenue NE",
+      "description": "Two vehicle incident.",
+      "start_dt_utc": "2025-09-30T20:04:00.000",
+      "modified_dt_utc": "2025-09-30T20:43:00.000",
+      "quadrant": "NE",
+      "longitude": "-114.0017355",
+      "latitude": "51.08955686",
+      "count": "1",
+      "id": "2025-09-30 20:04:00+00:00-114.001735551.08955686",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0017355,
+          51.08955686
+        ]
+      }
+    },
+    {
+      "incident_info": "Glenmore Trail at 68 Street SE",
+      "description": "Stalled vehicle. Blocking multiple lanes in the intersection. Single lane open EB. WB to SB left turn lane closed.",
+      "start_dt_utc": "2025-09-30T20:41:00.000",
+      "modified_dt_utc": "2025-09-30T20:43:00.000",
+      "quadrant": "SE",
+      "longitude": "-113.9345003",
+      "latitude": "50.97942837",
+      "count": "1",
+      "id": "2025-09-30 20:41:00+00:00-113.934500350.97942837",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9345003,
+          50.97942837
+        ]
+      }
+    },
+    {
+      "incident_info": "88 Avenue and Metis Trail NE",
+      "description": "Traffic incident. Blocking the WB right lane",
+      "start_dt_utc": "2025-09-30T21:42:00.000",
+      "modified_dt_utc": "2025-09-30T21:44:00.000",
+      "quadrant": "NE",
+      "longitude": "-113.9708714",
+      "latitude": "51.13262625",
+      "count": "1",
+      "id": "2025-09-30 21:42:00+00:00-113.970871451.13262625",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -113.9708714,
+          51.13262625
+        ]
+      }
+    },
+    {
+      "incident_info": "14 Avenue and Centre Street S",
+      "description": "There is an incident involving a pedestrian- EMS Dispatched.",
+      "start_dt_utc": "2025-09-30T22:52:00.000",
+      "modified_dt_utc": "2025-10-01T00:10:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.0634559",
+      "latitude": "51.0395293",
+      "count": "1",
+      "id": "2025-09-30 22:52:00+00:00-114.063455951.0395293",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.0634559,
+          51.0395293
+        ]
+      }
+    },
+    {
+      "incident_info": "9 Avenue at 6 Street SW",
+      "description": "Two vehicle incident. Blocking the EB right lane",
+      "start_dt_utc": "2025-09-30T23:56:00.000",
+      "modified_dt_utc": "2025-09-30T23:58:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.076378",
+      "latitude": "51.04498598",
+      "count": "1",
+      "id": "2025-09-30 23:56:00+00:00-114.07637851.04498598",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.076378,
+          51.04498598
+        ]
+      }
+    },
+    {
+      "incident_info": "Eastbound Stoney Trail approaching Sarcee Trail SW",
+      "description": "Traffic incident. Blocking the left lane",
+      "start_dt_utc": "2025-10-01T00:08:00.000",
+      "modified_dt_utc": "2025-10-01T00:10:00.000",
+      "quadrant": "SW",
+      "longitude": "-114.1759684",
+      "latitude": "51.00841938",
+      "count": "1",
+      "id": "2025-10-01 00:08:00+00:00-114.175968451.00841938",
+      "point": {
+        "type": "Point",
+        "coordinates": [
+          -114.1759684,
+          51.00841938
+        ]
+      }
+    }
+  ],
+  "textDiff": []
+}

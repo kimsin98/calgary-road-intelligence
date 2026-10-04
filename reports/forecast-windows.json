@@ -1,0 +1,42 @@
+[
+  {
+    "cutoff": "2025-10-31",
+    "horizon": 7,
+    "lambda": 0.1,
+    "total": 181,
+    "modelMAE": 0.0662186714921153,
+    "baselineMAE": 0.10986737041548458,
+    "modelCoverage": 6,
+    "baselineCoverage": 5
+  },
+  {
+    "cutoff": "2025-10-31",
+    "horizon": 30,
+    "lambda": 0.1,
+    "total": 819,
+    "modelMAE": 0.26000170839538916,
+    "baselineMAE": 0.40450669914739984,
+    "modelCoverage": 20,
+    "baselineCoverage": 20
+  },
+  {
+    "cutoff": "2025-11-30",
+    "horizon": 7,
+    "lambda": 0.1,
+    "total": 221,
+    "modelMAE": 0.07549596332859049,
+    "baselineMAE": 0.12396941399377687,
+    "modelCoverage": 6,
+    "baselineCoverage": 6
+  },
+  {
+    "cutoff": "2025-11-30",
+    "horizon": 30,
+    "lambda": 0.1,
+    "total": 827,
+    "modelMAE": 0.2618015949705841,
+    "baselineMAE": 0.4391798619569841,
+    "modelCoverage": 20,
+    "baselineCoverage": 21
+  }
+]

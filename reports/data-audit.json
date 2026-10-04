@@ -1,0 +1,32 @@
+{
+  "downloadedAt": "2026-10-03T07:58:08.937Z",
+  "rawEvents": 7015,
+  "events": 7015,
+  "duplicates": 0,
+  "rejected": 0,
+  "roads": 120567,
+  "matched": 7009,
+  "matchRate": 0.999144689950107,
+  "locations": 4105,
+  "first": "2024-12-31",
+  "last": "2025-12-31",
+  "timezone": "America/Edmonton",
+  "sourceTime": "UTC",
+  "countValues": [
+    "1"
+  ],
+  "projection": "Local equirectangular metre approximation at latitude 51N; 50m matching threshold",
+  "categories": {
+    "Other / unverified": 5252,
+    "Signals": 253,
+    "Collision-related": 1354,
+    "Stalled vehicle": 136,
+    "Road conditions": 20
+  },
+  "volumes": {
+    "sections": 334,
+    "matchedLocations": 1219,
+    "thresholdMeters": 30,
+    "note": "Proximity association only, not verified section linkage; 2024 average weekday volume vs 2025 events."
+  }
+}

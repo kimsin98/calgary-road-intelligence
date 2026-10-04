@@ -1,0 +1,134 @@
+{
+  "createdAt": "2026-10-03T23:47:11.333Z",
+  "datasetVersion": "2026-10-03T07:58:08.937Z",
+  "windows": [
+    {
+      "cutoff": "2025-10-31",
+      "horizon": 7,
+      "version": "poisson-ridge-v3",
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.0034926378013962565,
+        "loss": 0.09974871556067781,
+        "initialLoss": 0.10136349480002836,
+        "tolerance": 0.00001
+      },
+      "evaluation": {
+        "total": 101,
+        "knownLocations": 3218,
+        "zeroMAE": 0.031385954008701054,
+        "modelExpected": 67.29839033603777,
+        "baselineExpected": 141.55555555555986,
+        "modelDeviance": 0.2231736851195832,
+        "baselineDeviance": 0.589110349839851,
+        "modelMAE": 0.05096296116666061,
+        "baselineMAE": 0.06986395967129526,
+        "modelCoverage": 6,
+        "baselineCoverage": 5,
+        "reactiveCoverage": 5
+      },
+      "unseenFutureEvents": 80,
+      "overlap": {
+        "reactive": 11,
+        "rate": 15
+      }
+    },
+    {
+      "cutoff": "2025-10-31",
+      "horizon": 30,
+      "version": "poisson-ridge-v3",
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.005133222585872311,
+        "loss": 0.27777290034126645,
+        "initialLoss": 0.2850382880470716,
+        "tolerance": 0.00001
+      },
+      "evaluation": {
+        "total": 408,
+        "knownLocations": 3218,
+        "zeroMAE": 0.12678682411435674,
+        "modelExpected": 239.35851954660384,
+        "baselineExpected": 606.6666666666631,
+        "modelDeviance": 0.5957812777699037,
+        "baselineDeviance": 2.359271647155078,
+        "modelMAE": 0.18346767917258008,
+        "baselineMAE": 0.2488087839237624,
+        "modelCoverage": 21,
+        "baselineCoverage": 20,
+        "reactiveCoverage": 23
+      },
+      "unseenFutureEvents": 411,
+      "overlap": {
+        "reactive": 11,
+        "rate": 15
+      }
+    },
+    {
+      "cutoff": "2025-11-30",
+      "horizon": 7,
+      "version": "poisson-ridge-v3",
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.0034926378013962565,
+        "loss": 0.09974871556067781,
+        "initialLoss": 0.10136349480002836,
+        "tolerance": 0.00001
+      },
+      "evaluation": {
+        "total": 95,
+        "knownLocations": 3612,
+        "zeroMAE": 0.02630121816168328,
+        "modelExpected": 75.03655987866543,
+        "baselineExpected": 161.00000000000585,
+        "modelDeviance": 0.1942847808464394,
+        "baselineDeviance": 0.5509990398541108,
+        "modelMAE": 0.045976992793310544,
+        "baselineMAE": 0.06639596407038459,
+        "modelCoverage": 6,
+        "baselineCoverage": 6,
+        "reactiveCoverage": 8
+      },
+      "unseenFutureEvents": 126,
+      "overlap": {
+        "reactive": 13,
+        "rate": 15
+      }
+    },
+    {
+      "cutoff": "2025-11-30",
+      "horizon": 30,
+      "version": "poisson-ridge-v3",
+      "diagnostics": {
+        "iterations": 600,
+        "converged": false,
+        "gradientNorm": 0.005133222585872311,
+        "loss": 0.27777290034126645,
+        "initialLoss": 0.2850382880470716,
+        "tolerance": 0.00001
+      },
+      "evaluation": {
+        "total": 292,
+        "knownLocations": 3612,
+        "zeroMAE": 0.08084163898117387,
+        "modelExpected": 266.03999394933624,
+        "baselineExpected": 690.0000000000047,
+        "modelDeviance": 0.4297200237794189,
+        "baselineDeviance": 1.7136658788291117,
+        "modelMAE": 0.1428657969292967,
+        "baselineMAE": 0.22739018087855445,
+        "modelCoverage": 20,
+        "baselineCoverage": 21,
+        "reactiveCoverage": 23
+      },
+      "unseenFutureEvents": 535,
+      "overlap": {
+        "reactive": 14,
+        "rate": 17
+      }
+    }
+  ]
+}

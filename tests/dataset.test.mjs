@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateDataset,validateWeather} from '../src/domain/dataset.mjs';
+test('dataset rejects dangling location references and duplicate IDs',()=>{const e={id:'a',location:'missing',date:'2025-01-01',utc:'2025-01-01T00:00:00Z',lon:-114,lat:51};assert.throws(()=>validateDataset({audit:{},events:[e],locations:[]}));assert.throws(()=>validateDataset({audit:{},events:[],locations:[{id:'a'},{id:'a'}]}))});
+test('weather rejects duplicate timestamps',()=>{const h={utc:'2025-01-01T00:00:00Z',hour:0};assert.throws(()=>validateWeather({audit:{},hours:[h,h]}))});

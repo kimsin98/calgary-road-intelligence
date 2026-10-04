@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {rank,defaults,selectEvents,compare,evaluate} from '../src/analysis.mjs';
+const locations=['a','b'].map(id=>({id,name:id,lon:-114,lat:51}));const event=(id,location,date,hour=8,weekend=false)=>({id,location,date,utc:date+'T15:00:00Z',hour,weekend,category:'Signals'});
+const events=[event('1','a','2025-12-02'),event('2','a','2025-12-03'),event('3','b','2025-11-10'),event('4','b','2026-01-01')];
+test('end date excludes future evidence; equal windows count correctly',()=>{const p=rank(events,locations,defaults);assert.equal(p.selected,3);assert.equal(p.rows.find(r=>r.id==='a').recent,2);assert.equal(p.rows.find(r=>r.id==='b').previous,1)});
+test('short windows disable growth; no zero weight division',()=>{const p=rank(events,locations,{...defaults,start:'2025-12-01',weights:[0,1,0]});assert.equal(p.complete,false);assert.ok(p.rows.every(r=>Number.isFinite(r.score)&&r.contributions[1]===0))});
+test('morning peak excludes weekends and other hours',()=>{assert.equal(selectEvents([event('1','a','2025-12-02'),event('2','a','2025-12-03',22),event('3','a','2025-12-06',8,true)],{...defaults,period:'Morning peak'}).length,1)});
+test('capacity and comparison account for actual membership',()=>{const a=rank(events,locations,{...defaults,capacity:1}),b=rank(events,locations,{...defaults,capacity:2});const c=compare(a,b);assert.equal(c.entered.length,1);assert.equal(c.exited.length,0);assert.equal(c.retained,1)});
+test('empty views produce no candidates',()=>{assert.equal(rank(events,locations,{...defaults,category:'Road conditions'}).top.length,0)});
+test('evaluation future windows do not train on future location',()=>{const r=evaluate([event('1','a','2025-06-15'),event('2','b','2025-07-01')],locations,{...defaults,capacity:1});assert.equal(r[0].total,1);assert.equal(r[0].candidate,0)});

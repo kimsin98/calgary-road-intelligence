@@ -1,0 +1,36 @@
+{
+  "matched": 6998,
+  "total": 7015,
+  "rows": [
+    {
+      "condition": "Below freezing",
+      "events": 2547,
+      "hours": 2421,
+      "per100Hours": 105.20446096654274
+    },
+    {
+      "condition": "Snow reported",
+      "events": 787,
+      "hours": 537,
+      "per100Hours": 146.55493482309126
+    },
+    {
+      "condition": "Rain reported",
+      "events": 260,
+      "hours": 390,
+      "per100Hours": 66.66666666666666
+    },
+    {
+      "condition": "Low visibility",
+      "events": 125,
+      "hours": 71,
+      "per100Hours": 176.05633802816902
+    },
+    {
+      "condition": "Weather unavailable",
+      "events": 1,
+      "hours": 8,
+      "per100Hours": 12.5
+    }
+  ]
+}

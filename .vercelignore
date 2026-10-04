@@ -1,0 +1,11 @@
+/node_modules/
+/dist/
+/data/
+/reports/
+/tests/
+/pipelines/
+.env*
+*.zip
+*.tar.gz
+!public/data/
+!public/data/**

@@ -1,0 +1,6 @@
+import {chromium} from '@playwright/test';import assert from 'node:assert/strict';const b=await chromium.launch({args:['--no-sandbox']});const p=await b.newPage({viewport:{width:1440,height:1100}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://localhost:5173');await p.getByRole('button',{name:'Forward outlook',exact:true}).click();await p.getByRole('button',{name:'Generate forecast',exact:true}).click();await p.getByRole('button',{name:'Reveal what happened next',exact:true}).waitFor({timeout:60000});assert.equal(await p.locator('.forecast-location').count(),20);await p.getByRole('region',{name:'Forecast comparison'}).waitFor();
+await p.getByRole('button',{name:'Open forecast map',exact:true}).click();
+await p.waitForFunction(()=>document.querySelector('.forecast-map canvas'));
+await p.waitForTimeout(2000);
+await p.getByRole('button',{name:'Close preview',exact:true}).click();
+await p.getByRole('button',{name:'Reveal what happened next',exact:true}).click();await p.getByText('Actual reports',{exact:true}).waitFor();await p.screenshot({path:'reports/forward-outlook.png',fullPage:true});assert.deepEqual(errors,[]);console.log('Forecast worker, Top 20 and outcome reveal passed');await b.close();

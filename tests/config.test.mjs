@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateConfig} from '../src/domain/config.mjs';import {defaults} from '../src/analysis.mjs';
+test('invalid calendar dates and reversed windows are rejected',()=>{assert.throws(()=>validateConfig({...defaults,start:'2025-02-30'}));assert.throws(()=>validateConfig({...defaults,start:'2025-12-31',end:'2025-01-01'}));assert.equal(validateConfig(defaults),defaults)});
+test('invalid capacity and period are rejected',()=>{assert.throws(()=>validateConfig({...defaults,capacity:NaN}));assert.throws(()=>validateConfig({...defaults,period:'Other'}))});
