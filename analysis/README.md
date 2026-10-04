@@ -18,7 +18,7 @@ uv venv .venv && VIRTUAL_ENV=.venv uv pip install -r requirements.txt
 
 | File | Purpose |
 |---|---|
-| `fetch.py` | Full incident archive (Dec 2016 onward, ~65k records), road inventory (120,567 segments), 2024 volumes |
+| `fetch.py` | Full incident archive (Dec 2016 onward, ~65k records), road inventory (120,567 segments), yearly traffic volumes (`--volumes-only` refreshes just these) |
 | `prepare.py` | Builds units and assigns each incident to one |
 | `model.py` | EB model, ridge baseline, metrics |
 | `backtest.py` | Year-by-year comparison; picks the EB history window |
@@ -31,15 +31,16 @@ uv venv .venv && VIRTUAL_ENV=.venv uv pip install -r requirements.txt
   - **Segments:** every segment in the road inventory, including the ~107k with no reports.
   - **Intersections:** nodes where 3+ non-alley segments share an endpoint (46,007).
 - **Assignment:** an incident goes to the nearest intersection within **76 m** (250 ft, the usual intersection influence area); otherwise to the nearest segment within 50 m, as in `pipelines/prepare.mjs`. That puts 87% of incidents at intersections.
+- **Traffic volume:** the City's yearly Traffic Volumes datasets (average weekday traffic, both directions) for 2016–2019 and 2022–2024; 2020 and 2021 were not published. Each segment takes the count section within 30 m of its midpoint, and each intersection takes its busiest counted leg. The model uses the mean `log1p(volume)` over the count years up to the forecast cutoff, with no imputation for unpublished years or uncounted sites (those get a has-volume flag of 0). Coverage: 23% of segments and 33% of intersections. Most of it comes from the 2016–2019 datasets; later years count far fewer sections.
 
 ## Final model
 
 Hauer's empirical Bayes method (Hauer et al., 2002), fitted separately for segments and intersections at each cutoff, using only data up to that cutoff:
 
 1. **Safety performance function (SPF).** A Poisson GLM (`sklearn.PoissonRegressor`) of each unit's history count on site characteristics only:
-   - **Segments:** road class (`ctp_class`), log length, log 2024 weekday volume plus a has-volume flag, lon/lat splines.
-   - **Intersections:** highest and second-highest leg road class, number of legs, max leg volume, lon/lat splines.
-2. **Overdispersion.** A negative binomial shape `k`, from marginal maximum likelihood with the SPF held fixed. Currently about 0.44 for segments and 0.32 for intersections, so counts are strongly overdispersed.
+   - **Segments:** road class (`ctp_class`), log length, mean log weekday volume plus a has-volume flag, lon/lat splines.
+   - **Intersections:** highest and second-highest leg road class, number of legs, mean log volume of the busiest counted leg, lon/lat splines.
+2. **Overdispersion.** A negative binomial shape `k`, from marginal maximum likelihood with the SPF held fixed. Currently about 0.54 for segments and 0.34 for intersections, so counts are strongly overdispersed.
 3. **Shrinkage.** `EB = w·SPF + (1 − w)·history`, with `w = k / (k + SPF)`. Sites with long or busy histories rely on their own counts; quiet sites lean on similar sites.
 4. **Forecast.** `EB × horizon / history length`. The uncertainty is Eq. 3, `SD = √((1 − w)·EB)`, plus a 90% interval from the negative binomial posterior predictive (shape `k + history`).
 
@@ -65,7 +66,7 @@ Each year N is predicted from data through Dec 31 of N−1. 2026 is scored throu
 | Top20 coverage, % of best possible | **82%** | 81% |
 | Top100 coverage, % of best possible | **77%** | 75% |
 | Top500 coverage, % of best possible | **75%** | 73% |
-| Next-year reports caught by top 500 never-reported units | **110** | 6 |
+| Next-year reports caught by top 500 never-reported units | **107** | 6 |
 
 - **Accuracy:** EB halves the deviance and ranks about as well or slightly better.
 - **Never-reported sites:** these get 15–40% of each year's reports. Only EB can rank them, because they have no history.
@@ -136,11 +137,12 @@ All were evaluated with the same yearly backtest unless noted.
 | Hauer's overdispersion per km (`k = n·L`), joint NB SPF with length offset | Slightly worse on every metric than one `k` per unit kind |
 | Year-specific µ / citywide trend projection | Changes totals only (static site covariates); negligible gain, trend overshot 2025 |
 | Intersection radius 20–130 m, node clustering 0–50 m | No unit-free optimum: road-length budgets favour 20 m, site-count budgets favour large clustered units; 45–110 m is flat, so 76 m (convention) with no clustering |
+| 2024 volume only (4% of segments), applied to every backtest year | Same ranking and slightly higher deviance (0.0980 vs 0.0976) than mean volume over 2016–2024 up to each cutoff; replaced because it also used volumes from after the cutoff |
 
 ## Limitations
 
 - **Rates are assumed stable over the 5-year history.** The forecast (about 7,500 reports) is below the last 365 days (8,300), so a recent citywide rise is not carried forward.
-- **No exposure data by year.** Volume exists only for 2024 and covers about 4% of segments. Roads built after 2017 appear in history with zero reports.
+- **Partial exposure data.** Volume counts cover 23% of segments and 33% of intersections, mostly major roads. Roads built after 2017 appear in history with zero reports.
 - **The December 2025 geocoding change** (incidents snapped to road centrelines) still lowers 2026 Top100 slightly.
 - **Weather, time of day, incident category and spatial spillover are not used.**
 

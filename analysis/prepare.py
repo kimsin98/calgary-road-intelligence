@@ -22,6 +22,7 @@ from model import DATA
 
 SEGMENT_METRES = 50
 INTERSECTION_METRES = 76
+VOLUME_YEARS = (2016, 2017, 2018, 2019, 2022, 2023, 2024)  # 2020 and 2021 were not published
 NOT_INTERSECTION_LEGS = {"Lanes (Alleys)", "PedestrianBridge"}
 CLASS_RANK = [
     "Skeletal Road", "Urban Boulevard", "Parkway", "Industrial Arterial", "Arterial Street", "Local Arterial",
@@ -58,12 +59,15 @@ def build_segments(roads):
             "geometry": [json.dumps(mapping(shape(r["line"]))) for r in roads],
         }
     )
-    # 2024 weekday volume of the nearest volume section within 30 m of the segment midpoint.
-    volumes = json.loads((DATA / "raw/volumes.json").read_text())
-    tree = shapely.STRtree(project(np.array([shape(v["multilinestring"]) for v in volumes])))
-    (seg, section), _ = tree.query_nearest(midpoints, max_distance=30, return_distance=True, all_matches=False)
-    segments["volume"] = np.nan
-    segments.loc[seg, "volume"] = [float(volumes[i]["volume"]) for i in section]
+    # Weekday volume per year from the nearest count section within 30 m of the segment midpoint.
+    # Years without a nearby count (including the unpublished 2020–2021) stay missing.
+    for year in VOLUME_YEARS:
+        volumes = json.loads((DATA / f"raw/volumes-{year}.json").read_text())
+        geometry = [shape(v.get("multilinestring") or v["the_geom"]) for v in volumes]
+        tree = shapely.STRtree(project(np.array(geometry)))
+        (seg, section), _ = tree.query_nearest(midpoints, max_distance=30, return_distance=True, all_matches=False)
+        segments[f"volume_{year}"] = np.nan
+        segments.loc[seg, f"volume_{year}"] = [float(volumes[i]["volume"]) for i in section]
     return segments, lines
 
 
@@ -82,10 +86,13 @@ def build_intersections(roads, segments):
     legs = legs[legs.map(len) >= 3]
 
     rank = {c: i for i, c in enumerate(CLASS_RANK)}
-    road_class, volume, names = segments.road_class.to_numpy(), segments.volume.to_numpy(), segments.name.to_numpy()
+    road_class, names = segments.road_class.to_numpy(), segments.name.to_numpy()
     ordered = [sorted(l, key=lambda s: rank.get(road_class[s], len(rank))) for l in legs]
     lon, lat = to_lonlat(legs.index.get_level_values(0), legs.index.get_level_values(1))
-    leg_volume = [volume[l][np.isfinite(volume[l])] for l in legs]
+
+    def busiest_leg(year):
+        volume = segments[f"volume_{year}"].to_numpy()
+        return [np.nanmax(volume[l]) if np.isfinite(volume[l]).any() else np.nan for l in legs]
 
     def label(order):
         distinct = list(dict.fromkeys(n for n in names[order] if isinstance(n, str) and n))
@@ -99,7 +106,7 @@ def build_intersections(roads, segments):
             "major": [road_class[o[0]] for o in ordered],
             "minor": [road_class[o[1]] for o in ordered],
             "legs": legs.map(len).to_numpy(),
-            "volume": [v.max() if len(v) else np.nan for v in leg_volume],
+            **{f"volume_{year}": busiest_leg(year) for year in VOLUME_YEARS},
             "lon": lon,
             "lat": lat,
             "geometry": [json.dumps({"type": "Point", "coordinates": [float(a), float(b)]}) for a, b in zip(lon, lat)],

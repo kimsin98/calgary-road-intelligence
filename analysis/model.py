@@ -85,7 +85,18 @@ def history_start(cutoff, years):
 # ---------------------------------------------------------------- empirical Bayes
 
 
-def site_features(units):
+def volume_up_to(units, year):
+    """Mean log1p weekday volume over published count years <= year; NaN if never counted.
+
+    Count years are averaged as observed, without imputation (2020–2021 were not published), and
+    later years are excluded so a backtest never sees volumes from after its cutoff.
+    """
+    columns = [c for c in units.columns if c.startswith("volume_") and int(c[7:]) <= year]
+    return np.log1p(units[columns]).mean(axis=1, skipna=True) if columns else pd.Series(np.nan, index=units.index)
+
+
+def site_features(units, cutoff):
+    log_volume = volume_up_to(units, cutoff.year)
     return pd.DataFrame(
         {
             "road_class": units.road_class.fillna("Unknown"),
@@ -93,8 +104,8 @@ def site_features(units):
             "minor": units.minor.fillna("none"),
             "legs": units.legs.fillna(0),
             "log_length": np.log1p(units.length_m.fillna(0)),
-            "log_volume": np.log1p(units.volume.fillna(0)),
-            "has_volume": units.volume.notna().astype(float),
+            "log_volume": log_volume.fillna(0),
+            "has_volume": log_volume.notna().astype(float),
             "lon": units.lon,
             "lat": units.lat,
         },
@@ -103,7 +114,7 @@ def site_features(units):
 
 
 def spf_model(kind):
-    """Site-only SPF: road class (segments) or leg classes (intersections), size, volume, location."""
+    """Site-only SPF: road class (segments) or leg classes (intersections), size, mean volume, location."""
     one_hot = lambda: OneHotEncoder(handle_unknown="infrequent_if_exist", min_frequency=100)
     if kind == "segment":
         categorical = [("road_class", one_hot(), ["road_class"])]
@@ -133,7 +144,7 @@ def eb_forecast(inputs, cutoff, history_years, horizon_days, scale=1.0):
     start = history_start(cutoff, history_years)
     history_days = cutoff.toordinal() - start.toordinal() + 1
     y = inputs.counts(start, cutoff)
-    features = site_features(inputs.units)
+    features = site_features(inputs.units, cutoff)
     eta, k = np.zeros(len(y)), np.zeros(len(y))
     dispersion = {}
     for kind in ("segment", "intersection"):

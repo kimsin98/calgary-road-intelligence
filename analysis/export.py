@@ -24,7 +24,8 @@ HORIZON_DAYS = 365
 CAVEATS = [
     "Counts are City traffic incident reports (including stalls and signal faults), not confirmed collisions.",
     "Expected reports assume each site's rate is stable; road works, new roads and policy changes are not modelled.",
-    "Site characteristics use the 2024 road inventory and 2024 weekday volumes (volume for about 4% of segments).",
+    "Site characteristics use the current road inventory and mean weekday volume over 2016–2024 counts "
+    "(2020–2021 unpublished; counts cover a minority of segments, mostly major roads).",
     "Incident geocoding changed in December 2025; intersection units (76 m) absorb most but not all of the shift.",
     "Expected reports describe where reports concentrate, not causes or the effect of an inspection.",
 ]
