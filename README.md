@@ -83,7 +83,7 @@ npm run compress:data
 
 Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 18 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 19 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
 ## Interpretation and attribution
 
@@ -120,3 +120,5 @@ Monthly location evidence displays mapped facility counts and proximity limitati
 Monthly forecast map points open the same location evidence as table rows; selecting a row recentres an open map. Review-status filtering affects the model Top20 table only, preserving the full forecast map and evaluation. Export inspection shortlist downloads the currently filtered Top20 locations with coordinates, predictions, facilities and saved reviews.
 
 The presentation should follow [DEMO_GUIDE.md](DEMO_GUIDE.md), aligned to the organizers' Pitch slides: short introduction, one-minute problem statement, 1–2 minute solution/demo, and 1–2 minute closing. The earlier five-minute click-through is background preparation; this pitch structure takes precedence.
+
+Annual outlook supports confirmed selection of precomputed month-end replay cutoffs from 2025 onward, alongside the latest future forecast. Run `OPENBLAS_NUM_THREADS=1 analysis/.venv/bin/python analysis/export_annual_replays.py` to regenerate per-cutoff gzip files and their index. Historical replay uses fixed five-year history, independent of later model-window selection. Incomplete observation periods are explicitly marked; current-geometry/undated-asset caveats still apply.

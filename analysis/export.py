@@ -52,13 +52,21 @@ def validate_backtest(backtest, inputs):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--top", type=int, default=1000, help="number of highest-forecast units to export")
+    parser.add_argument("--cutoff", type=date.fromisoformat)
+    parser.add_argument("--output", type=type(OUT))
     args = parser.parse_args()
     backtest = json.loads(REPORT.read_text())
     history_years = None if backtest["selectedHistoryYears"] == "all" else backtest["selectedHistoryYears"]
 
     inputs = model.load()
     validate_backtest(backtest, inputs)
-    cutoff = inputs.last_complete
+    cutoff = args.cutoff or inputs.last_complete
+    if cutoff > inputs.last_complete:
+        raise ValueError("Cutoff exceeds complete data")
+    if args.cutoff:
+        history_years = 5  # fixed replay setting, not selected using later targets
+    output = args.output or OUT
+    output.parent.mkdir(parents=True, exist_ok=True)
     units, ids = inputs.units, inputs.units.unit_id.to_numpy()
     eb = model.eb_forecast(inputs, cutoff, history_years, HORIZON_DAYS)
     training = [date(y - 1, 12, 31) for y in range(FIRST_RIDGE_TRAINING, cutoff.year)
@@ -75,14 +83,19 @@ def main():
     dashboard_path = model.DATA.parent.parent / "public/data/dataset.json"
     dashboard = json.loads(dashboard_path.read_text())
     reactive_location = {e["id"]: e["location"] for e in dashboard["events"]}
+    export_ids = set(ids[model.rank(eb["expected"], ids)[:args.top]])
+    records = records[records.unit_id.isin(export_ids)]
     associations = {uid: sorted({reactive_location[eid] for eid in g.id if eid in reactive_location}) for uid,g in records.groupby("unit_id")}
     evidence = {uid:list(g.sort_values("date",ascending=False).head(5).itertuples()) for uid,g in records.groupby("unit_id")}
+    observed_end = min(cutoff + timedelta(days=365), inputs.last_complete)
+    observed = inputs.counts(cutoff + timedelta(days=1), observed_end) if args.cutoff else None
     rows = []
     for position, i in enumerate(model.rank(eb["expected"], ids)[: args.top], start=1):
         u = units.iloc[i]
         segment = u.kind == "segment"
         rows.append(
             {
+                "observedReports": int(observed[i]) if observed is not None else None,
                 "rank": position,
                 "id": u.unit_id,
                 "kind": u.kind,
@@ -113,6 +126,9 @@ def main():
 
     history_start = model.history_start(cutoff, history_years)
     export = {
+        "mode": "backtest" if args.cutoff else "future",
+        "historySelection": "Fixed five-year replay setting; not independently tuned" if args.cutoff else "Annual backtest-selected history",
+        "observation": {"through": min(cutoff + timedelta(days=365), inputs.last_complete).isoformat(), "complete": cutoff + timedelta(days=365) <= inputs.last_complete, "totalReports": int(observed.sum()), "top20Reports": int(observed[model.rank(eb["expected"], ids)[:20]].sum())} if args.cutoff else None,
         "version": backtest["version"],
         "dataFingerprint": inputs.fingerprint(),
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -146,9 +162,9 @@ def main():
         "units": rows,
     }
     text = json.dumps(export, separators=(",", ":"))
-    OUT.write_text(text)
-    OUT.with_suffix(".json.gz").write_bytes(gzip.compress(text.encode(), compresslevel=9))
-    print(f"Wrote {OUT.name}: {len(rows)} units, {len(text) / 1e6:.2f} MB "
+    output.write_text(text)
+    output.with_suffix(".json.gz").write_bytes(gzip.compress(text.encode(), compresslevel=9))
+    print(f"Wrote {output.name}: {len(rows)} units, {len(text) / 1e6:.2f} MB "
           f"({len(gzip.compress(text.encode())) / 1e6:.2f} MB gzipped); horizon {export['horizon']['start']} to "
           f"{export['horizon']['end']}, expected {export['totals']['expected']:.0f} reports "
           f"(last 365 days: {export['totals']['last365Reports']})")

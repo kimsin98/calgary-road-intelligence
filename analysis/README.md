@@ -190,3 +190,7 @@ Seven-day forecasts retain browser Ridge Poisson, collision targets and experime
 ## PR #2 integration
 
 Current v2 exports retain fingerprints, source evidence, complete-year targets and simple baselines. Asset arrays now participate in fingerprints. Rebuild all annual and short exports after fetching/preparing assets; previous comparisons do not validate the expanded SPF. Candidate CMF treatments appear in the monthly future outlook's selected-location evidence. They carry study references and expert-review requirements, without multiplying crash CMFs into report counts. No ramp inference is made from Skeletal Road class alone. Historical validity remains limited by undated/current assets and unknown removals.
+
+## Monthly annual replay selection
+
+`export_annual_replays.py` creates month-end cutoffs for 2025–2026 before the latest complete day, with a small index and separate gzip snapshots. Matching fingerprint/observed snapshots can be reused. `export.py --cutoff YYYY-MM-DD --output PATH` fits only pre-cutoff incident history; replay history is fixed at five years, not selected using subsequent annual outcomes. The ridge baseline trains only on complete target years available by that cutoff. Observation counts are separate, explicitly revealed in the UI, and marked partial when the 365-day target is incomplete. The existing year-by-year backtest table is global research context, not an evaluation of the selected rolling window.

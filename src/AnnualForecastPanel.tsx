@@ -17,10 +17,14 @@ interface AnnualUnit {
   last365Reports: number;
   ridgeRank: number;
   rank: number;
+  observedReports?:number|null;
   relatedDashboardLocationIds?: string[];
   reportEvidence?: { id: string; date: string; description: string }[];
 }
 interface AnnualData {
+  mode?: string;
+  historySelection?: string;
+  observation?: {through:string; complete:boolean; totalReports?:number; top20Reports?:number}|null;
   version: string;
   dataThrough: string;
   generatedAt: string;
@@ -44,9 +48,13 @@ export function AnnualForecastPanel() {
   const [data, setData] = useState<AnnualData | null>(null),
     [error, setError] = useState(""),
     [selected, setSelected] = useState<string | null>(null);
+  const [revealed,setRevealed]=useState(false);
+  const [entries,setEntries]=useState<{cutoff:string;url:string}[]>([]),[draft,setDraft]=useState("latest"),[url,setUrl]=useState("/data/forecast-annual.json.gz");
+  useEffect(()=>{fetch("/data/annual-replays/index.json").then(r=>{if(!r.ok)throw Error();return r.json()}).then(v=>setEntries(v.entries)).catch(()=>setError("Annual replay index unavailable."))},[]);
   useEffect(() => {
+    setData(null);setError("");setSelected(null);setRevealed(false);
     const c = new AbortController();
-    loadSnapshot("/data/forecast-annual.json.gz", c.signal)
+    loadSnapshot(url, c.signal)
       .then((value) => {
         const d = value as AnnualData;
         if (!d?.horizon || !Array.isArray(d.units))
@@ -57,9 +65,10 @@ export function AnnualForecastPanel() {
         if (!c.signal.aborted) setError(String(e));
       });
     return () => c.abort();
-  }, []);
-  if (error) return <p role="alert">{error}</p>;
-  if (!data) return <p>Loading precomputed annual outlook…</p>;
+  }, [url]);
+  const controls=<div className="forecast-controls"><label>Annual evidence cutoff<select aria-label="Annual cutoff" value={draft} onChange={e=>setDraft(e.target.value)}><option value="latest">Latest · future forecast</option>{entries.map(e=><option key={e.cutoff} value={e.url}>{e.cutoff} · historical replay</option>)}</select></label><button onClick={()=>setUrl(draft=== "latest"?"/data/forecast-annual.json.gz":draft)}>Apply annual cutoff</button></div>;
+  if (error) return <>{controls}<p role="alert">{error}</p></>;
+  if (!data) return <>{controls}<p role="status">Loading precomputed annual outlook…</p></>;
   const focus = data.units.find((r) => r.id === selected);
   const preview: ForecastMapInput = {
     historyLabel: "fitted history",
@@ -81,6 +90,8 @@ export function AnnualForecastPanel() {
   };
   return (
     <div className="decision-panel">
+      {controls}
+      {data.observation&&<p className="notice">Historical replay · observed through {data.observation.through}. {data.observation.complete?"Full 365-day observation window available.":"Partial observation window; this is not a complete annual backtest."} Forecast covers 365 days. {data.historySelection}</p>}
       <div className="decision-heading">
         <h2>Annual planning outlook</h2>
         <span>EXPERIMENTAL / EMPIRICAL BAYES</span>
@@ -106,6 +117,8 @@ export function AnnualForecastPanel() {
         Export annual outlook
       </button>
       <ForecastMap result={preview} />
+      {data.observation&&<button onClick={()=>setRevealed(v=>!v)}>{revealed?"Hide annual outcomes":"Reveal annual outcomes"}</button>}
+      {revealed&&data.observation&&<p>Observed through {data.observation.through}: {data.observation.totalReports??"unavailable"} reports; forecast Top20 captures {data.observation.top20Reports??"unavailable"}. {data.observation.complete?"Complete window.":"Partial window; full-year expected counts are not directly comparable."}</p>}
       <table>
         <thead>
           <tr>
@@ -113,6 +126,7 @@ export function AnnualForecastPanel() {
             <th>Expected reports</th>
             <th>90% predictive interval</th>
             <th>Own-history / similar-sites prior</th>
+            {revealed&&<th>Observed reports</th>}
           </tr>
         </thead>
         <tbody>
@@ -135,6 +149,7 @@ export function AnnualForecastPanel() {
                 {Math.round(r.priorWeight * 100)}%
                 <small>Ridge rank {r.ridgeRank}</small>
               </td>
+              {revealed&&<td>{r.observedReports??"Unavailable"}</td>}
             </tr>
           ))}
         </tbody>
@@ -167,6 +182,7 @@ export function AnnualForecastPanel() {
       )}
       <details>
         <summary>Annual backtest</summary>
+        <p>Global calendar-year research results; this table does not score the currently selected rolling forecast.</p>
         <p>
           Top20 coverage as a fraction of the hindsight-optimal Top20, not the
           fraction of all reports or a safety improvement.

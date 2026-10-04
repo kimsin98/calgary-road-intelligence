@@ -82,3 +82,15 @@ def test_asset_fingerprint_and_empty_geometry():
     changed = replace(inputs, asset_unit=np.array([0]), asset_type=np.array(['signal']), asset_day=np.array([1]))
     assert inputs.fingerprint() != changed.fingerprint()
     assert len(asset_points([])) == 0
+
+
+def test_annual_replays_observation_boundaries():
+    import json
+    from pathlib import Path
+    for path in (Path(__file__).resolve().parent.parent/'public/data/annual-replays').glob('202*.json'):
+        value=json.loads(path.read_text())
+        assert value['history']['end']==value['dataThrough']
+        assert (date.fromisoformat(value['horizon']['end'])-date.fromisoformat(value['dataThrough'])).days==365
+        assert value['observation']['through']<=value['horizon']['end']
+        assert value['observation']['top20Reports']==sum(r['observedReports'] for r in value['units'][:20])
+        assert all(e['date']<=value['dataThrough'] for r in value['units'] for e in r['reportEvidence'])

@@ -1,4 +1,4 @@
-import { existsSync, unlinkSync } from "node:fs";
+import { existsSync, unlinkSync, readdirSync } from "node:fs";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -6,6 +6,7 @@ export default defineConfig({
     {
       name: "compressed-snapshot-output",
       closeBundle() {
+        if(existsSync("dist/data/annual-replays")) for(const name of readdirSync("dist/data/annual-replays")) {if(name.endsWith(".json")&&name!=="index.json")unlinkSync("dist/data/annual-replays/"+name)}
         /* public files are copied before closeBundle */
         for (const name of ["dataset", "weather", "forecast-annual", "forecast-eb30"]) {
           const file = "dist/data/" + name + ".json";
