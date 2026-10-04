@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { AnalysisConfig } from "../domain/types";
 import { WEATHER_OPTIONS } from "../weather.mjs";
 export function AnalysisControls({
@@ -19,6 +20,40 @@ export function AnalysisControls({
   savePlan: () => void;
   change: any;
 }) {
+  const scope = {
+    start: config.start,
+    end: config.end,
+    period: config.period,
+    category: config.category,
+    weather: config.weather,
+  };
+  const [draft, setDraft] = useState(scope);
+  useEffect(() => {
+    setDraft({
+      start: config.start,
+      end: config.end,
+      period: config.period,
+      category: config.category,
+      weather: config.weather,
+    });
+  }, [
+    config.start,
+    config.end,
+    config.period,
+    config.category,
+    config.weather,
+  ]);
+  const pending = Object.keys(scope).some(
+    (key) =>
+      draft[key as keyof typeof draft] !== scope[key as keyof typeof scope],
+  );
+  const valid = Boolean(
+    draft.start &&
+    draft.end &&
+    draft.start <= draft.end &&
+    draft.start >= data.audit.first &&
+    draft.end <= data.audit.last,
+  );
   return (
     <>
       {" "}
@@ -43,28 +78,28 @@ export function AnalysisControls({
                     type="date"
                     min={data.audit.first}
                     max={data.audit.last}
-                    value={config.start}
+                    value={draft.start}
                     onChange={(e) =>
                       e.target.value &&
-                      setConfig({
-                        ...config,
+                      setDraft({
+                        ...draft,
                         start: e.target.value,
                         end:
-                          e.target.value > config.end
+                          e.target.value > draft.end
                             ? e.target.value
-                            : config.end,
+                            : draft.end,
                       })
                     }
                   />
                   <input
                     aria-label="End date"
                     type="date"
-                    min={config.start}
-                    max="2025-12-31"
-                    value={config.end}
+                    min={draft.start}
+                    max={data.audit.last}
+                    value={draft.end}
                     onChange={(e) =>
                       e.target.value &&
-                      setConfig({ ...config, end: e.target.value })
+                      setDraft({ ...draft, end: e.target.value })
                     }
                   />
                 </div>
@@ -74,9 +109,9 @@ export function AnalysisControls({
               <>
                 <label>Time of day · Calgary local</label>
                 <select
-                  value={config.period}
+                  value={draft.period}
                   onChange={(e) =>
-                    setConfig({ ...config, period: e.target.value })
+                    setDraft({ ...draft, period: e.target.value })
                   }
                 >
                   {[
@@ -95,9 +130,9 @@ export function AnalysisControls({
               <>
                 <label>Event type</label>
                 <select
-                  value={config.category}
+                  value={draft.category}
                   onChange={(e) =>
-                    setConfig({ ...config, category: e.target.value })
+                    setDraft({ ...draft, category: e.target.value })
                   }
                 >
                   {["All types", ...Object.keys(data.audit.categories)].map(
@@ -113,9 +148,9 @@ export function AnalysisControls({
                 <label>Weather context</label>
                 <select
                   aria-label="Weather condition"
-                  value={config.weather}
+                  value={draft.weather}
                   onChange={(e) =>
-                    setConfig({ ...config, weather: e.target.value })
+                    setDraft({ ...draft, weather: e.target.value })
                   }
                 >
                   {WEATHER_OPTIONS.map((s) => (
@@ -128,12 +163,83 @@ export function AnalysisControls({
                 </p>
               </>
             )}
+            <div className="scope-apply-actions">
+              <button
+                className="primary"
+                disabled={!pending || !valid}
+                onClick={() => setConfig({ ...config, ...draft })}
+              >
+                Apply evidence scope
+              </button>
+              <button disabled={!pending} onClick={() => setDraft(scope)}>
+                Reset changes
+              </button>
+              {pending && (
+                <span role="status">
+                  {valid
+                    ? "Changes pending · apply to update analysis"
+                    : "Choose dates within the available data range"}
+                </span>
+              )}
+            </div>
           </div>
           <div
             className="control-priority"
             hidden={!controlVisibility.capacity}
           >
             <h3>Ranking & capacity</h3>
+            <label>
+              Event-type weighting
+              <select
+                aria-label="Historical weighting"
+                value={
+                  config.typeWeightMode ??
+                  (config.typeWeights ? "learned" : "equal")
+                }
+                onChange={(e) =>
+                  setConfig({
+                    ...config,
+                    typeWeightMode: e.target.value as "equal" | "learned",
+                  })
+                }
+              >
+                <option value="equal">Equal event weights</option>
+                <option value="learned" disabled={!config.typeWeights}>
+                  Learned type weights · experimental
+                </option>
+              </select>
+            </label>
+            {!config.typeWeights && (
+              <p className="hint">
+                Generate a type-weighted forecast and import its learned weights
+                to enable the experimental historical mode.
+              </p>
+            )}
+            {config.typeWeights && config.typeWeightMode !== "equal" && (
+              <div className="notice">
+                <strong>Experimental learned type weights</strong>
+                <p>
+                  Applied to frequency only · {config.typeWeightSource?.horizon}
+                  -day collision model · trained through 2025. Not severity
+                  weights.
+                </p>
+                {Object.entries(config.typeWeights).map(([type, w]) => (
+                  <p key={type}>
+                    {type}: {w.toFixed(2)}×
+                  </p>
+                ))}
+                <button
+                  onClick={() =>
+                    setConfig({
+                      ...config,
+                      typeWeightMode: "equal",
+                    })
+                  }
+                >
+                  Restore equal event weights
+                </button>
+              </div>
+            )}
             {controlVisibility.capacity && (
               <>
                 <label>

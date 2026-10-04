@@ -1,5 +1,14 @@
 import type { MultiLineString } from "geojson";
 export type AnalysisConfig = {
+  typeWeightMode?: "equal" | "learned";
+  typeWeights?: Record<string, number>;
+  typeWeightSource?: {
+    version: string;
+    datasetVersion: string;
+    horizon: number;
+    trainedThrough: string;
+    method: string;
+  };
   start: string;
   end: string;
   period: string;
@@ -60,6 +69,7 @@ export interface RoadLocation {
   };
 }
 export interface RankedLocation extends RoadLocation {
+  weightedActivity: number;
   count: number;
   recent: number;
   previous: number;
@@ -144,6 +154,13 @@ export interface ForecastChange {
   explanation: string;
 }
 export interface ForecastResult {
+  weighting: "equal" | "learned";
+  objective: "all" | "collision";
+  learnedEffects: {
+    name: string;
+    coefficient: number;
+    rateMultiplier: number;
+  }[];
   crossValidation: {
     strategy: string;
     selectedLambda: number;
@@ -159,6 +176,7 @@ export interface ForecastResult {
           cutoff: string;
           modelCoverage: number;
           baselineCoverage: number;
+          equalWeightCoverage: number;
         }[];
       }[];
     }[];
@@ -196,6 +214,7 @@ export interface ForecastResult {
     modelCoverage: number;
     baselineCoverage: number;
     reactiveCoverage: number;
+    equalWeightCoverage: number;
     rows: ForecastRow[];
   } | null;
 }
@@ -208,6 +227,8 @@ export interface ForecastInput {
     capacity: number;
     mode: "backtest" | "future";
     dataEnd: string;
+    objective: "all" | "collision";
+    weighting: "equal" | "learned";
   };
 }
 

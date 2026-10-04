@@ -1,230 +1,244 @@
-# Calgary Road Disruption Intelligence：详细开发计划
+# Calgary Road Disruption Intelligence: Detailed Development Plan
 
-状态：原始方案保留；当前实现进度见 reports/DEVELOPMENT_STATUS.md。实际采用 Node 数据处理、React / MapLibre 和浏览器分析，无独立 API。
+Status: the original proposal is retained; see reports/DEVELOPMENT_STATUS.md for current implementation progress. The application uses Node data processing, React / MapLibre and browser-based analysis, without a separate API.
 
-## 1. 项目目标
+## Current Implementation and Future Boundaries (2026-10-04)
 
-为卡尔加里道路运营人员提供一个全年可用的道路排查工具：从公开交通事件记录中找出反复出现问题或近期事件增多的道路段，生成有数据依据的排查候选名单，并在名额或分析条件变化后重新计算。
+The following chapters preserve the initial proposal and subsequent design iterations. Older references to Python/APIs, single-year data, smoothed baselines or weather scenarios do not describe the current implementation. See README.md for usage and reports/DEVELOPMENT_STATUS.md for current status.
 
-面向的第一位用户是道路运营人员或交通分析人员。用户要回答的问题是：
+- Data: 27,805 official traffic reports from 2023–2026, 9,661 road/grid locations and 32,922 airport weather hours over the same period. UTC is retained; local filtering uses America/Edmonton. The latest day and 2026 year are incomplete.
+- Historical inspection: edit Evidence scope before confirming application; equal weights and imported experimental type weights are supported. Weighting changes only the frequency signal; raw counts, growth and recurring dates retain their respective definitions.
+- Forecasting: all-report/collision-related targets and equal/experimental type weighting are independently selectable. Poisson regression estimates report counts for the next 7/30 days. Historical backtesting and future forecasting are separate; future mode does not fabricate observed outcomes.
+- Temporal validation: select regularization using 2023→2024 and 2023–2024→2025 folds; refit on 2023–2025; independent 2026 tests do not select parameters. This is not a one-shot annual forecast.
+- Weight interpretation: model coefficients are predictive associations. Historical adaptation takes the positive part of the average coefficient across two time bins, then normalizes it. This is an unvalidated heuristic, not severity or scientifically established safety weighting. Equal-weight restoration and plan comparison are available.
+- Deployment: Node/React/MapLibre without a separate API; output contains approximately 4 MB of gzip data, decoded natively in the browser or through a fallback library. Gzip does not reduce decoded memory use.
+- Validation: current models do not consistently outperform simple baselines. Experimental notices and training convergence diagnostics remain visible. See the development status document for the current test/report index.
 
-- 本轮只能排查 10 或 20 个地点，哪些地点值得先去？
-- 这个地点为什么进入名单：事件多、近期增长，还是某类问题反复出现？
-- 如果只看早高峰、夜间、周末或冬季天气，名单有什么变化？
-- 相比单纯按事件数量排序，新方案优先关注了哪些地点？
+Future research: confirmed collision/injury data, traffic exposure, manually reviewed intersection associations and independent prospective validation. Weather forecasts, snow-clearing references, voice and live ingestion remain unfinished.
 
-项目输出是“交通中断事件的排查优先级”，不是经验证的事故危险性评级。数据没有完整伤亡信息，不以减少事故、降低损失或清雪效果作为已实现成果。
+## 1. Project Objective
 
-冬季是一个分析视角。清雪路线是市府现有规则的参照图层，不是本项目要重新制定的政策。
+Provide Calgary road operations staff with a year-round inspection tool: identify road segments with recurring problems or recent increases in events using public traffic records, produce evidence-based inspection candidates, and recalculate when capacity or analysis conditions change.
 
-## 2. 黑客松案例与交付约束
+The primary user is a road operations professional or traffic analyst. They need to answer:
 
-采用 Option B，Energy and Infrastructure Systems，Case 5：Autonomous Calgary Collision-Hotspot Ranking Agent。
+- If only 10 or 20 locations can be inspected this round, which should be visited first?
+- Why did a location enter the shortlist: many events, recent growth or repeated occurrences of a particular problem?
+- How does the shortlist change when considering only morning peak, nighttime, weekends or winter weather?
+- Which locations does the proposed approach prioritize compared with sorting only by event count?
 
-官方案例目录：
+The output is an inspection priority for traffic disruptions, not a validated crash-danger rating. The data lacks complete injury information; fewer crashes, reduced losses or improved snow clearance are not claimed as achieved outcomes.
+
+Winter is an analysis perspective. Snow-clearing routes are a reference layer for existing municipal rules, not a policy this project intends to redefine.
+
+## 2. Hackathon Case and Delivery Constraints
+
+Use Option B, Energy and Infrastructure Systems, Case 5: Autonomous Calgary Collision-Hotspot Ranking Agent.
+
+Official case directory:
 https://github.com/nagusubra/industry-hackathon-lab/tree/main/01-energy-and-infrastructure-systems/Case%205%20-%20Autonomous%20Calgary%20Collision-Hotspot%20Ranking%20Agent
 
-原案例要求：生成 Top 20 地点，与事件数量基线比较；修改一次权重，展示名单重合程度，并解释至少三个地点的排名变化。本项目保留这些要求，扩展道路段聚合、交互地图和排查名单。
+The original case requires a Top 20 shortlist, comparison with an event-count baseline, one weight change, shortlist overlap and explanations of ranking changes for at least three locations. This project retains those requirements and extends segment aggregation, interactive mapping and inspection shortlists.
 
-根据已阅读的手册与仓库：
+Based on the handbook and repository reviewed:
 
-- 团队为 2–5 名已注册成员。
-- 向主办方说明选择的赛道和案例；增加数据源及扩展方向时一并说明。
-- 截止时间为 2026 年 10 月 4 日 12:00 MDT，即 18:00 UTC。
-- 在官方仓库创建 Hackathon Submission Issue，一队一次提交。
-- 必填内容包括团队信息、项目介绍和 2–5 张截图；演示视频或在线地址可选但推荐。
-- 现场为 5 分钟展示和 3 分钟问答。
-- 主办方 starter、开源库和公开数据可以使用，须注明来源及团队自己的贡献。
+- Teams have 2–5 registered members.
+- Inform organizers of the selected stream and case, including additional sources and extensions.
+- Deadline: October 4, 2026 at 12:00 MDT, or 18:00 UTC.
+- Create a Hackathon Submission Issue in the official repository; one submission per team.
+- Required content includes team information, a project description and 2–5 screenshots. A demo video or live URL is optional but recommended.
+- On-site presentation: 5 minutes followed by 3 minutes of questions.
+- Organizer starters, open-source libraries and public data may be used with attribution and a clear account of the team's own contribution.
 
-开发前再次核对最新公告。评分关注数据决策及改进（30%）、行业问题（20%）、软件与架构（20%）、商业落地（15%）、展示（15%）。
+Recheck the latest announcements before development. Scoring emphasizes data decisions and improvement (30%), industry problem (20%), software and architecture (20%), commercial applicability (15%) and presentation (15%).
 
-## 3. 第一版范围与完成标准
+## 3. First-Version Scope and Completion Criteria
 
-### 3.1 必须完成：P0
+### 3.1 Required: P0
 
-1. 导入真实交通事件数据，报告记录数量、覆盖日期、缺失字段和清洗情况。
-2. 建立稳定的地点编号；优先匹配道路段，匹配不可靠时使用空间网格聚合。
-3. 按地点计算事件数量基线，生成 Top 20。
-4. 计算包含近期程度与重复事件信号的候选优先级；展示公式和各项贡献。
-5. 支持时间范围、时段、事件类别和排查名额筛选。
-6. 地图、排名表和地点详情联动，支持点击查看真实事件证据。
-7. 支持一次重新规划：改变权重或排查名额后重新排序，显示进入、退出和升降名次。
-8. 导出排查名单与报告，保存数据版本和配置，能够复现结果。
+1. Import real traffic-event data and report record counts, covered dates, missing fields and cleaning results.
+2. Establish stable location IDs, preferably matched road segments; use spatial grids when matching is unreliable.
+3. Calculate an event-count baseline by location and generate the Top 20.
+4. Calculate candidate priorities incorporating recency and recurring-event signals; show the formula and contributions.
+5. Support date range, time-of-day, event category and inspection-capacity filters.
+6. Link map, ranking table and location details, allowing users to inspect original event evidence.
+7. Support one replanning step: change weights or capacity, rerank and show entries, exits and rank movements.
+8. Export shortlists and reports, preserving dataset versions and configurations for reproducibility.
 
-P0 完成的含义：全新打开项目后，按 README 可启动；离线缓存数据可完成整段演示；任何排名都能追溯到具体记录和参数。
+P0 is complete when a fresh checkout starts using README instructions, cached local data supports the entire demonstration, and every ranking is traceable to records and parameters.
 
-### 3.2 完成 P0 后增加：P1
+### 3.2 After P0: P1
 
-- 官方交通流量背景：可靠匹配的路段可查看相对车流暴露下的事件指标。
-- 天气关联：降雪、低温、降雨等条件下的历史事件分布。
-- 清雪路线对照：地图叠加现行路线等级，说明相交或邻近关系。
-- 简单历史回放：按月或周看地点排名变化。
-- LLM 调用结构化分析工具，自动比较候选方案并生成附证据的简报。
+- Official traffic-volume context: reliably matched sections can show event indicators relative to traffic exposure.
+- Weather association: historical event distributions under snow, cold, rain and other conditions.
+- Snow-route comparison: overlay existing route classes and explain intersections or proximity.
+- Simple historical playback: monthly or weekly ranking changes.
+- An LLM calling structured analysis tools to compare candidates and produce an evidence-backed brief.
 
-### 3.3 时间足够再增加：P2
+### 3.3 If Time Allows: P2
 
-- ElevenLabs 朗读已生成的排查简报。
-- 巡查路线：对已选地点计算简化访问顺序，独立标为路线建议。
-- 更多历史年份，以及经核实的年度对照。
+- ElevenLabs narration of generated inspection briefs.
+- Inspection routing: a simplified visit order for selected locations, explicitly labeled a route suggestion.
+- Additional historical years and verified annual comparisons.
 
-第一版不承诺实时交通、道路表面结冰预测、真实维修成本、伤亡预测或完整调度执行。
+The first version does not promise real-time traffic, road-surface ice prediction, actual repair costs, injury prediction or full dispatch execution.
 
-## 4. 数据方案
+## 4. Data Plan
 
-### 4.1 核心：交通事件
+### 4.1 Core: Traffic Events
 
-- 官方门户：https://data.calgary.ca/Transportation-Transit/Traffic-Incidents/35ra-9556
-- 案例 seed：`calgary_traffic_incidents_2025.csv`。
-- 可用字段：`incident_info`、`description`、`start_dt`、`quadrant`、`longitude`、`latitude`、`incident_count`；实际下载后核对字段与含义。
-- 原本用途：交通中断事件档案，包括信号问题、危险道路状况、抛锚和部分碰撞报告。
-- 项目用途：地点聚合、时段分析、重复问题发现和排名。
+- Official portal: https://data.calgary.ca/Transportation-Transit/Traffic-Incidents/35ra-9556
+- Case seed: `calgary_traffic_incidents_2025.csv`.
+- Available fields: `incident_info`, `description`, `start_dt`, `quadrant`, `longitude`, `latitude`, `incident_count`; verify fields and meanings after downloading.
+- Original purpose: archive traffic disruptions, including signal problems, hazardous road conditions, stalled vehicles and some collision reports.
+- Project use: location aggregation, time-of-day analysis, recurring-problem discovery and ranking.
 
-先以案例 seed 完成流程，再按需获取官方更多记录。数据有遗漏、报告偏差及非碰撞事件，不能将全部记录称作交通事故。
+First complete the workflow with the seed, then obtain additional official records as needed. Reporting gaps, bias and non-collision events mean not all records can be described as crashes.
 
-### 4.2 空间基础：道路中心线
+### 4.2 Spatial Foundation: Street Centreline
 
 - https://data.calgary.ca/Transportation-Transit/Street-Centreline/4dx8-rtm5
-- 原本用途：道路中心线和分段的地图表示。
-- 项目用途：将事件匹配到道路段，显示道路名称及线状热点。
-- 待核实：格式、坐标系、路段编号、道路名称字段、下载体积和完整性。
+- Original purpose: mapping road centrelines and segments.
+- Project use: match events to segments, display road names and line-based hotspots.
+- Verify: format, coordinate system, segment IDs, road-name fields, download size and completeness.
 
-### 4.3 扩展数据
+### 4.3 Additional Sources
 
-| 数据 | 来源 | 原本用途 | 本项目用途与前提 |
+| Data | Source | Original purpose | Project use and prerequisites |
 |---|---|---|---|
-| 交通流量 | https://data.calgary.ca/dataset/Traffic-Volumes-for-2024/cauu-7hnw | 平均工作日道路交通量 | 为事件数量提供车流背景；核实年份、单位及路段对应关系 |
-| 历史天气 | https://climate.weather.gc.ca/historical_data/search_historic_data_e.html | 气象站观测 | 按时间关联事件，展示天气条件；须确认站点及所需字段确实可下载 |
-| 清雪优先路线 | https://data.calgary.ca/Health-and-Safety/Snow-and-Ice-Clearing-Priority-Routes-Map/fuea-eg5z | 现行清雪路线、等级与服务时限 | 作为冬季图层；地图页面的底层数据需核实，不假定页面本身就是下载接口 |
-| 信号灯位置 | https://data.calgary.ca/Health-and-Safety/Traffic-Signals/qr97-4jvx | 市府维护的信号设施位置 | 在信号相关事件分析中提供空间背景 |
+| Traffic volume | https://data.calgary.ca/dataset/Traffic-Volumes-for-2024/cauu-7hnw | Average weekday road traffic | Context for event counts; verify year, units and segment correspondence |
+| Historical weather | https://climate.weather.gc.ca/historical_data/search_historic_data_e.html | Weather-station observations | Join events by time and display weather conditions; confirm the station and required fields are downloadable |
+| Priority snow routes | https://data.calgary.ca/Health-and-Safety/Snow-and-Ice-Clearing-Priority-Routes-Map/fuea-eg5z | Existing routes, priorities and service timelines | Winter layer; verify underlying data rather than treating the map page as a download endpoint |
+| Traffic signals | https://data.calgary.ca/Health-and-Safety/Traffic-Signals/qr97-4jvx | Municipally maintained signal locations | Spatial context for signal-related events |
 
-先接入一个扩展来源。流量匹配成功优先接流量；匹配困难而天气字段可用则接天气。
+Connect one additional source first. Prefer volume if matching works; if matching is difficult and weather fields are available, connect weather instead.
 
-### 4.4 数据审计与追溯
+### 4.4 Auditing and Traceability
 
-每份数据保存来源 URL、下载时间、覆盖日期、许可证、原始字段说明与文件校验值。分析时使用固定快照，避免门户更新导致结果改变。
+Preserve source URLs, retrieval times, coverage dates, licenses, original field descriptions and checksums for every dataset. Analyze fixed snapshots so portal updates cannot silently change results.
 
-下载完成后生成数据报告：行数、唯一地点数、日期范围、缺失率、地理范围、重复记录及类别分布。没有核实的字段不纳入核心计算。
+After downloading, generate a report of row counts, unique locations, date range, missingness, geographic extent, duplicates and category distribution. Unverified fields must not enter core calculations.
 
-## 5. 清洗与空间匹配
+## 5. Cleaning and Spatial Matching
 
-1. 保留原始记录，另生成清洗结果；删除或排除的原因单独记录。
-2. 核实 `start_dt` 的时区。统一分析时间，正确处理 MDT/MST 和夏令时；无时区时间不直接当 UTC。
-3. 过滤无效经纬度和研究区域之外的点，保留排除统计。
-4. 优先用事件 ID 去重；seed 若无 ID，核实后用时间、位置和描述组合去重。先检查 `incident_count` 是否代表聚合计数，避免重复相加。
-5. 按经过人工抽查的规则分类：碰撞相关、信号问题、道路状况、抛锚、其他。保留原文，模糊情况归“其他／待确认”。
-6. 将道路与事件投影到适合卡尔加里的米制坐标系，再计算距离；不直接以经纬度差当米。
-7. 事件匹配到最近路段，设置可配置距离上限（先试 50 米，再用抽查修正）。交叉路口与平行道路的匹配置信度单独标明。
-8. 输出匹配率、距离分布和人工抽查结果。无法可靠匹配时，降级为约 100–200 米网格，以“地点区域”展示。
+1. Preserve original records and generate cleaned outputs separately; record removal/exclusion reasons.
+2. Verify the timezone of `start_dt`. Standardize analysis time and correctly handle MDT/MST and daylight saving; do not assume timestamps without timezone information are UTC.
+3. Filter invalid coordinates and points outside the study area, preserving exclusion counts.
+4. Prefer source IDs for deduplication. If the seed lacks IDs, verify a time/location/description composite. Check whether `incident_count` is an aggregate before summing.
+5. Classify using manually reviewed rules: collision-related, signals, road conditions, stalled vehicles and other. Preserve source text and assign ambiguous cases to Other / unverified.
+6. Project roads and events into an appropriate Calgary metre coordinate system before measuring distances; coordinate differences are not metres.
+7. Assign the nearest segment with a configurable maximum distance, initially 50 m and subsequently adjusted through review. Identify intersection/parallel-road matching confidence separately.
+8. Report match rates, distance distributions and manual review results. If reliable matching is unavailable, use approximately 100–200 m grid cells labeled location areas.
 
-街道匹配结果只是空间近似，不代表确认了事件发生在哪一条车道。
+Street matching is a spatial approximation, not confirmation of the event's lane.
 
-## 6. 排查优先级方法
+## 6. Inspection Priority Method
 
-### 6.1 比较基线
+### 6.1 Comparison Baseline
 
-在相同时间、类别和地理范围内，按去重后的事件数量降序生成 Top K。并列时使用固定地点 ID 排序，保证可复现。
+Within the same time, category and geographic scope, rank deduplicated event counts descending to obtain Top K. Break ties with stable location IDs for reproducibility.
 
-### 6.2 第一版评分
+### 6.2 First-Version Scoring
 
-先采用透明规则，不要求训练复杂模型：
+Begin with transparent rules rather than requiring a complex trained model:
 
 `priority = w1 × frequency + w2 × recent_signal + w3 × recurrence`
 
-- `frequency`：研究时间段内的事件数量，先取 `log(1 + count)` 再做 0–1 归一化，减轻少数大热点支配全部排名的问题。
-- `recent_signal`：最近窗口相对于之前等长窗口的事件增长。默认 30 天与此前 30 天，要求两个窗口数据完整；小样本做平滑处理。
-- `recurrence`：事件出现在多少个不同日期或周，区分一次集中报告与反复发生。
-- 示例初始权重为 0.5 / 0.3 / 0.2。这是待评估的工程起点，不能宣称是行业标准。
+- `frequency`: event count in the study period, transformed with `log(1 + count)` and normalized to 0–1 to limit domination by a few large hotspots.
+- `recent_signal`: growth in a recent window relative to the preceding equal window. Default: 30 days versus the prior 30 days, requiring complete windows and smoothing for small samples.
+- `recurrence`: the number of different dates or weeks with events, distinguishing concentrated reporting from repeated occurrences.
+- Illustrative initial weights: 0.5 / 0.3 / 0.2. This is an engineering starting point to evaluate, not an industry standard.
 
-近期窗口以数据所选截止日为基准。例如 seed 截止 2025 年末，“近期”指该历史截止日前，而非今天。
+Recent windows are relative to the selected historical cutoff. For example, a seed ending in late 2025 defines recency relative to that cutoff, not today.
 
-样本不足时给出“证据较少”提示，缺失指标不默认为零。所有排名详情显示事件数、有效日期范围、分数贡献和匹配质量。
+Show a limited-evidence notice for sparse samples; do not automatically treat missing indicators as zero. Ranking details display counts, effective date range, score contributions and match quality.
 
-### 6.3 时段与事件类型
+### 6.3 Time Periods and Event Types
 
-支持全年／所选日期、工作日／周末、早高峰／晚高峰／夜间及自定义小时。高峰与夜间定义写入配置，初始时间段只是产品设置。
+Support the full year/selected dates, weekdays/weekends, morning/evening peaks, nighttime and custom hours. Write peak/night definitions into configuration; initial periods are product settings.
 
-类型筛选改变分析对象。没有经验证的伤亡或严重程度字段时，不给类别随意赋予“伤亡风险权重”。
+Type filters change the analysis population. Without validated injury/severity fields, do not arbitrarily assign injury-risk weights to categories.
 
-### 6.4 重新规划
+### 6.4 Replanning
 
-保存第一次方案，再修改名额或权重，重新计算。展示：
+Save the first plan, change capacity or weights, and recalculate. Display:
 
-- Top K 名单及相对基线的名次变化。
-- 进入和退出地点；至少三个地点的变化理由。
-- 同一 K 下的名单重合率；K 改变时显示实际增减数量，不混用比较口径。
-- 新名单覆盖的事件数量和重复出现日期数；明确这些只是记录覆盖指标。
+- Top K and rank changes relative to the baseline.
+- Entering/exiting locations and explanations for at least three changes.
+- Overlap for the same K; when K changes, show actual additions/removals without mixing comparison definitions.
+- Events and recurring dates covered by the new shortlist, explicitly identified as record-coverage indicators.
 
-### 6.5 历史评估
+### 6.5 Historical Evaluation
 
-仅“排名变了”不能证明新方案更好。增加时间留出评估：
+A changed ranking alone does not prove improvement. Add temporal holdout evaluation:
 
-1. 用一个历史窗口计算排名，并冻结权重。
-2. 用之后窗口的真实事件检验所选地点覆盖了多少后续事件。
-3. 与相同 K 的事件数量基线比较；通过多个历史截止日重复评估。
-4. 报告后续事件覆盖率、候选名单稳定性和小样本情况。
+1. Rank a historical window and freeze weights.
+2. Use real events in the subsequent window to measure shortlist coverage.
+3. Compare with the event-count baseline at the same K and repeat across historical cutoffs.
+4. Report subsequent-event coverage, shortlist stability and small-sample conditions.
 
-调权重与最终留出评估使用不同窗口，避免看过结果后才选择参数。模型胜过基线不是预设结论；没有改善时如实展示何种条件下更好或更差。
+Use separate tuning and final holdout windows to avoid selecting parameters after viewing results. Beating the baseline is not a predetermined conclusion; show better and worse conditions honestly.
 
-### 6.6 流量与天气扩展
+### 6.6 Volume and Weather Extensions
 
-交通流量仅在对应路段和年份可辩护时计算曝光调整指标。平均工作日交通量不是实时小时交通量；2024 流量搭配 2025 事件须注明年份差异。不能据此直接计算“事故概率”。
+Calculate exposure-adjusted indicators only when volume links and years are defensible. Average weekday volume is not real-time hourly traffic; combining 2024 volume with 2025 events requires disclosure of the year mismatch. It cannot directly produce crash probability.
 
-天气按站点距离与时间匹配，显示站点来源及缺失情况。降雪字段不可用时不能用降水代替降雪而不说明。气温低于零不等于道路结冰。
+Match weather by station distance and time, showing station provenance and missingness. If snowfall is unavailable, do not silently replace it with precipitation. Below-freezing temperature does not establish road ice.
 
-天气关联还需要正常化比较：同类天气占多少观测小时、每小时出现多少事件。仅看降雪日事件总数会受降雪日数量影响。结果为关联分析，不能证明天气造成事件。
+Weather associations also require normalized comparisons: observation hours under each condition and events per hour. Snow-day totals depend on the number of snowy days. Associations do not prove weather caused events.
 
-## 7. 自动决策流程与可选 LLM
+## 7. Automated Decision Workflow and Optional LLM
 
-核心闭环：读取数据 → 提出候选名单 → 对照基线与约束评分 → 修改一次方案 → 输出名单与证据。
+Core loop: read data → propose shortlist → assess against baseline and constraints → modify one plan → output shortlist and evidence.
 
-评分标准允许自动排名、优化和规则调整，LLM 并非必需。P0 将该闭环实现为可复现的计算流程；权重变更由用户触发。
+Scoring criteria allow automatic ranking, optimization and rule adjustment; an LLM is not required. P0 implements a reproducible computational loop with user-triggered weight changes.
 
-P1 可加入自动搜索有限组权重：在历史验证窗口上比较，选出符合名额与小样本条件的方案，再在未使用窗口上报告结果。保存每次候选参数和评价记录。
+P1 may search a finite set of weights, compare them on historical validation windows, choose a plan respecting capacity and small-sample conditions, and report results on unused windows. Preserve every candidate parameter set and evaluation.
 
-若接 LLM，它负责理解筛选需求、调用已实现工具并总结结果：
+If integrated, the LLM interprets filter requests, calls implemented tools and summarizes results:
 
-- `analyze_locations(filters)`：获取指标与证据。
-- `rank_candidates(filters, weights, capacity)`：生成排序。
-- `compare_plans(plan_a, plan_b)`：比较名单。
-- `evaluate_history(config)`：获取历史评估。
-- `export_brief(plan_id)`：生成简报。
+- `analyze_locations(filters)`: retrieve indicators and evidence.
+- `rank_candidates(filters, weights, capacity)`: produce rankings.
+- `compare_plans(plan_a, plan_b)`: compare shortlists.
+- `evaluate_history(config)`: retrieve historical evaluation.
+- `export_brief(plan_id)`: generate a brief.
 
-LLM 不能自己编写事件数量、风险结论或不存在的维修方案。简报中的地点与数值来自工具返回结果，并附地点 ID 和原始记录引用。API 不可用时用模板简报完成同一流程。
+The LLM must not invent event counts, risk conclusions or nonexistent repair proposals. Locations/numbers in briefs come from tool outputs with IDs and original-record references. If an API is unavailable, a template brief completes the same workflow.
 
-ElevenLabs 仅在核心完成后用于朗读简报，不作为排名依赖。
+ElevenLabs is only for narration after the core is complete, not a ranking dependency.
 
-## 8. 界面与演示体验
+## 8. Interface and Demonstration Experience
 
-采用一个主工作台，地图为中心：
+Use one primary workbench centered on the map:
 
-- 顶部：项目名称、数据覆盖期、当前筛选后的事件数与候选地点数。
-- 左侧：日期、时段、类别、排查名额、权重及可选天气条件。
-- 中部：道路段或地点区域地图，颜色表达优先级，选中项与名单联动。
-- 右侧：Top K 地点、名次变化和关键指标；点击打开详情。
-- 底部或独立面板：事件时间分布、类别构成、基线对照和历史评估。
+- Top: project name, coverage period, filtered event count and candidate-location count.
+- Left: dates, periods, categories, capacity, weights and optional weather.
+- Center: segment/area map with priority colors and linked selection.
+- Right: Top K, rank movements and key indicators; click to open details.
+- Bottom or separate panel: temporal distributions, category mix, baseline comparison and historical evaluation.
 
-地点详情包括：道路或区域名、事件数、最近记录、不同事件日期数、类型分布、排名原因、原始记录样例、空间匹配质量。
+Location details include road/area name, count, recent records, distinct event dates, type distribution, ranking reasons, source examples and spatial-match quality.
 
-“方案对比”模式固定相同分析范围，区分进入、退出及保留地点。清雪图层使用单独图例，避免把市府路线等级和本项目优先级混成同一颜色含义。
+Plan comparison holds analysis scope constant and distinguishes entering, exiting and retained locations. Snow routes need a separate legend so municipal route classes and project priority do not share ambiguous color meanings.
 
-地图不同时渲染全部原始事件：默认画聚合地点或路段，放大或选择后再显示事件。远程底图不可用时仍显示边界、路段、地点和名单，支持离线演示。
+Do not render all raw events simultaneously. Default to aggregated locations/segments; show events after zooming or selection. If remote tiles fail, retain boundaries, segments, locations and shortlists for an offline demonstration.
 
-## 9. 建议技术栈与架构
+## 9. Suggested Stack and Architecture
 
-建议使用 Python 数据处理 + React 地图界面，兼顾空间处理和展示质量：
+Proposed stack: Python processing plus a React map interface for spatial capability and presentation quality:
 
-- 数据：pandas、GeoPandas、Shapely；固定数据导出为 Parquet／GeoJSON。
-- API：FastAPI、Pydantic，提供分析、排名、比较、详情与导出接口。
-- 前端：React + TypeScript + Vite。
-- 地图：MapLibre GL JS；统计图使用 ECharts 或团队熟悉的同类工具。
-- 第一版存储：本地文件与内存缓存，不引入数据库。
-- 可选：LLM 工具调用、ElevenLabs 语音。
+- Data: pandas, GeoPandas, Shapely; fixed outputs in Parquet/GeoJSON.
+- API: FastAPI, Pydantic for analysis, ranking, comparison, details and export.
+- Frontend: React + TypeScript + Vite.
+- Map: MapLibre GL JS; charts with ECharts or familiar alternatives.
+- Initial storage: local files and memory caches without a database.
+- Optional: LLM tool calling and ElevenLabs voice.
 
-开发第一阶段先确认所需运行环境可用。若空间依赖安装成本过高，以离线 GeoJSON 和网格聚合完成 P0；若时间不足，使用 Streamlit + 地图组件实现同一业务流程。
+First verify the runtime environment. If spatial dependencies are costly to install, use offline GeoJSON and grids for P0; if time is short, use Streamlit and a map component for the same workflow.
 
-数据流：官方快照 → 清洗及审计 → 地点聚合 → 特征计算 → 排名及评价 → API → 地图／名单／简报。
+Data flow: official snapshot → cleaning/audit → location aggregation → features → ranking/evaluation → API → map/shortlist/brief.
 
-拟定目录：
+Proposed directory layout:
 
 ```text
 calgary-road-disruption-intelligence/
@@ -235,121 +249,120 @@ calgary-road-disruption-intelligence/
 │   ├── app/
 │   │   ├── main.py
 │   │   ├── schemas.py
-│   │   └── services/        # 排名、比较、导出、可选 agent
+│   │   └── services/        # ranking, comparison, export, optional agent
 │   └── requirements.txt
 ├── frontend/
-│   └── src/                # 地图、筛选、列表、详情、图表
-├── pipelines/              # 获取、清洗、空间匹配、特征计算
+│   └── src/                # map, filters, lists, details, charts
+├── pipelines/              # retrieval, cleaning, spatial matching, features
 ├── data/
-│   ├── raw/                # 原始快照；按许可证及体积决定提交方式
-│   ├── processed/          # 清洗后的演示数据
-│   └── manifest.json       # 来源、时间、字段、版本
-├── configs/                # 分析参数、分类规则、演示场景
-├── reports/                # 数据审计、历史评估、排查简报
-└── tests/                  # 清洗、排序及时间留出等关键行为
+│   ├── raw/                # original snapshots; sharing depends on license/size
+│   ├── processed/          # cleaned demo data
+│   └── manifest.json       # sources, time, fields, versions
+├── configs/                # parameters, category rules, demo scenarios
+├── reports/                # audits, historical evaluation, inspection briefs
+└── tests/                  # cleaning, ranking and temporal holdout behavior
 ```
 
-API 初始建议：`GET /metadata`、`POST /rank`、`POST /compare`、`GET /locations/{id}`、`POST /evaluate`、`POST /export`。前后端共享明确的字段定义，地图和名单使用同一个方案结果。
+Initial API proposal: `GET /metadata`, `POST /rank`, `POST /compare`, `GET /locations/{id}`, `POST /evaluate`, `POST /export`. Share explicit field definitions; map and shortlist must use the same plan result.
 
-## 10. 开发阶段与优先顺序
+## 10. Development Stages and Priorities
 
-时间为任务估算，不保证固定时长。先完成每个阶段的可演示结果，再进入下一阶段。
+Times are estimates, not guaranteed durations. Complete a demonstrable result at each stage before proceeding.
 
-| 阶段 | 估算 | 任务 | 完成后可查看的产物 |
+| Stage | Estimate | Tasks | Reviewable output |
 |---|---|---|---|
-| 0：数据核实 | 1–2 小时 | 下载 seed、核实字段与时区、确认道路数据；抽查记录 | DATA_SOURCES、数据审计、聚合方案选择 |
-| 1：计算核心 | 2–3 小时 | 去重、分类、地点编号、数量基线及候选评分 | Top 20 CSV、地点证据、参数配置 |
-| 2：地图工作台 | 3–4 小时 | 地图、列表、筛选、详情联动 | 第一段完整可运行演示 |
-| 3：决策闭环 | 2–3 小时 | 参数重算、方案对照、名单增减、历史评估 | 基线对比与至少三个真实变化案例 |
-| 4：一个扩展源 | 2–3 小时 | 选择流量、天气或清雪图层之一 | 一项可解释的额外分析 |
-| 5：交付整理 | 1–2 小时 | 文档、截图、备份视频、简报、演示排练 | 提交包和可复现运行步骤 |
+| 0: Data verification | 1–2 hours | Download seed, verify fields/timezones and road data; sample records | DATA_SOURCES, audit, aggregation choice |
+| 1: Computation core | 2–3 hours | Deduplicate, classify, identify locations, count baseline and candidate scores | Top 20 CSV, evidence, configuration |
+| 2: Map workbench | 3–4 hours | Link map, list, filters and details | First complete runnable demonstration |
+| 3: Decision loop | 2–3 hours | Recompute, compare plans, entries/exits, historical evaluation | Baseline comparison and at least three real changes |
+| 4: One additional source | 2–3 hours | Volume, weather or snow-route layer | One explainable additional analysis |
+| 5: Delivery preparation | 1–2 hours | Documentation, screenshots, backup video, brief, rehearsal | Submission package and reproducible instructions |
 
-若阶段 0 发现道路匹配不可靠，立即使用网格；若阶段 2 前计算核心还未完成，暂停扩展数据；若留出评估不支持候选分数，展示真实结果并改进方法，不能挑结果冒充提升。
+If road matching is unreliable at stage 0, immediately use grids. If the core is unfinished before stage 2, pause additional data work. If holdout results do not support candidate scores, show the results and improve the method rather than cherry-picking an apparent gain.
 
-提交截止前至少留出 1–2 小时，停止新增功能，完成资料和演示检查。
+Reserve at least 1–2 hours before submission to stop adding features and check materials/demo.
 
-## 11. 团队分工建议
+## 11. Suggested Team Responsibilities
 
-- 2 人：一人负责数据、评分与 API，一人负责地图、交互与展示；一起确定评估口径和 pitch。
-- 3 人：数据与空间处理、后端与评分、前端与可视化各一人。
-- 4–5 人：增加历史评估／行业验证和扩展数据／展示整理角色。
+- Two people: one handles data/scoring/API, the other map/interactions/presentation; jointly define evaluation and pitch.
+- Three people: data/spatial processing, backend/scoring and frontend/visualization.
+- Four–five people: add historical evaluation/industry validation and additional data/presentation roles.
 
-先约定地点 ID、返回数据结构和配置格式，避免前后端独立计算得出不同名单。
+Agree on location IDs, result structures and configurations first to avoid different frontend/backend shortlists.
 
-## 12. 验证与质量要求
+## 12. Verification and Quality Requirements
 
-关键验证包含：
+Key checks:
 
-- 时间解析正确，近期指标不使用截止日之后的记录。
-- 去重和聚合不重复计数，空间距离以米计算。
-- 分类抽查记录；缺失与未知类别不强行推断。
-- 相同输入结果稳定；名额不超限；空筛选结果有明确反馈。
-- 基线与候选方案使用相同数据范围、地点单位和 K。
-- 分数变化解释与实际输入一致；Top K 增减数量正确。
-- 原始记录到地点排名可追溯；处理数量能够核对。
-- 对至少多个历史窗口做评估，不只展示一个有利时期。
-- 前端地图、详情和列表引用同一方案 ID；断网时核心演示仍可运行。
+- Correct timestamps; recent indicators exclude records after the cutoff.
+- No double counting in deduplication/aggregation; metre-based spatial distances.
+- Reviewed classification examples; no forced inference of missing/unknown categories.
+- Stable outputs, capacity limits and clear empty-result feedback.
+- Baseline/candidate use the same scope, location unit and K.
+- Score explanations match inputs; Top K changes are counted correctly.
+- Traceability from records to ranks and reconcilable processing counts.
+- Evaluation across multiple historical windows rather than one favorable period.
+- Map, details and list reference the same plan ID; the core demo works without network access.
 
-不以“地图很漂亮”代替计算验证，也不以权重产生的差异直接证明方案有效。
+An attractive map does not replace computational verification, and differences caused by weights do not alone establish effectiveness.
 
-## 13. 五分钟展示脚本
+## 13. Five-Minute Presentation Script
 
-1. 0:00–0:40：道路部门排查资源有限；事件总数提供线索，但看不出近期变化与重复问题。
-2. 0:40–1:10：展示数据来源、覆盖期、清洗情况和系统结构。
-3. 1:10–2:20：打开全年地图，查看基线 Top 20，再点开真实地点的记录证据。
-4. 2:20–3:20：切换时段或评分条件，重新规划，解释两个进入或退出的地点。
-5. 3:20–4:10：展示历史评估；如已完成，再显示天气或清雪对照。
-6. 4:10–5:00：导出候选名单，说明用户如何试用、价值以及后续需要的实际反馈。
+1. 0:00–0:40: inspection resources are limited; counts give clues but conceal recent changes and recurrence.
+2. 0:40–1:10: show sources, coverage, cleaning and architecture.
+3. 1:10–2:20: open the annual map, inspect baseline Top 20 and real location records.
+4. 2:20–3:20: change periods/scoring, replan and explain two entering/exiting locations.
+5. 3:20–4:10: show historical evaluation and, if complete, weather or snow-route comparisons.
+6. 4:10–5:00: export the shortlist, explain trial use, value and required feedback.
 
-演示前从真实结果中选好地点与场景，记录固定配置。不得为展示手工改写事件或评价结果。
+Choose real locations/scenarios beforehand and preserve fixed configurations. Never rewrite events or evaluation results for presentation.
 
-## 14. 最终提交文件
+## 14. Final Submission Materials
 
-- README：项目目标、团队贡献、启动步骤、架构图和演示说明。
-- DATA_SOURCES：全部来源、许可证、覆盖期、清洗及局限。
-- 固定演示数据与配置；大文件提供获取步骤。
-- 数据审计和历史评估报告。
-- 2–5 张截图：主地图、地点详情、方案对照、可选历史评估／扩展图层。
-- 可选不超过 5 分钟的演示视频及在线地址。
-- 官方提交 Issue 中提供代码仓库链接及运行说明。
+- README: objective, team contribution, startup instructions, architecture diagram and demo guidance.
+- DATA_SOURCES: all sources, licenses, coverage, cleaning and limitations.
+- Fixed demo data/configurations; retrieval instructions for large files.
+- Data audit and historical evaluation reports.
+- 2–5 screenshots: main map, details, comparison and optional evaluation/additional layer.
+- Optional video of no more than 5 minutes and a live URL.
+- Repository link and running instructions in the official submission Issue.
 
-## 15. 试点价值与后续验证
+## 15. Pilot Value and Further Validation
 
-实际试点应从小范围道路分析人员开始：让他们审阅候选名单和原始事件证据，标注是否值得调查、是否已经知道问题、以及缺哪些信息。
+Start a real pilot with a small group of road analysts. Have them review candidates and source evidence, marking whether investigation is worthwhile, whether the issue is already known and what information is missing.
 
-原型阶段可以衡量后续事件覆盖与分析时间；要证明排查名单更有用，需要人员反馈和实际排查结果。真实运营还需要正式数据接入、持续质量监控及用户认可的优先级规则。
+The prototype can measure subsequent-report coverage and analysis time. Demonstrating useful inspections requires staff feedback and actual inspection results. Operations also require formal ingestion, continuous quality monitoring and accepted prioritization rules.
 
-## 16. 导师反馈与下一步：Reactive + Proactive
+## 16. Mentor Feedback and Next Direction: Reactive + Proactive
 
-本节为最新方向，优先于前文第一版范围。Rahul 和 Gaurav 建议保留回顾性分析作为核心，并增加前瞻性分析演示；数据有限时仍尝试可验证的方案，在 pitch 中说明局限及改进路径。
+This section records the latest mentor direction and takes precedence over the earlier first-version scope. Rahul and Gaurav recommend retaining retrospective analysis as the core and adding a proactive demo. Attempt verifiable approaches despite limited data, and disclose limitations/improvement paths in the pitch.
 
-### Reactive：回顾性分析主流程
+### Reactive: Core Retrospective Workflow
 
-目的：帮助运营人员理解过去发生了什么，以及哪些地点值得优先排查。
+Purpose: help operations staff understand what happened and which locations deserve earlier inspection.
 
-汇总历史交通事件，展示时间及类别分布，生成 Top 20 地点，解释排名并比较不同排查方案。导师使用 crash data 一词，但现有数据包含多类交通中断，产品与展示继续准确标注为 traffic events / disruptions，不将全部记录称为已确认事故。
+Summarize historical events, show temporal/category distributions, generate Top 20, explain ranks and compare inspection plans. Mentors used the term crash data, but the source includes multiple disruptions. Product/presentation labels remain traffic events / disruptions rather than calling every record a confirmed crash.
 
-### Proactive：前瞻性演示扩展
+### Proactive: Forward-Looking Demo Extension
 
-目的：在下一段时间到来之前，根据截至当时可见的历史证据，提出需要提前关注的地点。
+Purpose: identify locations needing earlier attention before the next period, using evidence available at the historical cutoff.
 
-新增独立的“Forward outlook”视图：用户选择历史预测截止日、未来 7 天或 30 天窗口，以及可选的天气情景。系统仅使用截止日前的频率、近期趋势与重复出现模式，估计后续事件活动或生成前瞻关注排名；显示与回顾性 Top 20 的差异、理由及证据不足提示。
+Add a separate Forward outlook view with historical cutoff, next-7/30-day horizon and optional weather scenarios. Use only pre-cutoff frequency, trends and recurrence to estimate subsequent activity or produce forward-looking priorities; show differences from reactive Top 20, explanations and limited-evidence notices.
 
-先建立平滑的历史事件率基线，再比较趋势方案；输出明确标为实验性前瞻指标。未来天气由用户设定为情景，不能把之后实际天气当作预测时已知输入。现有天气过滤只是历史关联，不等同于预测。历史留出评价只是验证方法，也不能单独当作前瞻产品功能。
+First establish a smoothed historical-rate baseline, then compare trend approaches; clearly label outputs experimental. Future weather is a user-defined scenario, not later observed weather treated as known. Historical filtering is association, not forecasting. Holdout evaluation is a validation method, not by itself a proactive product feature.
 
-验证：选择多个历史截止日，用之前的记录计算输出，再用之后的记录检验同名额的后续事件覆盖；若输出数量估计，同时报告预测误差。参数选择和最终检验使用不同时间窗口。展示基线、失败情况及小样本限制，不能只挑有利例子。
+Validation: calculate at multiple cutoffs using earlier records, then measure subsequent-event coverage at equal capacity. If estimating counts, report errors too. Keep parameter selection and final tests separate. Show baselines, failures and sparse evidence rather than only favorable examples.
 
-### 开发与演示顺序
+### Development and Demonstration Order
 
-1. 保持 Reactive 核心流程完整，明确两种模式的用途。
-2. 增加截止日、预测窗口及前瞻指标计算，保留版本与配置以便复现。
-3. 增加前瞻地图/名单与回顾性名单对照，并解释至少三个变化地点。
-4. 完成时间留出验证，准备一个固定历史回放演示。
-5. 在五分钟 pitch 中先展示 Reactive，再展示 Proactive 实验功能，最后说明局限和改进路径。
+1. Preserve the complete reactive workflow and clarify both modes.
+2. Add cutoff, horizon and forward indicators, preserving versions/configuration.
+3. Add proactive map/shortlist and reactive comparisons with at least three change explanations.
+4. Complete temporal holdout evaluation and prepare a fixed historical replay.
+5. Present Reactive first, then the Proactive experiment, followed by limitations/improvements in the five-minute pitch.
 
-### Pitch 中的局限与未来改进
+### Pitch Limitations and Future Improvements
 
-现有数据只有有限历史范围，报告不完整，缺少完整伤亡和严重程度信息；道路归属有歧义，机场天气也不能代表每条道路。前瞻指标不代表已验证的事故概率、结冰预测或安全承诺。
+Historical coverage is limited, reporting incomplete, injury/severity information absent, road associations ambiguous and airport weather unrepresentative of individual roads. Forward indicators are not validated crash probabilities, ice predictions or safety promises.
 
-未来改进：获取多年且时间口径一致的事件数据、经确认的碰撞及严重程度数据、更可靠的路口聚合、对应时段的交通暴露，以及预测时可获取的天气预报；通过更多独立时间窗口和道路运营人员反馈检验实际价值。
-
+Future improvements: multi-year records with consistent time conventions, confirmed collision/severity data, better intersection aggregation, matching traffic exposure and forecasts available at prediction time. Assess practical value through additional independent periods and road-operations feedback.

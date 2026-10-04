@@ -59,6 +59,9 @@ export function rank(events, locations, c) {
       });
     const g = groups.get(e.location);
     g.count++;
+    g.weightedActivity =
+      (g.weightedActivity ?? 0) +
+      (c.typeWeightMode === "equal" ? 1 : (c.typeWeights?.[e.category] ?? 1));
     g.days.add(e.date);
     g.records.push(e);
     const ago = (cutoff - dateNumber(e.date)) / day;
@@ -76,14 +79,17 @@ export function rank(events, locations, c) {
     days: g.days.size,
     growth: complete ? (g.recent - g.previous) / (g.previous + 3) : 0,
   }));
-  const maxLog = Math.max(1, ...rows.map((r) => Math.log1p(r.count))),
+  const maxLog = Math.max(
+      1,
+      ...rows.map((r) => Math.log1p(r.weightedActivity)),
+    ),
     maxDays = Math.max(1, ...rows.map((r) => r.days));
   const effective = effectiveWeights(c.weights, complete),
     w = effective.weights,
     sum = w.reduce((a, b) => a + b, 0);
   for (const r of rows) {
     r.features = [
-      Math.log1p(r.count) / maxLog,
+      Math.log1p(r.weightedActivity) / maxLog,
       complete ? Math.max(0, Math.min(1, r.growth / 2)) : 0,
       r.days / maxDays,
     ];

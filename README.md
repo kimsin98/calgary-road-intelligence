@@ -1,95 +1,92 @@
 # Calgary Road Disruption Intelligence
 
-A working historical road-inspection shortlist tool for IEEE Industry Hackathon Option B, Energy & Infrastructure Case 5.
+A browser dashboard for historical road-inspection priorities and experimental traffic-report forecasting, developed for IEEE Industry Hackathon Option B, Energy & Infrastructure Case 5.
 
 ## Run
 
-Requires Node.js 22+.
+Node.js 22+ is required. No API keys or backend are needed.
 
 ```sh
-npm install
-npm run dev -- --port 5173
+npm ci
+npm run compress:data
+npm run dev
 ```
 
-Open http://localhost:5173. The checked-in processed snapshot supports the demo without live data services. Font downloads are optional. The dark vector basemap uses OpenFreeMap / OpenStreetMap data and requires network access; local road and event overlays remain available if tiles fail.
+Open http://localhost:5173. Traffic and weather snapshots are bundled locally; OpenFreeMap vector tiles and optional Google Fonts require network access.
 
 ```sh
-npm run prepare:data
 npm test
 npm run build
-npm run test:browser  # install Chromium + OS dependencies first
+npm run preview
 ```
 
-## Implemented
+## Data
 
-- Official 2025 UTC-year traffic records, converted to Calgary local time.
-- Complete paginated street-centreline snapshot and 50 m nearest-road association.
-- Interactive vector map, linked shortlist, source records, monthly/category charts and score contributions.
-- Date, time-of-day, category, capacity and transparent scoring controls.
-- Count-only baseline, detailed saved-plan comparison, rank/contribution changes, CSV and reproducible JSON report export.
-- Background-worker search over 21 weight combinations; separate tuning and final validation windows.
-- Three historical holdout windows with next-month record coverage comparison.
-- Nearby 2024 traffic-volume context (not used as verified exposure in ranking).
+The current fixed snapshot contains **27,805 traffic reports** from UTC January 2023 through October 2026, aggregated into **9,661 road/grid locations**. Calgary local dates span December 31, 2022 through October 3, 2026; boundary records are retained and the latest day/year is incomplete. The default analysis covers the latest 90 days.
 
-Data quality, scoring definitions and source links are available inside the app. See DATA_SOURCES.md and reports/data-audit.json.
+**32,922 ECCC hourly weather observations** cover January 2023 through the latest available October 2026 hour. Events join weather by UTC hour; display, dates, peak periods and weekends use `America/Edmonton`, including daylight saving. Missing measurements remain unavailable. Airport weather is context, not road-surface evidence.
 
-## Architecture
+Sources and processing details: [DATA_SOURCES.md](DATA_SOURCES.md). Current audits and evaluations are in `reports/`.
 
-Official snapshots → Node preparation and spatial matching → local dataset JSON → shared analysis module → React / MapLibre workbench.
+## Historical analysis
 
-The prototype computes locally in the browser; a separate API server is unnecessary for this fixed snapshot. No LLM or ElevenLabs connection is implemented. Automatic evaluation searches a bounded weight grid in a Web Worker. Users review the evidence before applying selected weights.
+- Map preview, linked Top 20 shortlist, evidence search, original reports, charts and geometric road-association review.
+- Date, time-of-day, event-type and weather filters are drafts until **Apply evidence scope** is clicked. **Reset changes** discards edits.
+- Frequency, recent growth and recurring-date scoring, adjustable capacity and a raw-count baseline.
+- Persistent saved-plan comparison, ranking explanations and JSON report export.
+- Automatic search over 21 priority mixes using six 2023–2025 windows; independent July 2026 outcome check. Historical evaluation uses separate 2026 windows.
+- Timeline playback with looping, webpage expansion and browser fullscreen.
 
-## Interpretation
+### Event-type weighting
 
-This ranks recorded disruptions for further review. It does not predict injuries or certify road safety. Most source descriptions are generic or unverified. Nearest-road matches can select the wrong parallel road or side of an intersection. Current geometry may differ from the 2025 inventory. Score weights are illustrative.
+Historical analysis provides **Equal event weights** and **Learned type weights · experimental**. Equal mode counts every report once. Learned mode applies imported type weights to the frequency signal only; raw counts, growth and recurrence retain their definitions.
 
-Default historical comparison: June and August holdouts tie the count baseline; October covers three more subsequent records. This is limited evidence, not a validated operating policy or proof of safety benefit.
+To import weights: open Forward outlook, choose **Collision-related report hotspots** and **Learned type weights · experimental**, generate a forecast, expand **Learned event-type effects**, then click **Try learned type weights in historical ranking**. The original plan is saved and comparison opens. Switch back to equal weights without losing the imported weights.
 
-## Attribution
+Historical weights use the positive part of each type's average coefficient across the two history bins, normalized to mean 1. This is an **unvalidated adaptation**, not the full forecast model or severity weighting. Applying a model fitted through 2025 to earlier history is retrospective exploration, not an independent backtest.
 
-City of Calgary: Traffic Incidents, Street Centreline, Traffic Volumes for 2024. Prepared case context and original seed: nagusubra/industry-hackathon-lab. Application and analysis code were created for this prototype; the case seed was used to inspect available fields, while the application uses fresh official records with explicit UTC fields.
+## Experimental forecasting
 
-## Next decisions
+Forward outlook has two independent controls:
 
-Before expanding, review map usability and a sample of road associations. Validate ranking priorities with an industry mentor. Strong next additions are weather joins and confidence-aware grouping around intersections. Weather, snow-route layers, speech and a live-data service are not yet implemented.
+| Control | Options |
+|---|---|
+| Target | All report hotspots / Collision-related report hotspots |
+| Event-type weighting | Equal event weights / Learned type weights · experimental |
 
-## OpenStreetMap vector basemap
+Equal mode pools report types in historical temporal features. Learned mode fits ten type-specific features: `log(1 + count)` for five categories over days 1–30 and 31–90. Both predict the selected target; a collision-related target does not imply confirmed crashes or injury risk.
 
-MapLibre loads key-free OpenFreeMap vector tiles based on OpenStreetMap. The local style file public/maps/calgary-dark.json adapts the OpenFreeMap dark style with navy land, blue water, readable grey-blue roads and lighter labels. Hotspots and official road geometry remain separate overlay layers. Map attribution credits OpenFreeMap, OpenMapTiles and OpenStreetMap. No Google key or raster darkening is used.
+The ridge-regularized Poisson model predicts expected report counts for the next **7 or 30 days**, then ranks locations. Learned coefficients and transformed-input rate multipliers describe predictive associations, not per-event importance or causal effects.
 
-Vector tiles, glyphs and sprites require network access. The app's dataset stays local. Provider information: https://openfreemap.org/ . Style source: https://tiles.openfreemap.org/styles/dark .
+- **Historical backtest:** choose a 2026 cutoff with a fully observed forecast window. Later outcomes are revealed explicitly.
+- **Future forecast:** cutoff is fixed to the latest dataset date, currently October 3, 2026. No future observed counts or accuracy metrics are fabricated.
+- **Time cross-validation:** train 2023 → validate 2024; train 2023–2024 → validate 2025. Each validation year has four rolling forecast windows. Select L2 strength from 0.001, 0.01, 0.1 and 1 using mean Poisson deviance, then refit on quarterly 2023–2025 windows. **2026 never selects parameters.**
+- Forecast map, historical shortlist comparison, separate JSON export, rate baseline, equal-weight shortlist coverage, MAE, deviance and calibration totals.
 
-## Map display modes
+This is rolling next-week/next-month prediction within the next year, **not a one-shot annual forecast**. Future weather is excluded. Models can reach the 600-iteration limit; diagnostics remain visible. Neither model has demonstrated consistent superiority over simple historical baselines. See [current status](reports/DEVELOPMENT_STATUS.md) for evaluation files and limits.
 
-Map controls offer Expand map (fills the webpage; Escape or Restore layout exits) and Fullscreen (browser Fullscreen API; exit using Escape or the same control). If browser fullscreen is unavailable, it falls back to webpage expansion. Fullscreen in an embedded iframe may require the parent to grant fullscreen permission. Map sizing follows container changes via ResizeObserver.
+## Deployment
 
-## Decision workflow
+Vercel is configured to build `npm run build` and serve `dist`. Build produces gzip snapshots and removes uncompressed JSON from the output: approximately **3.56 MB traffic + 0.45 MB weather**. The browser uses native decompression or a lazy fallback. Compression reduces transfer/storage, not parsed memory.
 
-1. Open Automatic evaluation and select Evaluate candidate plans.
-2. Inspect all search results and the separate December 1–30 validation.
-3. Apply the selected weights; the original plan is saved automatically.
-4. Plan comparison shows entered/exited/retained locations, rank and score-contribution changes.
-5. Evidence shows monthly counts, categories and original records. Export report saves parameters, record IDs, the saved shortlist and all search evidence.
+GitHub-linked deployments run after pushes; local CLI deployment is also supported. To deploy locally, run `npx vercel` for a preview or `npx vercel --prod` for production. Source packages must include `pipelines/compress-data.mjs`, source JSON, the lockfile and Vite/Vercel configuration.
 
-Search uses 90-day histories ending April 30 and July 31 with the following 30 days as tuning outcomes. November 30 history and December 1–30 outcomes are held separate from selection. Dates are fixed for the 2025 snapshot; category, time-of-day and capacity apply to each window. Ties favour count-only. Default search picks weights 0 / 0.2 / 0.8 and covers 24 vs 21 future records in validation (827 total); this single small difference is not stable proof of improvement. See reports/automatic-evaluation.json. Repeated inspection/tuning on final validation must be treated as exploratory.
+## Rebuild and verify
 
-Run `node tests/decisions-browser.mjs` for the decision workflow browser checks.
+```sh
+npm run fetch:data
+npm run prepare:data
+npm run fetch:weather
+npm run prepare:weather
+npm run compress:data
+```
 
-## Weather context
+Raw downloads are ignored by Git. Refreshing snapshots changes the dataset version and invalidates saved comparison plans. Forecast training years remain explicitly fixed; refreshing data does not silently change the evaluation protocol.
 
-The optional-weather stage is implemented using the checked-in ECCC Calgary airport 2025 hourly snapshot. Select Below freezing, Snow reported, Rain reported, Low visibility or Weather unavailable in Analysis controls. Weather filters participate in ranking, saved comparisons, historical evaluation and bounded search. Weather context shows event counts and observed-hour exposure; selected records show the matched temperature, weather description and visibility.
+Unit tests: `npm test`. Browser checks require Playwright Chromium and OS dependencies; relevant scripts include `tests/dashboard-browser.mjs`, `tests/evidence-scope-browser.mjs`, `tests/compressed-data-browser.mjs`, `tests/forecast-browser.mjs`, `tests/forecast-modes-browser.mjs`, and `tests/collision-forecast-browser.mjs`. Run `npm run test:browser` for all 13 browser suites; start the development server on port 5173 first. Test artifacts are written to temporary paths.
 
-Run `npm run fetch:weather` and `npm run prepare:weather` to refresh/rebuild the independent weather snapshot; see DATA_SOURCES.md for station, timestamps and caveats. Run `node tests/weather-browser.mjs` for weather interaction checks. No weather API key is required.
+## Interpretation and attribution
 
-## Road-association review
+This prioritizes reported disruptions for review. It does not establish fewer crashes, verified severity, road safety or causal weather effects. Text-derived categories, incomplete reporting, current road geometry, ambiguous junction/parallel matches and unverified traffic exposure limit conclusions. Candidate locations must be known at each forecast cutoff; later reports at unseen locations are reported separately.
 
-Selected Evidence now includes geometric review flags and competing road IDs/distances. The review uses distance, segment direction and true polyline endpoints to identify ambiguity; it preserves existing assignments. Many records are at junctions or nearby parallel roads, so proximity coverage does not certify road identity. Run `npm run audit:spatial` to rebuild, `node tests/spatial-browser.mjs` to verify the panel, and inspect reports/spatial-audit.json. Manual ground-truth review and any subsequent reassignment remain pending.
-
-## Experimental forward outlook
-
-Open Forward outlook to generate a 7/30-day expected-report forecast at a historical cutoff. The shared regularized Poisson model trains on March–June windows and tunes on August outcomes. Reveal later events to compare count error and Top20 coverage with the smoothed rate baseline. Default model coverage is 20 vs baseline21 despite lower count MAE, so it does not establish a better inspection policy. Future weather is excluded; full-year known-location inventory and repeated test exploration limit prospective interpretation. See reports/forecast-windows.json. Run `node tests/forecast-browser.mjs` for interaction verification.
-
-
-## Expanded snapshot (2026-10-04)
-
-The current traffic snapshot contains 27,805 UTC records from January 2023 through October 2026 (Calgary local date range 2022-12-31 to 2026-10-03). Local boundary records are retained; the latest UTC date is October 4. The default analysis shows the latest 90 days, with the full snapshot available in date controls. Forecast fitting uses quarterly 2023–2024 windows plus March/June 2025, with August/September/November 2025 internal tuning. 2026 outcomes are reserved for independent backtests. Future prediction starts at the latest observed local date. Weather remains a 2025-only snapshot; 2024 volume is proximity context across years, not verified exposure. The current local date is still an incomplete reporting day. See reports/forecast-2026-evaluation.json for current evaluation; earlier reports describe older snapshots.
+Sources: City of Calgary Traffic Incidents, Street Centreline and Traffic Volumes 2024; ECCC CALGARY INTL A; OpenFreeMap/OpenMapTiles/OpenStreetMap; optional Google Fonts. Hackathon context comes from [industry-hackathon-lab](https://github.com/nagusubra/industry-hackathon-lab). Snow-route reference, voice narration, LLM integration and live ingestion remain future work.

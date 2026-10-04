@@ -108,9 +108,13 @@ export function OptimizationPanel({
 }: Props) {
   const stale =
     result &&
-    ["period", "category", "weather", "capacity"].some(
+    (["period", "category", "weather", "capacity"].some(
       (key) => result.filters[key] !== config[key],
-    );
+    ) ||
+      JSON.stringify(result.filters.typeWeights ?? null) !==
+        JSON.stringify(config.typeWeights ?? null) ||
+      (result.filters.typeWeightMode ?? null) !==
+        (config.typeWeightMode ?? null));
   return (
     <div className="decision-panel">
       <div className="decision-heading">

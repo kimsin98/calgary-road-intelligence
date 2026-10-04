@@ -6,10 +6,14 @@ import { useWorkerTask } from "./hooks/useWorkerTask";
 export function ForecastPanel({
   data,
   onSelect,
+  onApplyTypeWeights,
 }: {
   data: Dataset;
   onSelect: (id: string) => void;
+  onApplyTypeWeights: (result: ForecastResult) => void;
 }) {
+  const [weighting, setWeighting] = useState<"equal" | "learned">("equal");
+  const [objective, setObjective] = useState<"all" | "collision">("all");
   const [mode, setMode] = useState<"backtest" | "future">("backtest");
   const [cutoff, setCutoff] = useState("2026-06-30"),
     [horizon, setHorizon] = useState(30),
@@ -30,7 +34,9 @@ export function ForecastPanel({
     result &&
     (result.cutoff !== effectiveCutoff ||
       result.horizon !== horizon ||
-      result.mode !== mode);
+      result.mode !== mode ||
+      result.objective !== objective ||
+      result.weighting !== weighting);
   function run() {
     setRevealed(false);
     runTask({
@@ -42,6 +48,8 @@ export function ForecastPanel({
         capacity: 20,
         mode,
         dataEnd: data.audit.last,
+        objective,
+        weighting,
       },
     });
   }
@@ -98,6 +106,34 @@ export function ForecastPanel({
       </p>
       <div className="forecast-controls">
         <label>
+          Event-type weighting
+          <select
+            aria-label="Forecast weighting"
+            value={weighting}
+            onChange={(e) => {
+              setWeighting(e.target.value as "equal" | "learned");
+              setRevealed(false);
+            }}
+          >
+            <option value="equal">Equal event weights</option>
+            <option value="learned">Learned type weights · experimental</option>
+          </select>
+        </label>
+        <label>
+          Ranking objective
+          <select
+            aria-label="Forecast objective"
+            value={objective}
+            onChange={(e) => {
+              setObjective(e.target.value as "all" | "collision");
+              setRevealed(false);
+            }}
+          >
+            <option value="all">All report hotspots</option>
+            <option value="collision">Collision-related report hotspots</option>
+          </select>
+        </label>
+        <label>
           {mode === "backtest" ? "Historical cutoff" : "Latest data cutoff"}
           <input
             aria-label="Forecast cutoff"
@@ -128,6 +164,14 @@ export function ForecastPanel({
           {busy ? "Training & predicting…" : "Generate forecast"}
         </button>
       </div>
+      {weighting === "learned" && (
+        <p className="notice">
+          Experimental type-aware model: each event type contributes separate
+          30-day and 31–90-day history features. Predicts collision-related
+          reports, not confirmed crashes, severity or crash probability. Learned
+          coefficients are predictive associations, not importance weights.
+        </p>
+      )}
       {error && <p role="alert">{error}</p>}
       {stale && (
         <p className="notice">Settings changed. Generate a new forecast.</p>
@@ -177,9 +221,12 @@ export function ForecastPanel({
             <h3>What changes from historical priorities?</h3>
             <p>
               Same 90-day evidence: {result.comparison.start} ~ {result.cutoff},
-              all hours and types. Historical weights: frequency 50%, growth
-              30%, recurring dates 20%. Later outcomes do not determine either
-              ranking.
+              all hours;{" "}
+              {result.objective === "collision"
+                ? "collision-related history"
+                : "all event types"}
+              . Historical weights: frequency 50%, growth 30%, recurring dates
+              20%. Later outcomes do not determine either ranking.
             </p>
             <div className="optimization-summary">
               <div>
@@ -226,6 +273,58 @@ export function ForecastPanel({
               ))}
             </details>
           </section>
+          {result.weighting === "learned" && (
+            <details>
+              <summary>Learned event-type effects</summary>
+              <button
+                disabled={result.objective !== "collision" || !result.learnedEffects.some((f) => f.coefficient > 0)}
+                onClick={() => onApplyTypeWeights(result)}
+              >
+                Try learned type weights in historical ranking
+              </button>
+              <p>
+                Import is available for the collision-related target. Historical adaptation uses positive model coefficients averaged
+                across the two history bins and normalized to mean 1. Negative
+                predictive associations become zero contribution, not negative
+                event counts. Only the frequency signal changes; growth and
+                recurrence retain their existing definitions. This is an
+                unvalidated ranking adaptation, not the full predictive model.
+              </p>
+              <p>
+                Each coefficient applies to log(1 + type count). The multiplier
+                is for a one-unit increase in that transformed input, holding
+                other inputs fixed; it is not a per-event severity weight.
+              </p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Historical feature</th>
+                    <th>Coefficient</th>
+                    <th>Rate multiplier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.learnedEffects.map((f) => (
+                    <tr key={f.name}>
+                      <td>{f.name}</td>
+                      <td>{f.coefficient.toFixed(3)}</td>
+                      <td>{f.rateMultiplier.toFixed(3)}×</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
+          )}
+          <p>
+            Prediction target:{" "}
+            {result.objective === "collision"
+              ? "collision-related reports"
+              : "all traffic-event reports"}
+            .{" "}
+            {result.objective === "collision"
+              ? "Rate baseline and historical comparison use collision-related history; past 90-day table counts still show all reports."
+              : "All event types are counted equally."}
+          </p>
           <ForecastMap result={result} />
           <table>
             <thead>
@@ -268,7 +367,8 @@ export function ForecastPanel({
                 Later reports: {result.evaluation.total}. Model Top 20 coverage:{" "}
                 {result.evaluation.modelCoverage}; rate-baseline Top 20:{" "}
                 {result.evaluation.baselineCoverage}; historical Top 20:{" "}
-                {result.evaluation.reactiveCoverage}.
+                {result.evaluation.reactiveCoverage}; equal-weight all-report
+                shortlist: {result.evaluation.equalWeightCoverage}.
               </p>
               <p>
                 Known locations: {result.evaluation.knownLocations}. Later
@@ -349,20 +449,25 @@ export function ForecastPanel({
               . Regularization selected by validation Poisson deviance.
             </p>
             <p>
-              Shared ridge-regularized Poisson regression; inputs are log event
-              counts over 1–7, 8–14, 15–30 and 31–90 days, recurring dates, and
-              recent share. Expanding-year cross-validation selects
-              regularization using 2024 and 2025 only. The final model fits
-              quarterly 2023–2025 windows and stays frozen for independent 2026
-              backtests. Future weather is excluded.
+              Shared ridge-regularized Poisson regression.{" "}
+              {result.weighting === "learned"
+                ? "Type-aware inputs are ten log(1 + count) features: each of five event categories over days 1–30 and 31–90."
+                : "All-report inputs use log counts over 1–7, 8–14, 15–30 and 31–90 days, recurring dates and recent share."}{" "}
+              Expanding-year cross-validation selects regularization using 2024
+              and 2025 only. The final model fits quarterly 2023–2025 windows
+              and stays frozen for independent 2026 backtests. Future weather is
+              excluded.
             </p>
             <p>
-              Baseline: 90-day count × horizon / 90. No pseudo-count smoothing
-              is applied. Candidate locations are limited to those observed by
-              each historical cutoff. Later events at unseen locations are
-              reported separately; current road geometry remains a historical
-              limitation. Repeated test-window exploration is not independent
-              validation.
+              Baseline: 90-day{" "}
+              {result.objective === "collision"
+                ? "collision-related"
+                : "all-report"}{" "}
+              count × horizon / 90. No pseudo-count smoothing is applied.
+              Candidate locations are limited to those observed by each
+              historical cutoff. Later events at unseen locations are reported
+              separately; current road geometry remains a historical limitation.
+              Repeated test-window exploration is not independent validation.
             </p>
           </details>
         </>

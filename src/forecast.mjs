@@ -13,7 +13,26 @@ const FEATURES = [
   "Recurring days / 90",
   "Recent share",
 ];
-function examples(events, locations, cutoff, horizon, outcomes = true) {
+export const EVENT_TYPES = [
+  "Collision-related",
+  "Road conditions",
+  "Signals",
+  "Stalled vehicle",
+  "Other / unverified",
+];
+const TYPE_FEATURES = EVENT_TYPES.flatMap((type) => [
+  type + " · past 30 days",
+  type + " · days 31–90",
+]);
+function examples(
+  events,
+  locations,
+  cutoff,
+  horizon,
+  outcomes = true,
+  objective = "all",
+  weighting = "equal",
+) {
   const known = new Set(
     events.filter((e) => e.date <= cutoff).map((e) => e.location),
   );
@@ -22,7 +41,14 @@ function examples(events, locations, cutoff, horizon, outcomes = true) {
       .filter((l) => known.has(l.id))
       .map((l) => [
         l.id,
-        { location: l, bins: [0, 0, 0, 0], days: new Set(), target: 0 },
+        {
+          location: l,
+          bins: [0, 0, 0, 0],
+          types: Array(10).fill(0),
+          collisionCount: 0,
+          days: new Set(),
+          target: 0,
+        },
       ]),
   );
   for (const e of events) {
@@ -32,7 +58,16 @@ function examples(events, locations, cutoff, horizon, outcomes = true) {
     if (ago >= 0 && ago < 90) {
       g.bins[ago < 7 ? 0 : ago < 14 ? 1 : ago < 30 ? 2 : 3]++;
       g.days.add(e.date);
-    } else if (outcomes && ago < 0 && ago >= -horizon) g.target++;
+      const type = EVENT_TYPES.indexOf(e.category);
+      if (type >= 0) g.types[type * 2 + (ago < 30 ? 0 : 1)]++;
+      if (e.category === "Collision-related") g.collisionCount++;
+    } else if (
+      outcomes &&
+      ago < 0 &&
+      ago >= -horizon &&
+      (objective === "all" || e.category === "Collision-related")
+    )
+      g.target++;
   }
   return [...groups.values()].map((g) => {
     const total = g.bins.reduce((a, b) => a + b, 0);
@@ -41,14 +76,20 @@ function examples(events, locations, cutoff, horizon, outcomes = true) {
       name: g.location.name,
       lon: g.location.lon,
       lat: g.location.lat,
-      x: g.bins
-        .map(Math.log1p)
-        .concat(g.days.size / 90, total ? g.bins[0] / total : 0),
+      x:
+        weighting === "learned"
+          ? g.types.map(Math.log1p)
+          : g.bins
+              .map(Math.log1p)
+              .concat(g.days.size / 90, total ? g.bins[0] / total : 0),
       count: total,
       recent: g.bins[0],
       days: g.days.size,
       target: g.target,
-      baseline: (horizon * total) / 90,
+      collisionCount: g.collisionCount,
+      allRate: (horizon * total) / 90,
+      baseline:
+        (horizon * (objective === "collision" ? g.collisionCount : total)) / 90,
     };
   });
 }
@@ -91,6 +132,10 @@ function metric(rows, coefficients, k) {
       sorted.reduce((s, r) => s + Math.abs(r.baseline - r.target), 0) /
       rows.length,
     modelCoverage: sorted.slice(0, k).reduce((s, r) => s + r.target, 0),
+    equalWeightCoverage: [...sorted]
+      .sort((a, b) => b.allRate - a.allRate || a.id.localeCompare(b.id))
+      .slice(0, k)
+      .reduce((sum, r) => sum + r.target, 0),
     baselineCoverage: baseline.slice(0, k).reduce((s, r) => s + r.target, 0),
     rows: sorted,
   };
@@ -102,10 +147,13 @@ export function compareForecast(
   capacity,
   rows,
   coefficients,
+  features = FEATURES,
+  objective = "all",
 ) {
   const start = dateShift(cutoff, -89);
   const reactive = rank(events, locations, {
     ...defaults,
+    category: objective === "collision" ? "Collision-related" : "All types",
     start,
     end: cutoff,
     capacity,
@@ -121,7 +169,7 @@ export function compareForecast(
   );
   const explain = (row) => {
     const terms = row.x
-      .map((v, i) => ({ label: FEATURES[i], value: v * coefficients[i + 1] }))
+      .map((v, i) => ({ label: features[i], value: v * coefficients[i + 1] }))
       .sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
     const term = terms[0];
     return term && Math.abs(term.value) > 1e-8
@@ -169,6 +217,8 @@ export function forecast(
     capacity = 20,
     mode = "backtest",
     dataEnd,
+    objective = "all",
+    weighting = "equal",
   } = {},
 ) {
   if (
@@ -177,6 +227,11 @@ export function forecast(
     dateShift(cutoff, 0) !== cutoff
   )
     throw Error("Invalid forecast cutoff date");
+  if (!["all", "collision"].includes(objective))
+    throw Error("Unknown forecast objective");
+  if (!["equal", "learned"].includes(weighting))
+    throw Error("Unknown weighting mode");
+  const featureNames = weighting === "learned" ? TYPE_FEATURES : FEATURES;
   if (![7, 30].includes(horizon))
     throw Error("Forecast horizon must be 7 or 30 days");
   if (!["backtest", "future"].includes(mode))
@@ -206,7 +261,10 @@ export function forecast(
     { trainYears: [2023, 2024], validationYear: 2025 },
   ];
   const cache = new Map(
-    trainEnds.map((end) => [end, examples(events, locations, end, horizon)]),
+    trainEnds.map((end) => [
+      end,
+      examples(events, locations, end, horizon, true, objective, weighting),
+    ]),
   );
   const trials = [0.001, 0.01, 0.1, 1]
     .map((lambda) => {
@@ -262,6 +320,8 @@ export function forecast(
     cutoff,
     horizon,
     mode === "backtest",
+    objective,
+    weighting,
   );
   const evaluation = metric(rows, chosen.coefficients, capacity);
   const comparison = compareForecast(
@@ -271,6 +331,8 @@ export function forecast(
     capacity,
     evaluation.rows,
     chosen.coefficients,
+    featureNames,
+    objective,
   );
   const actual = new Map(rows.map((r) => [r.id, r.target]));
   evaluation.reactiveCoverage = comparison.reactiveTop.reduce(
@@ -279,6 +341,13 @@ export function forecast(
   );
   return {
     comparison,
+    weighting,
+    objective,
+    learnedEffects: featureNames.map((name, i) => ({
+      name,
+      coefficient: chosen.coefficients[i + 1],
+      rateMultiplier: Math.exp(chosen.coefficients[i + 1]),
+    })),
     mode,
     dataEnd: latest,
     rows: evaluation.rows.map((r) => ({
@@ -289,7 +358,7 @@ export function forecast(
     horizon,
     end: dateShift(cutoff, horizon),
     capacity,
-    features: FEATURES,
+    features: featureNames,
     coefficients: chosen.coefficients,
     lambda: chosen.lambda,
     diagnostics: chosen.diagnostics,
@@ -313,10 +382,11 @@ export function forecast(
         ? null
         : events.filter(
             (e) =>
+              (objective === "all" || e.category === "Collision-related") &&
               e.date > cutoff &&
               e.date <= dateShift(cutoff, horizon) &&
               !rows.some((r) => r.id === e.location),
           ).length,
-    version: "poisson-ridge-v6",
+    version: "poisson-ridge-v7",
   };
 }
