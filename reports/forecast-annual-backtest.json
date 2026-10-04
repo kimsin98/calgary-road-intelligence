@@ -1,6 +1,6 @@
 {
   "version": "eb-annual-v2",
-  "dataFingerprint": "8c215768ddcc79a59ca7eaa8ab836c2a1582e2bb8b711c1b150e8d3fbfb9e70f",
+  "dataFingerprint": "a2ec4bb2cec89395450812bc4683d1373248085e6939bd3b72658e74043a914a",
   "dataThrough": "2026-10-02",
   "units": {
     "segment": 120567,
@@ -18,14 +18,14 @@
   ],
   "summary": {
     "eb": {
-      "deviance": 0.09758227099593805,
-      "top20OfOracle": 0.8185922444935158,
-      "top100OfOracle": 0.7659025337992741,
-      "top500OfOracle": 0.7535995266644234,
-      "neverReportedTop500": 106.57142857142857
+      "deviance": 0.09719945557942981,
+      "top20OfOracle": 0.8259847521077356,
+      "top100OfOracle": 0.7662470691744817,
+      "top500OfOracle": 0.7530757906361429,
+      "neverReportedTop500": 112.57142857142857
     },
     "ridge": {
-      "deviance": 0.20291540054788992,
+      "deviance": 0.20291540054789042,
       "top20OfOracle": 0.8114050429515155,
       "top100OfOracle": 0.7496329149581838,
       "top500OfOracle": 0.7264271804118874,
@@ -50,29 +50,29 @@
     {
       "year": 2018,
       "scoredThrough": "2018-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 6558,
       "atNeverReportedUnits": 2419,
       "historyYears": "all",
       "k": {
-        "segment": 0.04722249905193646,
-        "intersection": 0.10493085794087022
+        "segment": 0.04732306245996231,
+        "intersection": 0.11056047471313747
       },
       "eb": {
-        "expected": 5263.48361222106,
-        "deviance": 0.10246666008394688,
+        "expected": 5271.033364989322,
+        "deviance": 0.10176656703142692,
         "top20": 615,
         "top20OfOracle": 0.9290030211480362,
-        "top100": 1308,
-        "top100OfOracle": 0.8610928242264648,
-        "top500": 2726,
-        "top500OfOracle": 0.8220747889022919,
-        "neverReportedTop500": 330,
-        "interval90CoverageTop500": 0.924,
-        "logScoreTop500": -2.4015928054298006
+        "top100": 1302,
+        "top100OfOracle": 0.8571428571428571,
+        "top500": 2702,
+        "top500OfOracle": 0.8148371531966224,
+        "neverReportedTop500": 344,
+        "interval90CoverageTop500": 0.92,
+        "logScoreTop500": -2.3924958265800114
       },
       "lastYear": {
-        "expected": 5258,
+        "expected": 5258.0,
         "deviance": 0.6068141236214604,
         "top20": 624,
         "top20OfOracle": 0.9425981873111783,
@@ -83,7 +83,7 @@
         "neverReportedTop500": 22
       },
       "historicalRate": {
-        "expected": 5258,
+        "expected": 5258.0,
         "deviance": 0.6068141236214604,
         "top20": 624,
         "top20OfOracle": 0.9425981873111783,
@@ -97,29 +97,29 @@
     {
       "year": 2019,
       "scoredThrough": "2019-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 4613,
       "atNeverReportedUnits": 1373,
       "historyYears": 1,
       "k": {
-        "segment": 0.1800634829332108,
-        "intersection": 0.227312932221495
+        "segment": 0.18020809993946268,
+        "intersection": 0.23997554605479238
       },
       "eb": {
-        "expected": 6566.127530983213,
-        "deviance": 0.08508177156325186,
+        "expected": 6573.418281091566,
+        "deviance": 0.08455287059701289,
         "top20": 262,
         "top20OfOracle": 0.8506493506493507,
-        "top100": 633,
-        "top100OfOracle": 0.7824474660074165,
-        "top500": 1480,
-        "top500OfOracle": 0.7198443579766537,
-        "neverReportedTop500": 181,
+        "top100": 643,
+        "top100OfOracle": 0.7948084054388134,
+        "top500": 1487,
+        "top500OfOracle": 0.7232490272373541,
+        "neverReportedTop500": 186,
         "interval90CoverageTop500": 0.906,
-        "logScoreTop500": -2.3551661135077984
+        "logScoreTop500": -2.353825437969073
       },
       "lastYear": {
-        "expected": 6558,
+        "expected": 6558.0,
         "deviance": 0.4408889324871258,
         "top20": 250,
         "top20OfOracle": 0.8116883116883117,
@@ -130,7 +130,7 @@
         "neverReportedTop500": 1
       },
       "historicalRate": {
-        "expected": 5908,
+        "expected": 5908.0,
         "deviance": 0.3671016673277082,
         "top20": 263,
         "top20OfOracle": 0.8538961038961039,
@@ -144,26 +144,26 @@
     {
       "year": 2020,
       "scoredThrough": "2020-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 5777,
       "atNeverReportedUnits": 1336,
       "historyYears": 2,
       "k": {
-        "segment": 0.2931880118361809,
-        "intersection": 0.26656741916477505
+        "segment": 0.29409418451935854,
+        "intersection": 0.28249123630185957
       },
       "eb": {
-        "expected": 5606.012976064786,
-        "deviance": 0.09409414486794636,
+        "expected": 5613.673307158173,
+        "deviance": 0.09342781665448126,
         "top20": 307,
         "top20OfOracle": 0.7974025974025974,
-        "top100": 760,
-        "top100OfOracle": 0.7509881422924901,
-        "top500": 1832,
-        "top500OfOracle": 0.7131179447255741,
-        "neverReportedTop500": 186,
-        "interval90CoverageTop500": 0.902,
-        "logScoreTop500": -2.2973952127577
+        "top100": 753,
+        "top100OfOracle": 0.7440711462450593,
+        "top500": 1833,
+        "top500OfOracle": 0.7135072012456208,
+        "neverReportedTop500": 191,
+        "interval90CoverageTop500": 0.908,
+        "logScoreTop500": -2.287963565962785
       },
       "lastYear": {
         "expected": 4625.638356164384,
@@ -188,8 +188,8 @@
         "neverReportedTop500": 11
       },
       "ridge": {
-        "expected": 3631.9071523789494,
-        "deviance": 0.20695846478504665,
+        "expected": 3631.9071523789485,
+        "deviance": 0.2069584647850467,
         "top20": 297,
         "top20OfOracle": 0.7714285714285715,
         "top100": 652,
@@ -202,26 +202,26 @@
     {
       "year": 2021,
       "scoredThrough": "2021-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 6986,
       "atNeverReportedUnits": 1230,
       "historyYears": 2,
       "k": {
-        "segment": 0.4739663331598848,
-        "intersection": 0.29750342660437545
+        "segment": 0.4750320764337448,
+        "intersection": 0.32022870158576616
       },
       "eb": {
-        "expected": 5193.101313784227,
-        "deviance": 0.1049809348601013,
-        "top20": 303,
-        "top20OfOracle": 0.7518610421836228,
-        "top100": 824,
-        "top100OfOracle": 0.7463768115942029,
-        "top500": 2107,
-        "top500OfOracle": 0.7127875507442489,
-        "neverReportedTop500": 135,
-        "interval90CoverageTop500": 0.864,
-        "logScoreTop500": -2.4191042161306755
+        "expected": 5199.30174052927,
+        "deviance": 0.1042236099328181,
+        "top20": 311,
+        "top20OfOracle": 0.771712158808933,
+        "top100": 831,
+        "top100OfOracle": 0.7527173913043478,
+        "top500": 2113,
+        "top500OfOracle": 0.7148173207036536,
+        "neverReportedTop500": 139,
+        "interval90CoverageTop500": 0.872,
+        "logScoreTop500": -2.413598845361863
       },
       "lastYear": {
         "expected": 5761.215846994536,
@@ -246,8 +246,8 @@
         "neverReportedTop500": 4
       },
       "ridge": {
-        "expected": 4664.499516658229,
-        "deviance": 0.21916714387479294,
+        "expected": 4664.499516658232,
+        "deviance": 0.21916714387479308,
         "top20": 295,
         "top20OfOracle": 0.7320099255583127,
         "top100": 842,
@@ -260,29 +260,29 @@
     {
       "year": 2022,
       "scoredThrough": "2022-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 7568,
       "atNeverReportedUnits": 1178,
       "historyYears": 3,
       "k": {
-        "segment": 0.45433569481941666,
-        "intersection": 0.2867921441020339
+        "segment": 0.45544135303707056,
+        "intersection": 0.30827235979079604
       },
       "eb": {
-        "expected": 5793.999132893196,
-        "deviance": 0.10477511658054915,
+        "expected": 5804.953614860178,
+        "deviance": 0.10440503177625646,
         "top20": 290,
         "top20OfOracle": 0.7988980716253443,
-        "top100": 799,
-        "top100OfOracle": 0.7474275023386342,
-        "top500": 2259,
-        "top500OfOracle": 0.7535023348899266,
-        "neverReportedTop500": 127,
-        "interval90CoverageTop500": 0.888,
-        "logScoreTop500": -2.4083741930567775
+        "top100": 805,
+        "top100OfOracle": 0.7530402245088869,
+        "top500": 2243,
+        "top500OfOracle": 0.7481654436290861,
+        "neverReportedTop500": 133,
+        "interval90CoverageTop500": 0.884,
+        "logScoreTop500": -2.391122271800582
       },
       "lastYear": {
-        "expected": 6986,
+        "expected": 6986.0,
         "deviance": 0.6716389586087254,
         "top20": 297,
         "top20OfOracle": 0.8181818181818182,
@@ -304,8 +304,8 @@
         "neverReportedTop500": 2
       },
       "ridge": {
-        "expected": 5297.545667351672,
-        "deviance": 0.22146460818702574,
+        "expected": 5297.545667351617,
+        "deviance": 0.2214646081870273,
         "top20": 293,
         "top20OfOracle": 0.8071625344352618,
         "top100": 782,
@@ -318,29 +318,29 @@
     {
       "year": 2023,
       "scoredThrough": "2023-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 7214,
       "atNeverReportedUnits": 907,
       "historyYears": 3,
       "k": {
-        "segment": 0.4981486361910069,
-        "intersection": 0.2877266174649359
+        "segment": 0.4982520312922598,
+        "intersection": 0.30821643032405016
       },
       "eb": {
-        "expected": 6779.599604746795,
-        "deviance": 0.0939810609871444,
+        "expected": 6792.667277076887,
+        "deviance": 0.09373300610079183,
         "top20": 313,
         "top20OfOracle": 0.8346666666666667,
-        "top100": 859,
-        "top100OfOracle": 0.7968460111317254,
-        "top500": 2253,
-        "top500OfOracle": 0.777432712215321,
-        "neverReportedTop500": 90,
-        "interval90CoverageTop500": 0.898,
-        "logScoreTop500": -2.3498697736805196
+        "top100": 867,
+        "top100OfOracle": 0.8042671614100185,
+        "top500": 2250,
+        "top500OfOracle": 0.7763975155279503,
+        "neverReportedTop500": 110,
+        "interval90CoverageTop500": 0.894,
+        "logScoreTop500": -2.3515850992041822
       },
       "lastYear": {
-        "expected": 7568,
+        "expected": 7568.0,
         "deviance": 0.6059488489879449,
         "top20": 282,
         "top20OfOracle": 0.752,
@@ -362,8 +362,8 @@
         "neverReportedTop500": 5
       },
       "ridge": {
-        "expected": 5825.473255334913,
-        "deviance": 0.19726089183502132,
+        "expected": 5825.473255334853,
+        "deviance": 0.19726089183502146,
         "top20": 309,
         "top20OfOracle": 0.824,
         "top100": 848,
@@ -376,26 +376,26 @@
     {
       "year": 2024,
       "scoredThrough": "2024-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 7490,
       "atNeverReportedUnits": 900,
       "historyYears": 5,
       "k": {
-        "segment": 0.4696347221327343,
-        "intersection": 0.30285671197294606
+        "segment": 0.47007759962430573,
+        "intersection": 0.32241810889393185
       },
       "eb": {
-        "expected": 6455.832868969154,
-        "deviance": 0.09650247498602363,
+        "expected": 6467.827884611178,
+        "deviance": 0.09633007347079726,
         "top20": 318,
         "top20OfOracle": 0.8617886178861789,
-        "top100": 817,
-        "top100OfOracle": 0.7736742424242424,
-        "top500": 2220,
-        "top500OfOracle": 0.776495278069255,
-        "neverReportedTop500": 94,
-        "interval90CoverageTop500": 0.894,
-        "logScoreTop500": -2.3530245000042895
+        "top100": 813,
+        "top100OfOracle": 0.7698863636363636,
+        "top500": 2225,
+        "top500OfOracle": 0.7782441413081497,
+        "neverReportedTop500": 99,
+        "interval90CoverageTop500": 0.896,
+        "logScoreTop500": -2.3603985053752656
       },
       "lastYear": {
         "expected": 7233.764383561644,
@@ -420,7 +420,7 @@
         "neverReportedTop500": 6
       },
       "ridge": {
-        "expected": 6067.7681444949085,
+        "expected": 6067.768144494925,
         "deviance": 0.20605476582035903,
         "top20": 322,
         "top20OfOracle": 0.8726287262872628,
@@ -434,26 +434,26 @@
     {
       "year": 2025,
       "scoredThrough": "2025-12-31",
-      "seasonalScale": 1,
+      "seasonalScale": 1.0,
       "total": 6999,
       "atNeverReportedUnits": 760,
       "historyYears": 5,
       "k": {
-        "segment": 0.49868312138864945,
-        "intersection": 0.3109390205979737
+        "segment": 0.4993664961284446,
+        "intersection": 0.3308239208387075
       },
       "eb": {
-        "expected": 7008.016655672029,
-        "deviance": 0.09316305438249539,
-        "top20": 304,
-        "top20OfOracle": 0.8587570621468926,
-        "top100": 835,
-        "top100OfOracle": 0.805984555984556,
-        "top500": 2123,
-        "top500OfOracle": 0.7948333957319356,
-        "neverReportedTop500": 65,
+        "expected": 7020.994342350094,
+        "deviance": 0.09299470088292461,
+        "top20": 306,
+        "top20OfOracle": 0.864406779661017,
+        "top100": 837,
+        "top100OfOracle": 0.8079150579150579,
+        "top500": 2118,
+        "top500OfOracle": 0.7929614376637963,
+        "neverReportedTop500": 72,
         "interval90CoverageTop500": 0.92,
-        "logScoreTop500": -2.245535488285485
+        "logScoreTop500": -2.2427667500882493
       },
       "lastYear": {
         "expected": 7469.535519125683,
@@ -478,8 +478,8 @@
         "neverReportedTop500": 5
       },
       "ridge": {
-        "expected": 6230.575306759238,
-        "deviance": 0.19025859736378378,
+        "expected": 6230.5753067592295,
+        "deviance": 0.19025859736378417,
         "top20": 305,
         "top20OfOracle": 0.8615819209039548,
         "top100": 842,
@@ -497,21 +497,21 @@
       "atNeverReportedUnits": 771,
       "historyYears": 5,
       "k": {
-        "segment": 0.4966133757168007,
-        "intersection": 0.3315805425771355
+        "segment": 0.49667826660993786,
+        "intersection": 0.35129182290156774
       },
       "eb": {
-        "expected": 5039.33046385907,
-        "deviance": 0.0955791103073061,
-        "top20": 315,
-        "top20OfOracle": 0.8267716535433071,
-        "top100": 723,
-        "top100OfOracle": 0.7400204708290685,
-        "top500": 1822,
-        "top500OfOracle": 0.7470274702747027,
-        "neverReportedTop500": 49,
-        "interval90CoverageTop500": 0.894,
-        "logScoreTop500": -2.3307116182819914
+        "expected": 5047.57097713421,
+        "deviance": 0.09528195023793933,
+        "top20": 325,
+        "top20OfOracle": 0.8530183727034121,
+        "top100": 715,
+        "top100OfOracle": 0.7318321392016377,
+        "top500": 1823,
+        "top500OfOracle": 0.7474374743747437,
+        "neverReportedTop500": 44,
+        "interval90CoverageTop500": 0.892,
+        "logScoreTop500": -2.3328619060693807
       },
       "lastYear": {
         "expected": 4860.933540965754,
@@ -536,8 +536,8 @@
         "neverReportedTop500": 6
       },
       "ridge": {
-        "expected": 4236.196001376041,
-        "deviance": 0.17924333196919984,
+        "expected": 4236.196001376125,
+        "deviance": 0.1792433319692014,
         "top20": 309,
         "top20OfOracle": 0.8110236220472441,
         "top100": 731,

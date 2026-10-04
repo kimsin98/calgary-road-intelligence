@@ -10,7 +10,7 @@ dashboard's 7/30-day ridge Poisson model (`src/forecast.mjs`) and does not chang
 cd analysis
 uv venv .venv && VIRTUAL_ENV=.venv uv pip install -r requirements.txt
 .venv/bin/python fetch.py      # City open data → data/raw/ (~70 MB, gitignored)
-.venv/bin/python prepare.py    # units + incident assignment → data/*.parquet
+.venv/bin/python prepare.py    # units, incident and asset assignment → data/*.parquet
 .venv/bin/python backtest.py   # EB vs ridge, 2018–present → ../reports/forecast-annual-backtest.json (~1 min)
 .venv/bin/python export.py     # 12-month forecast → ../public/data/forecast-annual.json(.gz)
 .venv/bin/python -m pytest
@@ -18,8 +18,8 @@ uv venv .venv && VIRTUAL_ENV=.venv uv pip install -r requirements.txt
 
 | File | Purpose |
 |---|---|
-| `fetch.py` | Full incident archive (Dec 2016 onward, ~65k records), road inventory (120,567 segments), yearly traffic volumes (`--volumes-only` refreshes just these) |
-| `prepare.py` | Builds units and assigns each incident to one |
+| `fetch.py` | Full incident archive (Dec 2016 onward, ~65k records), road inventory (120,567 segments), yearly traffic volumes, Traffic Signals, Traffic Signs, Crosswalks (`--assets-only` refreshes these and keeps the incident snapshot) |
+| `prepare.py` | Builds units and assigns each incident and asset to one |
 | `model.py` | EB model, ridge baseline, metrics |
 | `backtest.py` | Year-by-year comparison; picks the EB history window |
 | `export.py` | Forward forecast for the app |
@@ -32,15 +32,17 @@ uv venv .venv && VIRTUAL_ENV=.venv uv pip install -r requirements.txt
   - **Intersections:** nodes where 3+ non-alley segments share an endpoint (46,007).
 - **Assignment:** an incident goes to the nearest intersection within **76 m** (250 ft, the usual intersection influence area); otherwise to the nearest segment within 50 m, as in `pipelines/prepare.mjs`. That puts 87% of incidents at intersections.
 - **Traffic volume:** the City's yearly Traffic Volumes datasets (average weekday traffic, both directions) for 2016–2019 and 2022–2024; 2020 and 2021 were not published. Each segment takes the count section within 30 m of its midpoint, and each intersection takes its busiest counted leg. The model uses the mean `log1p(volume)` over the count years up to the forecast cutoff, with no imputation for unpublished years or uncounted sites (those get a has-volume flag of 0). Coverage: 23% of segments and 33% of intersections. Most of it comes from the 2016–2019 datasets; later years count far fewer sections.
+- **Traffic control and crossings:** the City's Traffic Signals (full and partial signals, plus pedestrian RRFBs and overhead flashers), the Stop and Yield blades from Traffic Signs, and Crosswalks. Each asset goes to the intersection within 40 m; pedestrian signals and crosswalks away from intersections go to the segment within 30 m. Signals and signs carry install dates, so a forecast only uses those installed by its cutoff. Crosswalks have no dates, so backtests use today's crosswalks.
 
 ## Final model
 
 Hauer's empirical Bayes method (Hauer et al., 2002), fitted separately for segments and intersections at each cutoff, using only data up to that cutoff:
 
 1. **Safety performance function (SPF).** A Poisson GLM (`sklearn.PoissonRegressor`) of each unit's history count on site characteristics only:
-   - **Segments:** road class (`ctp_class`), log length, mean log weekday volume plus a has-volume flag, lon/lat splines.
-   - **Intersections:** highest and second-highest leg road class, number of legs, mean log volume of the busiest counted leg, lon/lat splines.
-2. **Overdispersion.** A negative binomial shape `k`, from marginal maximum likelihood with the SPF held fixed. Currently about 0.54 for segments and 0.34 for intersections, so counts are strongly overdispersed.
+   - **Segments:** road class (`ctp_class`), log length, mean log weekday volume plus a has-volume flag, traffic control and crossings (below), lon/lat splines.
+   - **Intersections:** highest and second-highest leg road class, number of legs, mean log volume of the busiest counted leg, traffic control and crossings, lon/lat splines.
+   - **Traffic control and crossings (both kinds):** signalized (yes/no), pedestrian signal (RRFB or overhead flasher), log number of stop signs, log number of yield signs, log number of crosswalks, school crosswalk (yes/no).
+2. **Overdispersion.** A negative binomial shape `k`, from marginal maximum likelihood with the SPF held fixed. Currently about 0.54 for segments and 0.36 for intersections, so counts are strongly overdispersed.
 3. **Shrinkage.** `EB = w·SPF + (1 − w)·history`, with `w = k / (k + SPF)`. Sites with long or busy histories rely on their own counts; quiet sites lean on similar sites.
 4. **Forecast.** `EB × horizon / history length`. The uncertainty is Eq. 3, `SD = √((1 − w)·EB)`, plus a 90% interval from the negative binomial posterior predictive (shape `k + history`).
 
@@ -62,11 +64,11 @@ Each year N is predicted from data through Dec 31 of N−1. 2026 is scored throu
 
 | | EB | Ridge |
 |---|---|---|
-| Poisson deviance per unit | **0.098** | 0.203 |
-| Top20 coverage, % of best possible | **82%** | 81% |
+| Poisson deviance per unit | **0.097** | 0.203 |
+| Top20 coverage, % of best possible | **83%** | 81% |
 | Top100 coverage, % of best possible | **77%** | 75% |
 | Top500 coverage, % of best possible | **75%** | 73% |
-| Next-year reports caught by top 500 never-reported units | **107** | 6 |
+| Next-year reports caught by top 500 never-reported units | **113** | 6 |
 
 - **Accuracy:** EB halves the deviance and ranks about as well or slightly better.
 - **Never-reported sites:** these get 15–40% of each year's reports. Only EB can rank them, because they have no history.
@@ -113,6 +115,9 @@ interface AnnualForecast {
     spfExpected: number;                    // what similar sites would expect, same horizon
     priorWeight: number;                    // w: 0 = own history only, 1 = similar sites only
     ridgeExpected: number; ridgeRank: number;
+    signalized: boolean; pedestrianSignal: boolean;   // at the forecast start
+    stopSigns: number; yieldSigns: number;
+    crosswalks: number; schoolCrosswalk: boolean;
   }[];
 }
 ```
@@ -123,6 +128,7 @@ Segment ids match `road:<segment_id>` in `dataset.json`. Intersection units are 
 - Show `expected` with `low90`–`high90`.
 - Explain a site with `priorWeight`: "mostly its own history" versus "similar to other <roadClass> sites".
 - Flag where `rank` and `ridgeRank` disagree.
+- Describe the site with its control: "signalized", "stop-controlled" (`stopSigns > 0`) or "yield", plus crosswalks.
 
 ## Alternatives tried
 
@@ -138,13 +144,16 @@ All were evaluated with the same yearly backtest unless noted.
 | Year-specific µ / citywide trend projection | Changes totals only (static site covariates); negligible gain, trend overshot 2025 |
 | Intersection radius 20–130 m, node clustering 0–50 m | No unit-free optimum: road-length budgets favour 20 m, site-count budgets favour large clustered units; 45–110 m is flat, so 76 m (convention) with no clustering |
 | 2024 volume only (4% of segments), applied to every backtest year | Same ranking and slightly higher deviance (0.0980 vs 0.0976) than mean volume over 2016–2024 up to each cutoff; replaced because it also used volumes from after the cutoff |
+| Incident category (from description text) | A site's past share of pedestrian/cyclist, multi-vehicle, stalled, signal and lane-blocking reports, added on top of the EB forecast: deviance −0.05% overall, +0.23% on sites with history, Top100 unchanged. Categories come from free text, whose wording changed in 2020 ("Traffic incident." went from 0% to ~65% of reports) |
+| Time of day / day of week | A site's past share of AM-peak, midday, PM-peak, night and weekend reports, added the same way: deviance +0.09% overall, +1.28% on sites with history (overfits early years), Top100 unchanged. Every timing pattern repeats at about the same rate, so total history already carries the signal |
+| Weather (not backtested) | Considered only. The repo's weather (`public/data/weather.json`) is one airport station from 2023 onward. It describes citywide conditions rather than site differences, and future weather is unknown for a 12-month forecast |
 
 ## Limitations
 
 - **Rates are assumed stable over the 5-year history.** The forecast (about 7,500 reports) is below the last 365 days (8,300), so a recent citywide rise is not carried forward.
 - **Partial exposure data.** Volume counts cover 23% of segments and 33% of intersections, mostly major roads. Roads built after 2017 appear in history with zero reports.
 - **The December 2025 geocoding change** (incidents snapped to road centrelines) still lowers 2026 Top100 slightly.
-- **Weather, time of day, incident category and spatial spillover are not used.**
+- **Weather, time of day, incident category and spatial spillover are not used** (see Alternatives tried). Time of day and category describe reports, not sites, so they can only enter through a site's history, where they added nothing.
 
 ## References
 
@@ -177,3 +186,7 @@ Across the same six exploratory 2026 cutoffs, mean Top20 coverage for rate/EB/Po
 The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export_short.py` on the same full-inventory road/intersection units as the comparison. Three-year history is fixed, not tuned; all report types are pooled. Six historical cutoffs and a latest-complete-date future forecast are exported to `public/data/forecast-eb30.json.gz`. Future outcomes are null. Refresh the offline pipeline to add cutoffs or newer data.
 
 Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.
+
+## PR #2 integration
+
+Current v2 exports retain fingerprints, source evidence, complete-year targets and simple baselines. Asset arrays now participate in fingerprints. Rebuild all annual and short exports after fetching/preparing assets; previous comparisons do not validate the expanded SPF. Candidate CMF treatments appear in the monthly future outlook's selected-location evidence. They carry study references and expert-review requirements, without multiplying crash CMFs into report counts. No ramp inference is made from Skeletal Road class alone. Historical validity remains limited by undated/current assets and unknown removals.

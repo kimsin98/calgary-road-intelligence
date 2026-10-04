@@ -8,7 +8,12 @@ An incident belongs to the nearest intersection within 76 m (250 ft, the usual i
 influence area), otherwise to the nearest segment within 50 m (as in pipelines/prepare.mjs);
 anything else is dropped. Coordinates use the dashboard's local equirectangular projection.
 
-Writes data/units.parquet and data/events.parquet. Usage: .venv/bin/python prepare.py
+Assets (signals, stop/yield signs, crosswalks) are attached to the intersection within 40 m, and
+pedestrian signals and crosswalks away from intersections to the segment within 30 m. Each keeps
+its install date where the source has one, so the model only uses assets present at a cutoff.
+
+Writes data/units.parquet, data/events.parquet and data/assets.parquet.
+Usage: .venv/bin/python prepare.py
 """
 
 import json
@@ -23,6 +28,10 @@ from model import DATA
 SEGMENT_METRES = 50
 INTERSECTION_METRES = 76
 VOLUME_YEARS = (2016, 2017, 2018, 2019, 2022, 2023, 2024)  # 2020 and 2021 were not published
+ASSET_NODE_METRES = 40
+ASSET_SEGMENT_METRES = 30
+FULL_SIGNALS = {"Traffic signal", "Traffic signal T intersection", "1/2 signal", "1/4 signal"}
+PEDESTRIAN_SIGNALS = {"Pedestrian RRFB", "Overhead Flasher"}
 NOT_INTERSECTION_LEGS = {"Lanes (Alleys)", "PedestrianBridge"}
 CLASS_RANK = [
     "Skeletal Road", "Urban Boulevard", "Parkway", "Industrial Arterial", "Arterial Street", "Local Arterial",
@@ -137,19 +146,66 @@ def assign_events(segments, lines, intersections):
     return events[events.unit_id.notna()].reset_index(drop=True)
 
 
+def asset_points(rows):
+    def lonlat(point):
+        return (json.loads(point.replace("'", '"')) if isinstance(point, str) else point)["coordinates"]
+
+    if not rows:
+        return shapely.points(np.empty((0, 2)))
+    xy = np.array([lonlat(r["point"]) for r in rows])
+    return shapely.points(*to_metres(xy[:, 0], xy[:, 1]))
+
+
+def build_assets(segments, lines, intersections):
+    """One row per asset: unit_id, asset type and install date (None if the source has no date)."""
+    node_tree = shapely.STRtree(shapely.points(*to_metres(intersections.lon, intersections.lat)))
+    line_tree = shapely.STRtree(lines)
+    node_ids, segment_ids = intersections.unit_id.to_numpy(), segments.unit_id.to_numpy()
+
+    def attach(rows, asset, installed, segments_too=False):
+        points, unit = asset_points(rows), np.full(len(rows), None, dtype=object)
+        if segments_too:
+            (i, j), _ = line_tree.query_nearest(points, max_distance=ASSET_SEGMENT_METRES, return_distance=True,
+                                                all_matches=False)
+            unit[i] = segment_ids[j]
+        (i, j), _ = node_tree.query_nearest(points, max_distance=ASSET_NODE_METRES, return_distance=True,
+                                            all_matches=False)
+        unit[i] = node_ids[j]
+        return pd.DataFrame({"unit_id": unit, "asset": asset, "installed": installed})
+
+    load = lambda name: [r for r in json.loads((DATA / f"raw/{name}.json").read_text()) if r.get("point")]
+    date_of = lambda r: (r.get("instdate") or "")[:10] or None
+    signals, signs, crosswalks = load("signals"), load("signs"), load("crosswalks")
+    parts = []
+    for asset, types, segments_too in (("signal", FULL_SIGNALS, False), ("pedestrian_signal", PEDESTRIAN_SIGNALS, True)):
+        rows = [r for r in signals if r.get("int_type") in types]
+        parts.append(attach(rows, asset, [date_of(r) for r in rows], segments_too))
+    for blade in ("Stop", "Yield"):
+        rows = [r for r in signs if r.get("blade_type") == blade]
+        parts.append(attach(rows, f"{blade.lower()}_sign", [date_of(r) for r in rows]))
+    parts.append(attach(crosswalks, "crosswalk", None, segments_too=True))
+    school = [r for r in crosswalks if r.get("crosswalk_type") == "SCHOOL"]
+    parts.append(attach(school, "school_crosswalk", None, segments_too=True))
+    assets = pd.concat(parts, ignore_index=True)
+    return assets[assets.unit_id.notna()].reset_index(drop=True)
+
+
 def main():
     roads = [r for r in json.loads((DATA / "raw/roads.json").read_text()) if r.get("line")]
     segments, lines = build_segments(roads)
     intersections = build_intersections(roads, segments)
     events = assign_events(segments, lines, intersections)
     units = pd.concat([segments, intersections], ignore_index=True)
+    assets = build_assets(segments, lines, intersections)
     units.to_parquet(DATA / "units.parquet")
     events.to_parquet(DATA / "events.parquet")
+    assets.to_parquet(DATA / "assets.parquet")
     print(
         f"{len(segments)} segments, {len(intersections)} intersections; {len(events)} incidents assigned, "
         f"{(events.unit_id.str.startswith('node:')).mean():.0%} to intersections; "
         f"{events.date.min()} to {events.date.max()}"
     )
+    print("assets attached:", assets.asset.value_counts().to_dict())
 
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ def main():
         recent = inputs.counts(cutoff-timedelta(days=89), cutoff)
         past = records[(records.date >= model.history_start(cutoff,3).isoformat()) & (records.date <= cutoff.isoformat())]
         evidence = {uid:[{'id':str(e.id),'date':str(e.date),'description':str(e.description)} for e in g.sort_values('date',ascending=False).head(3).itertuples()] for uid,g in past.groupby('unit_id')}
+        assets = {name: inputs.assets_at(name, cutoff) for name in ("signal", "stop_sign", "yield_sign", "crosswalk")}
         rows = []
         for rank,i in enumerate(model.rank(fitted['expected'],ids)[:1000],1):
             u = inputs.units.iloc[i]
@@ -30,6 +31,12 @@ def main():
                 'predicted':float(fitted['expected'][i]),'baseline':float(rate[i]),'count':int(recent[i]),
                 'historyReports':int(fitted['history'][i]),'priorWeight':float(fitted['priorWeight'][i]),
                 'low90':int(fitted['low90'][i]),'high90':int(fitted['high90'][i]),
+                'siteControl':{'kind':u.kind,'name':u['name'] if isinstance(u['name'],str) else None,
+                    'roadClass':u.major if u.kind=='intersection' else u.road_class,
+                    'minorRoadClass':u.minor if u.kind=='intersection' else None,
+                    'legs':int(u.legs) if u.kind=='intersection' else 0,
+                    'signalized':bool(assets['signal'][i]),'stopSigns':int(assets['stop_sign'][i]),
+                    'yieldSigns':int(assets['yield_sign'][i]),'crosswalks':int(assets['crosswalk'][i])},
                 'target':None if future else int(actual[i]),'reportEvidence':evidence.get(u.unit_id,[])})
         forecasts.append({'cutoff':cutoff.isoformat(),'end':end.isoformat(),'mode':'future' if future else 'backtest',
             'historyStart':model.history_start(cutoff,3).isoformat(),'k':fitted['k'],'rows':rows,

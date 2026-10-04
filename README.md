@@ -112,3 +112,5 @@ Seven-day forecasts retain browser Ridge Poisson, collision targets and experime
 5. Close with the practical proposal: analysts review a shortlist, confirm local context and record whether inspection was useful. Better crash/severity data, exposure and prospective feedback are the next validation steps.
 
 The next7 Poisson and annual EB modes are additional planning horizons; their units and controls differ. Keep the main presentation focused on historical review and next30 outlook.
+
+Monthly future outlook also offers CMF-based treatment research in selected-location evidence. Candidates depend on nearby mapped controls and road class, and require expert verification. External crash modification factors are shown with study references; they are not used to calculate reductions in traffic-event reports. Signal/sign/crosswalk features now enter the EB SPF; current/undated asset and removal-history limitations remain.

@@ -19,10 +19,11 @@ by the Empirical Bayes Method: A Tutorial. Transportation Research Record, 1784(
 https://doi.org/10.3141/1784-16
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 from pathlib import Path
 import hashlib
+import json
 
 import numpy as np
 import pandas as pd
@@ -45,17 +46,28 @@ class Inputs:
     event_unit: np.ndarray  # unit row number per event
     event_day: np.ndarray  # local date ordinal per event
     last_complete: date  # latest local date with a full day of records
+    asset_unit: np.ndarray = field(default_factory=lambda: np.array([], dtype=int))  # unit row number per asset (signal, sign, crosswalk)
+    asset_type: np.ndarray = field(default_factory=lambda: np.array([], dtype=str))  # asset type per asset, see prepare.build_assets
+    asset_day: np.ndarray = field(default_factory=lambda: np.array([], dtype=int))  # install date ordinal per asset; 0 if undated (treated as always present)
 
     def fingerprint(self):
         digest = hashlib.sha256(pd.util.hash_pandas_object(self.units.astype(str), index=True).values.tobytes())
         digest.update(self.event_unit.tobytes())
         digest.update(self.event_day.tobytes())
+        digest.update(self.asset_unit.tobytes())
+        digest.update(json.dumps(self.asset_type.tolist(), separators=(",", ":")).encode())
+        digest.update(self.asset_day.tobytes())
         return digest.hexdigest()
 
     def counts(self, start, end):
         """Reports per unit with local date in [start, end] (dates, inclusive)."""
         inside = (self.event_day >= start.toordinal()) & (self.event_day <= end.toordinal())
         return np.bincount(self.event_unit[inside], minlength=len(self.units)).astype(float)
+
+    def assets_at(self, asset, cutoff):
+        """Number of assets of a type installed on or before cutoff, per unit."""
+        keep = (self.asset_type == asset) & (self.asset_day <= cutoff.toordinal())
+        return np.bincount(self.asset_unit[keep], minlength=len(self.units)).astype(float)
 
     def active_days(self, start, end):
         inside = (self.event_day >= start.toordinal()) & (self.event_day <= end.toordinal())
@@ -69,12 +81,16 @@ def load(data_dir=DATA):
     events = events[events.date >= FIRST_DATE.isoformat()]
     last_complete = date.fromisoformat(events.date.max()) - timedelta(days=1)  # latest day is partial
     events = events[events.date <= last_complete.isoformat()]
+    assets = pd.read_parquet(data_dir / "assets.parquet")
     row = pd.Series(np.arange(len(units)), index=units.unit_id)
     return Inputs(
         units=units,
         event_unit=row[events.unit_id].to_numpy(),
         event_day=np.array([date.fromisoformat(d).toordinal() for d in events.date]),
         last_complete=last_complete,
+        asset_unit=row[assets.unit_id].to_numpy(),
+        asset_type=assets.asset.to_numpy(),
+        asset_day=np.array([date.fromisoformat(d).toordinal() if isinstance(d, str) else 0 for d in assets.installed]),
     )
 
 
@@ -102,7 +118,25 @@ def volume_up_to(units, year):
     return np.log1p(units[columns]).mean(axis=1, skipna=True) if columns else pd.Series(np.nan, index=units.index)
 
 
-def site_features(units, cutoff):
+def asset_features(inputs, cutoff):
+    """Traffic control and pedestrian crossing assets present at the cutoff."""
+    count = lambda asset: inputs.assets_at(asset, cutoff)
+    return {
+        "signal": (count("signal") > 0).astype(float),
+        "pedestrian_signal": (count("pedestrian_signal") > 0).astype(float),
+        "log_stop_signs": np.log1p(count("stop_sign")),
+        "log_yield_signs": np.log1p(count("yield_sign")),
+        "log_crosswalks": np.log1p(count("crosswalk")),
+        "school_crosswalk": (count("school_crosswalk") > 0).astype(float),
+    }
+
+
+ASSET_FEATURES = ("signal", "pedestrian_signal", "log_stop_signs", "log_yield_signs", "log_crosswalks",
+                  "school_crosswalk")
+
+
+def site_features(inputs, cutoff):
+    units = inputs.units
     log_volume = volume_up_to(units, cutoff.year)
     return pd.DataFrame(
         {
@@ -115,20 +149,21 @@ def site_features(units, cutoff):
             "has_volume": log_volume.notna().astype(float),
             "lon": units.lon,
             "lat": units.lat,
+            **asset_features(inputs, cutoff),
         },
         index=units.index,
     )
 
 
 def spf_model(kind):
-    """Site-only SPF: road class (segments) or leg classes (intersections), size, mean volume, location."""
+    """Site-only SPF: road or leg classes, size, mean volume, traffic control and crossings, location."""
     one_hot = lambda: OneHotEncoder(handle_unknown="infrequent_if_exist", min_frequency=100)
     if kind == "segment":
         categorical = [("road_class", one_hot(), ["road_class"])]
-        numeric = ["log_length", "log_volume", "has_volume"]
+        numeric = ["log_length", "log_volume", "has_volume", *ASSET_FEATURES]
     else:
         categorical = [("major", one_hot(), ["major"]), ("minor", one_hot(), ["minor"])]
-        numeric = ["legs", "log_volume", "has_volume"]
+        numeric = ["legs", "log_volume", "has_volume", *ASSET_FEATURES]
     columns = ColumnTransformer(
         categorical + [("numeric", StandardScaler(), numeric), ("space", SplineTransformer(n_knots=10), ["lon", "lat"])]
     )
@@ -151,7 +186,7 @@ def eb_forecast(inputs, cutoff, history_years, horizon_days, scale=1.0):
     start = history_start(cutoff, history_years)
     history_days = cutoff.toordinal() - start.toordinal() + 1
     y = inputs.counts(start, cutoff)
-    features = site_features(inputs.units, cutoff)
+    features = site_features(inputs, cutoff)
     eta, k = np.zeros(len(y)), np.zeros(len(y))
     dispersion = {}
     for kind in ("segment", "intersection"):

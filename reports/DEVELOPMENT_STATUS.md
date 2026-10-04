@@ -77,3 +77,11 @@ The dashboard's next30 outlook now uses pure EB, precomputed by `analysis/export
 Seven-day forecasts retain browser Ridge Poisson, collision targets and experimental learned-type options. These controls do not apply to EB30. EB unit evidence is displayed independently; reactive Top20 overlap and learned-weight imports are not calculated across different unit definitions. The 30-day choice follows exploratory average gains, not uniform superiority or operational validation.
 
 EB30 integration verification: 38 Node tests, 11 Python tests, production build and all 15 browser suites passed (the general browser suite was rerun after narrowing its duplicate-date locator). Production preview also passed EB30 fallback gzip decoding. Exported backtest Top20/deviance matches the same-unit comparison; future rows and evaluation remain null. No change to seven-day or historical ranking algorithms.
+
+## PR #2 integration
+
+Traffic control/crosswalk SPF features integrated, with asset arrays included in fingerprints, default-empty synthetic test inputs and empty-asset geometry handling. Preserve v2 annual export evidence/baselines and regenerate predictions from prepared assets. Monthly future evidence now includes research treatment candidates and CMF source links. Crash CMFs are not applied to all-report forecast counts; Skeletal Road class alone no longer triggers ramp-meter suggestions. The old dashboard-keyed site-controls snapshot is superseded by per-EB-unit controls embedded at each cutoff. Undated/current asset and removal-history limitations remain.
+
+Recomputed asset-aware results: annual mean EB/ridge deviance 0.097/0.203, Top20 oracle coverage 83%/81%. Next30 mean Top20 rate/EB/Poisson/hybrid 33.0/36.83/32.83/35.33; next7 6.17/5.83/5.83/6.00. Monthly choice and seven-day retention remain unchanged. New snapshots/experiment reports share the asset-aware fingerprint.
+
+PR #2 closeout verification: 38 Node tests, 13 Python tests, production build and all 15 browser suites pass. Production asset-aware EB/CMF evidence also passed. Synthetic CMF checks confirm no report-reduction output and no ramp inference; all replay/future snapshots regenerated against the asset-aware fingerprint.

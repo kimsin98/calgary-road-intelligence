@@ -64,3 +64,9 @@ The annual export carries the prepared-data fingerprint, fitted history, latest 
 ## Thirty-day EB snapshot
 
 `forecast-eb30.json.gz` (~0.94 MB) contains six replay cutoffs and the latest complete-date next30 forecast on the annual pipeline's 166,574 units. It uses fixed three-year pooled-report history and the same site SPF/exposure restrictions. It contains independent source samples and does not inherit reactive categories, weather filters or learned type weights. Only the top 1,000 predictions are shipped for each cutoff; evaluation totals and baseline coverage are computed over the complete inventory. Future outcomes are null.
+
+## Traffic-control assets and treatment research
+
+PR #2 adds City Traffic Signals (`qr97-4jvx`), Traffic Signs (`u6ce-yibw`, Stop/Yield blades) and Crosswalks (`hxgg-rpad`). Asset assignment prefers an intersection within 40 m; pedestrian signals/crosswalks otherwise use a segment within 30 m. Installation dates filter signals/signs at each cutoff where available. Undated assets, present-day crossings and missing removal histories limit historical validity. Assets are included in the prepared-data fingerprint.
+
+FHWA CMF Clearinghouse studies provide candidate treatments for expert review, not expected reductions in traffic reports. CMFs target crashes under specific study conditions. Road class does not establish ramp geometry, warrants or treatment suitability; no automatic ramp-meter recommendation is made. Study references and applicability require local engineering verification.

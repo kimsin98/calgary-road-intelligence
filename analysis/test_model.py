@@ -61,3 +61,24 @@ def test_export_rejects_stale_or_missing_fingerprint():
     for report in ({}, {"dataFingerprint": "stale"}):
         with pytest.raises(ValueError, match="rerun backtest"):
             validate_backtest(report, inputs)
+
+
+def test_asset_features_only_count_installs_by_cutoff(inputs):
+    signals = inputs.asset_type == "signal"
+    late = signals & (inputs.asset_day > date(2020, 12, 31).toordinal())
+    assert late.any(), "expected some signals installed after 2020"
+    before, after = inputs.assets_at("signal", date(2020, 12, 31)), inputs.assets_at("signal", date(2026, 1, 1))
+    assert before.sum() < after.sum()
+    assert np.array_equal(before, np.bincount(inputs.asset_unit[signals & ~late], minlength=len(inputs.units)))
+    undated = inputs.asset_type == "crosswalk"
+    assert inputs.assets_at("crosswalk", model.FIRST_DATE).sum() == undated.sum()
+
+
+def test_asset_fingerprint_and_empty_geometry():
+    from types import SimpleNamespace
+    from prepare import asset_points
+    import pandas as pd
+    inputs = model.Inputs(pd.DataFrame({'unit_id':['a']}), np.array([0]), np.array([1]), date(2026,1,1))
+    changed = replace(inputs, asset_unit=np.array([0]), asset_type=np.array(['signal']), asset_day=np.array([1]))
+    assert inputs.fingerprint() != changed.fingerprint()
+    assert len(asset_points([])) == 0

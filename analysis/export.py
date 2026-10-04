@@ -29,6 +29,7 @@ CAVEATS = [
     "Incident geocoding changed in December 2025; intersection units (76 m) absorb most but not all of the shift.",
     "Historical road geometry and actual publication dates of volume counts are unverified; cutoff-year filtering is not a complete point-in-time guarantee.",
     "Weather, time of day, incident category and spatial spillover are not used.",
+    "Traffic-control assets are filtered by installation date where recorded; undated assets and current crosswalks are treated as present historically. Removed assets are not reconstructed.",
     "Expected reports describe where reports concentrate, not causes or the effect of an inspection.",
 ]
 
@@ -66,6 +67,7 @@ def main():
     ridge_rank = np.empty(len(ids), int)
     ridge_rank[model.rank(ridge, ids)] = np.arange(1, len(ids) + 1)
     recent = inputs.counts(cutoff - timedelta(days=364), cutoff)
+    assets = {name: inputs.assets_at(name, cutoff) for name in ("signal", "pedestrian_signal", "stop_sign", "yield_sign", "crosswalk", "school_crosswalk")}
 
     import pandas as pd
     records = pd.read_parquet(model.DATA / "events.parquet")
@@ -100,6 +102,10 @@ def main():
                 "priorWeight": round(float(eb["priorWeight"][i]), 3),
                 "ridgeExpected": round(float(ridge[i]), 3),
                 "ridgeRank": int(ridge_rank[i]),
+                "signalized": bool(assets["signal"][i]),
+                "pedestrianSignal": bool(assets["pedestrian_signal"][i]),
+                "stopSigns": int(assets["stop_sign"][i]), "yieldSigns": int(assets["yield_sign"][i]),
+                "crosswalks": int(assets["crosswalk"][i]), "schoolCrosswalk": bool(assets["school_crosswalk"][i]),
                 "relatedDashboardLocationIds": associations.get(u.unit_id, []),
                 "reportEvidence": [{"id": str(e.id), "date": str(e.date), "description": str(e.description)} for e in evidence.get(u.unit_id, [])],
             }
