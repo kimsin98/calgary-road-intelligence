@@ -19,7 +19,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
 import "./command.css";
 
-import { defaults, rank, compare, evaluate } from "./analysis.mjs";
+import { defaults, rank, compare, evaluate, selectEvents } from "./analysis.mjs";
 import { analysisScope, resolveFocus } from "./domain/scope.mjs";
 import { DataMethodPage } from "./DataMethodPage";
 
@@ -611,7 +611,7 @@ function App() {
                 </table>
               </div>
             )}
-            {tab === "Agent" && <AgentPage />}
+            {tab === "Agent" && <AgentPage data={data} historical={{scope:activeConfig,selected:plan.selected,rows:plan.top.map((r:any)=>({...r,reportEvidence:selectEvents(data.events,activeConfig).filter((e:any)=>e.location===r.id).slice(-3)}))}} />}
             {tab === "Data & method" && <DataMethodPage />}
           </div>
         </section>
