@@ -144,13 +144,16 @@ All were evaluated with the same yearly backtest unless noted.
 | Year-specific µ / citywide trend projection | Changes totals only (static site covariates); negligible gain, trend overshot 2025 |
 | Intersection radius 20–130 m, node clustering 0–50 m | No unit-free optimum: road-length budgets favour 20 m, site-count budgets favour large clustered units; 45–110 m is flat, so 76 m (convention) with no clustering |
 | 2024 volume only (4% of segments), applied to every backtest year | Same ranking and slightly higher deviance (0.0980 vs 0.0976) than mean volume over 2016–2024 up to each cutoff; replaced because it also used volumes from after the cutoff |
+| Incident category (from description text) | A site's past share of pedestrian/cyclist, multi-vehicle, stalled, signal and lane-blocking reports, added on top of the EB forecast: deviance −0.05% overall, +0.23% on sites with history, Top100 unchanged. Categories come from free text, whose wording changed in 2020 ("Traffic incident." went from 0% to ~65% of reports) |
+| Time of day / day of week | A site's past share of AM-peak, midday, PM-peak, night and weekend reports, added the same way: deviance +0.09% overall, +1.28% on sites with history (overfits early years), Top100 unchanged. Every timing pattern repeats at about the same rate, so total history already carries the signal |
+| Weather (not backtested) | Considered only. The repo's weather (`public/data/weather.json`) is one airport station from 2023 onward. It describes citywide conditions rather than site differences, and future weather is unknown for a 12-month forecast |
 
 ## Limitations
 
 - **Rates are assumed stable over the 5-year history.** The forecast (about 7,500 reports) is below the last 365 days (8,300), so a recent citywide rise is not carried forward.
 - **Partial exposure data.** Volume counts cover 23% of segments and 33% of intersections, mostly major roads. Roads built after 2017 appear in history with zero reports.
 - **The December 2025 geocoding change** (incidents snapped to road centrelines) still lowers 2026 Top100 slightly.
-- **Weather, time of day, incident category and spatial spillover are not used.**
+- **Weather, time of day, incident category and spatial spillover are not used** (see Alternatives tried). Time of day and category describe reports, not sites, so they can only enter through a site's history, where they added nothing.
 
 ## References
 
